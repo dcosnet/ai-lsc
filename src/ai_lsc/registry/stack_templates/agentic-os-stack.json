@@ -1,0 +1,33 @@
+{
+    "id": "agentic-os-stack",
+    "name": "Agentic OS — Full Orchestration Stack",
+    "description": "Production agentic orchestration stack: Ollama inference + LibreChat agent frontend + Qdrant vector memory + Redis task queue + LiteLLM multi-provider routing. All LLM endpoints point to localhost — no external API keys needed.",
+    "version": "2.0",
+    "author": "ai-lsc",
+    "tags": ["agentic", "orchestration", "function-calling", "rag", "multi-model", "production", "local-first"],
+    "endpoints": {
+        "litellm_base": "http://localhost:4000",
+        "litellm_model": "ollama/qwen2.5:32b",
+        "librechat_endpoint": "http://localhost:3080",
+        "qdrant_endpoint": "http://localhost:6333",
+        "redis_endpoint": "localhost:6379"
+    },
+    "tools": [
+        "ollama",
+        "redis",
+        "qdrant",
+        "litellm",
+        "n8n",
+        "librechat",
+        "mariadb",
+        "glances",
+        "fabric"
+    ],
+    "notes": {
+        "architecture": "The agents/ package bridges LibreChat's function-calling to AI-LSC's RuntimeExecutor. The LLM can start/stop services, pull models, and inject skills through natural language.",
+        "model_routing": "LiteLLM proxy at localhost:4000 normalizes all local Ollama models into a single OpenAI-compatible endpoint. Ollama serves at localhost:11434. LiteLLM config points: model_list: [{model_name: 'qwen2.5', litellm_params: {model: 'ollama/qwen2.5:32b', api_base: 'http://localhost:11434/v1'}}].",
+        "memory_layers": "Redis (localhost:6379) = hot path (task queue, pub/sub, status cache). MariaDB = cold path (audit logs, persisted memory, config). Qdrant (localhost:6333) = semantic index (RAG, skill matching, vector search).",
+        "agent_frontend": "LibreChat at localhost:3080 provides multi-provider support with native OpenAI tool-calling format. Configure it to point at LiteLLM as the assistant endpoint.",
+        "workflow": "n8n at localhost:5678 orchestrates complex multi-step agent workflows beyond single-turn tool calls."
+    }
+}

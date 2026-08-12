@@ -1,0 +1,28 @@
+{
+    "id": "open-webui-full-rag",
+    "name": "Open WebUI — Full RAG Knowledge Stack",
+    "description": "The most popular self-hosted ChatGPT replacement. Open WebUI + Ollama + ChromaDB + Whisper for voice input + Docling for document ingestion. The stack thousands of homelabbers and YouTubers run for private AI chat with full document understanding.",
+    "version": "1.0",
+    "author": "ai-lsc",
+    "tags": ["open-webui", "chatgpt-alternative", "rag", "homelab", "youtube-trending", "document-ai", "local-first"],
+    "endpoints": {
+        "ollama_base": "http://localhost:11434",
+        "openwebui": "http://localhost:3000",
+        "chromadb": "http://localhost:8000"
+    },
+    "tools": [
+        "ollama",
+        "openwebui",
+        "chromadb",
+        "whisper",
+        "docling",
+        "markitdown"
+    ],
+    "notes": {
+        "youtube_context": "The #1 homelab AI setup across YouTube. Every self-hosted AI tutorial covers this exact stack. Channels like @techhut, @crosstalksolutions, and @networkchuck have dedicated videos with 500K+ views on this combo.",
+        "recommended_models": "llama3.1:8b (fast chat), llama3.1:70b (quality), qwen2.5:32b (multilingual), mistral-nemo:12b (lightweight), nomic-embed-text (embeddings)",
+        "setup": "Open WebUI auto-detects Ollama on localhost:11434. Upload PDFs/docs in the UI — they get chunked and embedded into ChromaDB automatically. Whisper enables the microphone button for voice-to-text input.",
+        "workflow": "Documents → Docling/MarkItDown → Markdown → Open WebUI RAG pipeline → ChromaDB vector store. Whisper handles voice queries. All inference through Ollama on local GPU.",
+        "tips": "Set OLLAMA_NUM_PARALLEL=4 for concurrent chat requests. Use Open WebUI's built-in model switching to route simple queries to 8B and complex ones to 70B. Create workspaces per project for isolated document collections."
+    }
+}

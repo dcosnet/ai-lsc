@@ -1,0 +1,30 @@
+{
+    "id": "n8n-ai-workflow-automation",
+    "name": "n8n AI Workflow Automation Hub",
+    "description": "Visual AI workflow automation with n8n at the center. Connect local Ollama models to webhooks, email, databases, and scheduling. Build AI-powered automations without writing code — the exact setup from the viral 'Automate Everything with Local AI' videos.",
+    "version": "1.0",
+    "author": "ai-lsc",
+    "tags": ["n8n", "workflow", "automation", "no-code", "youtube-trending", "local-first", "integration"],
+    "endpoints": {
+        "n8n": "http://localhost:5678",
+        "ollama_base": "http://localhost:11434/v1",
+        "redis": "localhost:6379",
+        "postgresql": "localhost:5432"
+    },
+    "tools": [
+        "ollama",
+        "litellm",
+        "n8n",
+        "redis",
+        "postgresql",
+        "fabric",
+        "whisper"
+    ],
+    "notes": {
+        "youtube_context": "n8n + local AI is the most viewed AI automation content on YouTube. Channels like @n8n_io (official), @techwithtim, and @lainzworld show workflows like: auto-summarize emails with local LLM, transcribe meetings with Whisper, classify support tickets with Ollama, and generate reports on schedule.",
+        "recommended_models": "llama3.1:8b (classification, fast), qwen2.5:14b (summarization), mistral-nemo:12b (general), phi-4:14b (structured output), nomic-embed-text (semantic search)",
+        "setup": "n8n runs at localhost:5678 with PostgreSQL for persistence and Redis for queue management. Add the Ollama node (built-in) pointing at localhost:11434. LiteLLM at 4000 provides fallback model routing. n8n's AI Agent node chains multiple LLM calls together in a visual flow.",
+        "workflow": "Trigger (webhook/cron/email) → n8n AI Agent → Ollama (localhost:11434) → process result → action (email/slack/database write). Whisper node for audio. Fabric node for text transforms. Multiple agents can collaborate in a single workflow.",
+        "tips": "Use n8n's sub-workflow feature to reuse AI processing across multiple automations. Set Ollama keep_alive=5m in n8n config to avoid cold starts between workflow triggers. The AI Agent node's memory feature persists conversation context across workflow runs using Redis."
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "id": "local-llm-lab",
+    "name": "Local LLM Lab",
+    "description": "Self-hosted LLM playground with multiple inference backends, model management, vector store, and chat interface. Everything runs on localhost — zero cloud dependencies.",
+    "version": "2.0",
+    "author": "ai-lsc",
+    "tags": ["llm", "local-ai", "inference", "chat", "rag", "local-first"],
+    "endpoints": {
+        "ollama_base": "http://localhost:11434",
+        "openwebui": "http://localhost:3000",
+        "chromadb": "http://localhost:8000",
+        "litellm_base": "http://localhost:4000"
+    },
+    "tools": [
+        "ollama",
+        "llamacpp",
+        "vllm",
+        "litellm",
+        "openwebui",
+        "chromadb",
+        "whisper",
+        "docling",
+        "aider",
+        "fabric"
+    ],
+    "notes": {
+        "setup": "Ollama at 11434 is the primary inference engine. vLLM and llama.cpp are alternative backends for GGUF/exl2 formats. LiteLLM at 4000 provides a unified OpenAI-compatible API over all backends.",
+        "recommended_models": "llama3.1:70b, qwen2.5-coder:32b, mistral-nemo:12b, codestral:22b, phi-4:14b, gemma2:27b",
+        "workflow": "OpenWebUI provides the browser chat frontend at localhost:3000 connected to Ollama. ChromaDB handles RAG document embeddings. Whisper does local speech-to-text. Docling converts PDFs to Markdown for ingestion. Aider connects to the same Ollama endpoint for pair programming. Fabric provides CLI text-transform pipelines."
+    }
+}

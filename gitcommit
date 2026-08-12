@@ -1,0 +1,114 @@
+AI-LSC Release v3.0 -- codename: Ankh of Jah
+
+Full architectural rewrite from v2.4. This is not an incremental
+release; the project fundamentally changed structure, scope, and
+design philosophy.
+
+v2.4 was a monolithic tool launcher.
+v3.0 is a metadata-driven infrastructure management platform.
+
+What changed:
+
+Architecture
+  - Migrated from flat script layout to src/ai_lsc/ package with 22
+    core modules, 13 registry layer files, and clean separation of
+    concerns (registry, runtime, stack, skills, agents, ui)
+  - Introduced AI_LSC_BASE_DIR env var chain: bootstrap writes .env,
+    launcher reads it, constants.py resolves it -- entire runtime
+    derives from one variable. No hardcoded paths leak outside constants.
+  - ADR-001 established: Capability as the foundational abstraction.
+    Every subsystem (templates, pipelines, skills, containers,
+    dashboards, monitoring) points at Capability. Tool is a
+    implementation detail. Swap Ollama for vLLM -- nothing above the
+    registry notices. See docs/ADR-001-capability-architecture.md.
+
+Registry
+  - 115 registered tools organized across 13 infrastructure layers
+    (Host Platform -> Containers). Each entry carries full metadata:
+    installer, launcher, health probe, configuration, export rules,
+    capability mapping.
+  - Modular per-layer registry: ai_lsc/registry/layers/*.py -- adding a
+    tool means adding a dict entry, not touching Python logic.
+  - Registry auto-merges new keys across releases without user action.
+
+Stack Templates
+  - Template system expresses infrastructure intent, not install scripts.
+  - 4 included templates (Claude Code Setup, Agentic OS Stack,
+    SaaS Integrations, Free Claude Code).
+  - Templates reference tool IDs; the registry provides all install and
+    launch logic. Zero duplication.
+  - Stack Wizard UI for template selection and deployment.
+
+Runtime
+  - Multi-runtime execution: native, Podman, Docker Compose, LXC.
+  - RuntimeExecutor unifies install/start/stop/health across all targets.
+  - Container export generates Podman Quadlet, Docker Compose, or LXC
+    config from a template -- same template, different output format.
+  - Fixed LXC config path bug (Path string concat) and hardcoded
+    /mnt/AI mount targets.
+
+Bootstrap
+  - Fully portable: extracts anywhere, detects parent directory tree,
+    auto-resolves base dir. No assumptions about install location.
+  - Arch Linux: --system-site-packages venv sees pacman-installed
+    PySide6, avoids pip compile hell.
+  - Python version stamping detects stale venv after pacman -Syu,
+    auto-recreates.
+  - Cleans stale ~/.local/bin/ai-lsc and pipx installs from v2.x.
+  - python-pyside6 availability check before attempting pacman install
+    (package not in official Arch repos).
+
+Installer
+  - Supports pacman, apt, dnf, pip, git clone, npm, and manual installers.
+  - Dependency expansion: installing a template auto-detects and installs
+    missing prerequisite tools.
+  - License gate: tools requiring license acceptance prompt before install.
+
+Verification
+  - Per-tool health probes: process check, port check, API ping.
+  - Verification dashboard shows install status for all 115 tools.
+  - Hardware detection: GPU driver, CUDA version, memory, disk.
+
+UI
+  - PySide6 dark-themed interface with sidebar navigation across all
+    13 layers.
+  - Dashboard with live service status, log feed, and system health.
+  - Infrastructure layer pages with per-tool ServiceRow widgets.
+  - Code analysis panel: ripgrep, fd, AST inspection, tree-sitter parsing.
+  - Skills console with modelfile tree browser and model pull.
+  - IPC stack editor for pipeline visualization.
+  - Settings page with base directory configuration.
+  - Fixed 8 NameError crashes in exception handlers (except without as).
+  - Fixed thread-unsafe UI mutation from background install thread.
+  - Fixed stack wizard KeyError on missing metadata fields.
+
+Skills
+  - Skill definitions as JSON manifests with capability requirements.
+  - SkillRuntimeResolver maps skill requests to available capabilities.
+  - 6 included skills (code-reviewer, vector-search, rag-analyst,
+    stack-operator, agent-orchestrator, redis-operator).
+
+Agents (infrastructure only -- deferred to v4.0)
+  - Redis pub/sub bridge for inter-agent communication.
+  - Tool bridge connecting agent function-calling to RuntimeExecutor.
+  - Ollama tools interface for model management.
+  - Model pool with tier routing (8B/14B/32B/70B).
+  - Dispatcher and clarification gate for multi-turn agent loops.
+  - All symbols safely stubbed; no agent execution in v3.0.
+
+Bug fixes from v2.4
+  - Resolved externally-managed-environment error on Arch (venv isolation)
+  - Removed ModuleNotFoundError from stale ~/.local/bin/ai-lsc entry point
+  - Root launcher (ai_lsc.py) replaces pip entry-point -- no install needed
+  - Convenience launcher (run.sh) sources .env for proper env injection
+  - Path("/var/lib/lxc" / name) string concat crash -> proper Path join
+  - 8x except Exception without as exc -> all now capture correctly
+  - Thread-unsafe _run_install UI calls -> QTimer.singleShot dispatch
+  - Hardcoded /mnt/AI LXC mount targets -> dynamic path resolution
+  - Stack wizard meta['name'] KeyError -> .get() with safe defaults
+  - python-pyside6 pacman fallback for Arch repos that don't carry it
+
+Files changed: essentially everything. See ADR-001 for the architectural
+rationale and the vocabulary that will govern v3.0 stabilization and
+v4.0 development.
+```

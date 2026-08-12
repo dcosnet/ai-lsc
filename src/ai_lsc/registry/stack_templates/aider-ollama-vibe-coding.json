@@ -1,0 +1,27 @@
+{
+    "id": "aider-ollama-vibe-coding",
+    "name": "Aider + Ollama Vibe Coding Stack",
+    "description": "The #1 YouTube AI coding stack of 2025. Aider pair-programmer wired to local Ollama models. Zero API keys, zero cloud — vibe code entirely offline with 32B+ models that rival GPT-4 for coding tasks.",
+    "version": "1.0",
+    "author": "ai-lsc",
+    "tags": ["vibe-coding", "aider", "ollama", "coding", "youtube-trending", "local-first", "offline"],
+    "endpoints": {
+        "ollama_base": "http://localhost:11434/v1",
+        "aider_model": "ollama/qwen2.5-coder:32b"
+    },
+    "tools": [
+        "ollama",
+        "aider",
+        "fabric",
+        "ripgrep",
+        "fd",
+        "tree_sitter"
+    ],
+    "notes": {
+        "youtube_context": "This is the exact stack from the viral 'Vibe Coding with Local AI' videos: Aider + Ollama + Qwen2.5-Coder. Creators like @networkchuck, @cbarks, and @techwithtim have built full projects live on stream with this combo.",
+        "recommended_models": "qwen2.5-coder:32b (best balance), deepseek-coder-v2:236b (strongest), codestral:22b (fast), llama3.1:70b (general), phi-4:14b (lightweight)",
+        "setup": "Run: ollama pull qwen2.5-coder:32b && aider --model ollama/qwen2.5-coder:32b. Aider auto-discovers Ollama on localhost:11434.",
+        "workflow": "Aider edits code in your git repo using local LLM. Fabric transforms text/prompts. ripgrep + fd + tree-sitter power Aider's repository map for large codebase awareness.",
+        "tips": "Use aider --message 'implement X' for single tasks. Use aider --chat for interactive sessions. Add .aider.conf.yml to your project root for per-project model config."
+    }
+}

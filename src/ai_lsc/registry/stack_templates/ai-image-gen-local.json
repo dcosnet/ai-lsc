@@ -1,0 +1,24 @@
+{
+    "id": "ai-image-gen-local",
+    "name": "AI Image Generation — Local Creative Studio",
+    "description": "Run Stable Diffusion, FLUX, and ComfyUI entirely on your GPU. No DALL-E subscriptions, no Midjourney fees. Generate images, edit photos, and build automated generation pipelines — the homelab creative AI stack that's exploding on YouTube.",
+    "version": "1.0",
+    "author": "ai-lsc",
+    "tags": ["image-gen", "stable-diffusion", "flux", "comfyui", "creative", "youtube-trending", "local-first", "gpu"],
+    "endpoints": {
+        "comfyui": "http://localhost:8188",
+        "forge": "http://localhost:7860"
+    },
+    "tools": [
+        "forge",
+        "invokeai",
+        "fabric"
+    ],
+    "notes": {
+        "youtube_context": "Local AI image generation has massive YouTube presence. Channels like @mreflow, @aaronweikle, and @flyingjunior run FLUX.1 and SDXL locally. ComfyUI tutorials consistently hit 1M+ views. This stack covers the three most popular workflows.",
+        "recommended_models": "FLUX.1-dev (12B, best quality), FLUX.1-schnell (fast generation), stable-diffusion-xl-base-1.0 (classic SDXL), juggernaut-xl (fine-tuned SDXL), dreamshaper-xl (lightweight)",
+        "setup": "Forge (optimized WebUI) at localhost:7860 is the easiest entry point. InvokeAI provides a more polished creative workflow. Both auto-download models on first run. Set --listen 0.0.0.0 to access from other devices.",
+        "workflow": "Quick gen: Forge with FLUX.1-schnell (~2s per image on 4090). Quality gen: FLUX.1-dev with refined prompts. Batch processing: Forge API + Fabric for automated pipeline workflows. ControlNet for pose/depth/edge-guided generation.",
+        "tips": "8GB VRAM minimum for FLUX.1-schnell (FP8). 24GB for FLUX.1-dev. Use xformers and sdp attention for speed. Torch compile adds ~30% throughput after first warmup. Batch size 1 with tiled VAE for large resolutions on limited VRAM."
+    }
+}

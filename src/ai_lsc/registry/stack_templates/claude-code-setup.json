@@ -1,0 +1,46 @@
+{
+    "id": "claude-code-setup",
+    "name": "Claude Code Local Stack",
+    "description": "Claude Code development environment wired to local Ollama inference. No cloud API keys required — all LLM calls route through localhost:11434. Includes memory, prompt engineering, and multi-agent coordination.",
+    "version": "2.0",
+    "author": "ai-lsc",
+    "tags": ["claude", "development", "ai-coding", "agent", "memory", "local-first"],
+    "endpoints": {
+        "claude_api_base": "http://localhost:11434/v1",
+        "anthropic_api_key": "ollama",
+        "anthropic_model": "claude-4-sonnet"
+    },
+    "tools": [
+        "claude_code",
+        "ollama",
+        "aider",
+        "fabric",
+        {
+            "id": "claude_mem",
+            "name": "Claude Mem",
+            "source": "https://github.com/nicely-done/claude-mem",
+            "category": "Memory",
+            "role": "Context Memory",
+            "description": "Persistent conversation memory layer for Claude Code sessions",
+            "installer": {"type": "git", "pkg": "https://github.com/nicely-done/claude-mem"},
+            "launcher": {"type": "tmux", "cmd": "claude-mem serve --port {port}", "default_port": 9600},
+            "flags": {"has_cli": true, "has_gui": false, "has_web": true}
+        },
+        {
+            "id": "claude_squad",
+            "name": "Claude Squad",
+            "source": "https://github.com/nicely-done/claude-squad",
+            "category": "Multi-Agent",
+            "role": "Team Coordination",
+            "description": "Multi-agent team orchestration for parallel Claude Code instances",
+            "installer": {"type": "git", "pkg": "https://github.com/nicely-done/claude-squad"},
+            "launcher": {"type": "tmux", "cmd": "claude-squad coordinate --port {port}", "default_port": 9603},
+            "flags": {"has_cli": true, "has_gui": false, "has_web": true}
+        }
+    ],
+    "notes": {
+        "setup": "Set CLAUDE_CODE_USE_BEDROCK=1 or configure claude-code to point at the Ollama endpoint. Anthropic Claude models are proxied through LiteLLM or Ollama's OpenAI-compatible API at localhost:11434.",
+        "recommended_models": "claude-4-sonnet (14B+ local), qwen2.5-coder:32b, deepseek-coder-v2:236b",
+        "workflow": "Claude Code → Ollama (localhost:11434) → local weights. Aider handles pair programming with the same endpoint. Fabric provides CLI text-processing pipelines."
+    }
+}

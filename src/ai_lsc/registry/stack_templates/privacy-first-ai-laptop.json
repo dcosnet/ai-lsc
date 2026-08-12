@@ -1,0 +1,30 @@
+{
+    "id": "privacy-first-ai-laptop",
+    "name": "Privacy-First AI Laptop Setup",
+    "description": "The complete privacy-respecting AI stack for your laptop. All processing on-device, no telemetry, no cloud APIs. Ollama + Whisper + Obsidian + Paperless-NGX + local search. Popular with privacy-focused YouTubers and FOSS advocates.",
+    "version": "1.0",
+    "author": "ai-lsc",
+    "tags": ["privacy", "offline", "laptop", "document-management", "youtube-trending", "local-first", "foss"],
+    "endpoints": {
+        "ollama_base": "http://localhost:11434",
+        "openwebui": "http://localhost:3000",
+        "paperlessngx": "http://localhost:8000"
+    },
+    "tools": [
+        "ollama",
+        "openwebui",
+        "whisper",
+        "docling",
+        "markitdown",
+        "obsidian",
+        "paperlessngx",
+        "fabric"
+    ],
+    "notes": {
+        "youtube_context": "Privacy-focused AI content has exploded. Channels like @TheLinuxExperiment, @crosstalksolutions, and @braveouterweb showcase fully local AI setups. The message: 'Your AI should stay on your machine.' This template builds that exact vision.",
+        "recommended_models": "llama3.1:8b (daily driver, 4GB VRAM), phi-4:14b (quality on 8GB), mistral-nemo:12b (sweet spot), gemma2:9b (fast), nomic-embed-text (document embeddings)",
+        "setup": "Ollama runs as a systemd service. Open WebUI provides the chat frontend. Paperless-NGX ingests scanned documents. Docling/MarkItDown converts them for RAG. Whisper handles voice memos. Obsidian links everything with local markdown notes.",
+        "workflow": "Paper documents → scan → Paperless-NGX (OCR + tagging) → Docling (extract text) → Open WebUI RAG (chat with your documents). Voice notes → Whisper → text → Fabric → summarized notes → Obsidian vault. All data stays on your NVMe.",
+        "tips": "For laptops with <8GB VRAM, use 4-bit quantized models. Set OLLAMA_NUM_PARALLEL=1 to prevent VRAM thrashing. Paperless-NGX works great with 2GB RAM allocated. Use Obsidian's local graph view to visualize connections between your AI-generated notes and source documents."
+    }
+}

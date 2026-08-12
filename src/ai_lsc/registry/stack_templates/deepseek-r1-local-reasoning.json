@@ -1,0 +1,29 @@
+{
+    "id": "deepseek-r1-local-reasoning",
+    "name": "DeepSeek R1 — Local Reasoning Engine",
+    "description": "Run DeepSeek R1 (the open-source reasoning model that challenged OpenAI o1) entirely locally. vLLM or llama.cpp serves the 70B distilled model with chain-of-thought reasoning visible in real-time. The most hyped local AI setup of early 2025.",
+    "version": "1.0",
+    "author": "ai-lsc",
+    "tags": ["deepseek", "reasoning", "r1", "vllm", "llama.cpp", "youtube-trending", "local-first", "math", "coding"],
+    "endpoints": {
+        "ollama_base": "http://localhost:11434",
+        "vllm_base": "http://localhost:8000",
+        "litellm_base": "http://localhost:4000"
+    },
+    "tools": [
+        "ollama",
+        "llamacpp",
+        "vllm",
+        "litellm",
+        "openwebui",
+        "aider",
+        "fabric"
+    ],
+    "notes": {
+        "youtube_context": "DeepSeek R1 broke the internet in Jan 2025 with reasoning capabilities matching OpenAI o1 at a fraction of the cost. YouTubers like @fmateo09, @aaronweikle, and @marcusrbrown showed how to run the distilled 32B/70B models locally for free. This template recreates that exact setup.",
+        "recommended_models": "deepseek-r1:32b (24GB VRAM via vLLM), deepseek-r1:70b (2x 24GB GPUs or quantized), deepseek-r1-distill-qwen:32b (fastest reasoning), deepseek-coder-v2:236b (split across GPUs)",
+        "setup": "Fast path: ollama pull deepseek-r1:32b && open-webui (auto-connects). High-throughput: vLLM serves with speculative decoding at localhost:8000. LiteLLM at 4000 normalizes the endpoint for any OpenAI-compatible client.",
+        "workflow": "Reasoning queries hit the model through Open WebUI or any API client. The chain-of-thought (thinking tokens) is visible in real-time. Aider uses the same endpoint for reasoning-powered code generation. Fabric pipes reasoning output through text-transform chains.",
+        "tips": "vLLM with --enable-chunked-prefill handles long contexts better. For <24GB VRAM, use deepseek-r1:14b or the distilled Qwen variants. Set temperature=0.6 for best reasoning quality — higher temps degrade chain-of-thought coherence."
+    }
+}

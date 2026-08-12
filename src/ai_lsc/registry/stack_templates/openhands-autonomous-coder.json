@@ -1,0 +1,30 @@
+{
+    "id": "openhands-autonomous-coder",
+    "name": "OpenHands — Autonomous AI Software Engineer",
+    "description": "Run the OpenHands autonomous coding agent entirely locally. Sandboxed code execution + terminal access + file management + web browsing + Ollama inference. The most popular open-source autonomous software engineer on GitHub.",
+    "version": "1.0",
+    "author": "ai-lsc",
+    "tags": ["openhands", "autonomous", "coding-agent", "sandbox", "youtube-trending", "local-first", "terminal"],
+    "endpoints": {
+        "ollama_base": "http://localhost:11434/v1",
+        "litellm_base": "http://localhost:4000",
+        "openhands": "http://localhost:3000"
+    },
+    "tools": [
+        "openhands",
+        "ollama",
+        "litellm",
+        "fabric",
+        "ripgrep",
+        "fd",
+        "tree_sitter"
+    ],
+    "notes": {
+        "youtube_context": "The autonomous coding agent concept went viral when open-source alternatives appeared. OpenHands, maintained by All-Hands-AI, is the most starred and actively developed project in this space. Channels like @NicholasRenotte, @aiaborde, and @codingwithadam have full build-along videos with 200K+ views.",
+        "about_openhands": "OpenHands is an autonomous AI software engineer that can plan, write, debug, and execute code in sandboxed Docker environments. It has full terminal access, file management, web browsing capability, and supports any LLM backend. GitHub: https://github.com/All-Hands-AI/OpenHands — 40K+ stars.",
+        "recommended_models": "qwen2.5-coder:32b (primary coding, best SWE-bench), deepseek-coder-v2:236b (complex reasoning), codestral:22b (fast edits), llama3.1:70b (architectural planning), claude-4-sonnet (if available via proxy)",
+        "setup": "1) OpenHands installs via git clone + pip. 2) Configure LLM backend in config.yaml to point at Ollama (localhost:11434) or LiteLLM (localhost:4000). 3) Start the server: python -m openhands.server. 4) Open the web UI at localhost:3000. 5) Give it a task and watch it plan, code, test, and iterate autonomously.",
+        "workflow": "User describes task in web UI → OpenHands plans approach → Agent writes code in sandbox → Code executes in Docker container → Agent reads output → Agent iterates until tests pass. Fabric can transform error messages into structured context. ripgrep + fd + tree_sitter give the agent codebase awareness when pointed at a repo.",
+        "tips": "OpenHands uses Docker sandboxes by default for safe code execution. For local-only setups, configure SANDBOX_TYPE=local in the environment. The coding model matters more than reasoning quality — Qwen2.5-Coder:32b consistently outperforms larger general models on SWE-bench. Use LiteLLM as a middleman if you want to hot-swap models between tasks without restarting OpenHands."
+    }
+}

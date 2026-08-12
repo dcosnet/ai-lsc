@@ -1,0 +1,28 @@
+{
+    "id": "multi-agent-crewai-local",
+    "name": "Multi-Agent CrewAI — Local Team Stack",
+    "description": "Build AI agent teams that collaborate on complex tasks, all running on local models. CrewAI orchestrates specialized agents (researcher, coder, reviewer) powered by Ollama. The exact stack from 'Building an AI Company with Local Models' YouTube series.",
+    "version": "1.0",
+    "author": "ai-lsc",
+    "tags": ["multi-agent", "crewai", "autogen", "agent-team", "youtube-trending", "local-first", "automation"],
+    "endpoints": {
+        "ollama_base": "http://localhost:11434/v1",
+        "litellm_base": "http://localhost:4000"
+    },
+    "tools": [
+        "ollama",
+        "litellm",
+        "crewai",
+        "autogen",
+        "chromadb",
+        "fabric",
+        "n8n"
+    ],
+    "notes": {
+        "youtube_context": "Multi-agent AI teams are the #2 trending AI coding topic. Videos by @aiaborde, @promptengineering, and @johnhampton010 show agents delegating tasks to each other. CrewAI is the most beginner-friendly framework for this — define roles, give them tools, and watch them collaborate.",
+        "recommended_models": "qwen2.5:32b (agent reasoning), llama3.1:70b (complex tasks), codestral:22b (coding agents), mistral-nemo:12b (lightweight agents), nomic-embed-text (agent memory embeddings)",
+        "setup": "pip install crewai crewai-tools. Set OPENAI_API_BASE=http://localhost:11434/v1 and OPENAI_API_KEY=ollama. LiteLLM at 4000 normalizes if you mix Ollama with other backends.",
+        "workflow": "Define a Crew with Agent roles (Researcher, Coder, Reviewer). Each agent gets tools (web search, file read/write, code execution). Ollama serves all LLM calls locally. ChromaDB stores agent memory between sessions. n8n can trigger crews from external events (webhooks, schedules, git pushes).",
+        "tips": "Use sequential process for step-by-step tasks. Use hierarchical process for complex planning (manager agent delegates). Keep agent backstories short and role-focused — verbose context wastes tokens on local models. Embedding quality matters more than model size for agent memory tasks."
+    }
+}

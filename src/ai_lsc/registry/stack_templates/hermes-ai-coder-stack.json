@@ -1,0 +1,41 @@
+{
+    "id": "hermes-ai-coder-stack",
+    "name": "Hermes — AI Coder & Agent Stack",
+    "description": "Maximum coding intelligence: Aider pair programming + Hermes agent orchestration + Agno multi-agent framework + CrewAI team collaboration + Ollama local inference + OpenWebUI chat frontend + full codebase awareness tools. The everything-stack for serious AI-assisted development.",
+    "version": "1.0",
+    "author": "ai-lsc",
+    "tags": ["hermes", "coding", "agent", "multi-agent", "agno", "crewai", "aider", "premium", "local-first"],
+    "endpoints": {
+        "ollama_base": "http://localhost:11434/v1",
+        "litellm_base": "http://localhost:4000",
+        "openwebui": "http://localhost:3000",
+        "hermes_agent": "http://localhost:17051",
+        "hermes_dashboard": "http://localhost:17050"
+    },
+    "tools": [
+        "ollama",
+        "aider",
+        "litellm",
+        "openwebui",
+        "hermes",
+        "hermes_agent",
+        "hermes_desktop",
+        "agno",
+        "crewai",
+        "autogen",
+        "fabric",
+        "chromadb",
+        "ripgrep",
+        "fd",
+        "tree_sitter"
+    ],
+    "notes": {
+        "philosophy": "Hermes is the messenger of the gods — this stack routes every coding task through the best available local AI pathway. Aider for pair programming, Agno for structured agent pipelines, CrewAI for team-based task decomposition, Hermes Desktop for the unified agent GUI, and Hermes Agent for the autonomous runtime. LiteLLM normalizes all model access so every tool talks to Ollama on localhost:11434.",
+        "recommended_models": "qwen2.5-coder:32b (primary coding, beats GPT-4 on SWE-bench), deepseek-coder-v2:236b (complex reasoning), codestral:22b (fast edits), llama3.1:70b (architectural planning), phi-4:14b (quick tasks), nomic-embed-text (codebase embeddings for RAG)",
+        "coding_interface": "Aider is the primary coding interface — it has the best git integration, whole-repo awareness, and cost-efficient token usage with local models. For interactive exploration, Hermes Desktop provides a visual agent environment. For conversational coding, OpenWebUI connects to the same Ollama endpoint.",
+        "agentic_hierarchy": "Single tasks → Aider (fast, direct). Multi-step pipelines → Agno (sequential agents with memory). Team projects → CrewAI (role-based: Architect, Coder, Reviewer, Tester). Full autonomy → Hermes Agent (persistent background agent with tool access). Cross-framework orchestration → AutoGen (Microsoft's framework for heterogeneous agent teams).",
+        "codebase_awareness": "rigrep finds symbols, fd navigates directories, tree-sitter parses AST. Aider uses repo-map to build a compressed representation of your entire codebase. ChromaDB indexes code chunks for semantic search. This gives every agent in the stack full awareness of your project structure.",
+        "setup": "1) Pull models: ollama pull qwen2.5-coder:32b && ollama pull nomic-embed-text. 2) Start Ollama (systemd or tmux). 3) Start LiteLLM pointing at localhost:11434. 4) Launch Hermes Desktop for the GUI agent. 5) Run aider in your project repo. 6) OpenWebUI for browser-based chat with your code.",
+        "tips": "Use LiteLLM to switch between models per-task without restarting tools. Aider's /ask command lets you query the model without editing files — perfect for quick questions. Agno agents can call Aider as a tool for code modifications. ChromaDB codebase indexing runs once, then every agent benefits from semantic search. Keep Hermes Dashboard open on a second monitor to monitor all agent activity."
+    }
+}

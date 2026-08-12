@@ -1,0 +1,73 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Type checking
+*.pyi
+
+# Distribution
+*.tar.gz
+*.tar.bz2
+*.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+*.log
+
+# Application runtime data
+pipeline_state.json
+pipeline.json
+config.json
+ai_lsc_state.json
+
+# Tool output
+*.yaml.bak
+lxc-launch.sh
+*.conf.bak
+
+# Downloaded models (Ollama, etc.)
+models/
+weights/
+
+# Logs
+logs/
+*.log
+
+# Guardrail baseline (internal, not for publishing)
+.guardrail_baseline.json
+
+# Temporary files
+tmp/
+temp/
