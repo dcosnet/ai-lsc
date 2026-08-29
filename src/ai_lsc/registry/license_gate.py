@@ -8,7 +8,7 @@ tool's ``license`` SPDX ID against three sources:
    tool_id is blocked, raise :class:`LicenseBlocked` immediately.  No
    dialog, no acceptance, no install.
 
-2. **Auto-approval registry** (``config/license_approvals.json``) — a
+2. **Auto-approval registry** (``configs/license_approvals.json``) — a
    user-editable list of OSI-approved SPDX IDs that have been
    pre-approved.  If the tool's license is in this list, install
    proceeds without a dialog.  Only OSI-approved licenses can appear
@@ -28,7 +28,7 @@ the install.
 
 Files managed
 -------------
-* ``config/license_approvals.json`` — ``{"licenses": ["MIT", "Apache-2.0"], "updated_at": "..."}``
+* ``configs/license_approvals.json`` — ``{"licenses": ["MIT", "Apache-2.0"], "updated_at": "..."}``
 * ``config/license_acceptances.json`` — ``{"ollama": {"spdx": "MIT", "accepted_at": "...", "via": "auto-approved"}, ...}``
 """
 

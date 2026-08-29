@@ -15,7 +15,7 @@ Usage
     config.set_ollama_endpoint(ollama_port=11434)
     config.set_litellm_endpoint(litellm_port=4000)
     config.set_tool_schemas(tool_schemas)
-    config.save("/mnt/AI/tools/librechat/librechat.yaml")
+    config.save("/mnt/AI/runtime/librechat/config.yaml")
 """
 
 from __future__ import annotations

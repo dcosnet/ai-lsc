@@ -1,4 +1,4 @@
-"""Registry entries for the Knowledge Management layer (L10).
+"""Registry entries for the Knowledge Management layer (L11).
 
 Contains vector stores, graph databases, search engines, document parsers,
 data pipelines, memory systems, and knowledge management tools.
@@ -10,7 +10,7 @@ This module is consumed by
 TOOLS: dict[str, dict] = {
     'zotero': {
     "name": "Zotero",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Reference Manager",
     "category": "Academic References",
@@ -38,7 +38,7 @@ TOOLS: dict[str, dict] = {
 },
     'calibre': {
     "name": "Calibre",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Library Manager",
     "category": "Ebook Library",
@@ -66,7 +66,7 @@ TOOLS: dict[str, dict] = {
 },
     'paperlessngx': {
     "name": "Paperless-ngx",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Document Archive",
     "category": "Document Management",
@@ -97,7 +97,7 @@ TOOLS: dict[str, dict] = {
 },
     'logseq': {
     "name": "Logseq",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Knowledge Graph",
     "category": "Outliner",
@@ -125,7 +125,7 @@ TOOLS: dict[str, dict] = {
 },
     'joplin': {
     "name": "Joplin",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Note Taking",
     "category": "Notes",
@@ -153,7 +153,7 @@ TOOLS: dict[str, dict] = {
 },
     'chromadb': {
     "name": "ChromaDB",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Memory",
     "category": "Vector Store",
@@ -181,7 +181,7 @@ TOOLS: dict[str, dict] = {
 },
     'lancedb': {
     "name": "LanceDB",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Memory",
     "category": "Vector Store",
@@ -209,7 +209,7 @@ TOOLS: dict[str, dict] = {
 },
     'qdrant': {
     "name": "Qdrant",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Memory",
     "category": "Vector Store",
@@ -242,7 +242,7 @@ TOOLS: dict[str, dict] = {
 },
     'neo4j': {
     "name": "Neo4j",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Memory",
     "category": "Graph Database",
@@ -270,7 +270,7 @@ TOOLS: dict[str, dict] = {
 },
     'elasticsearch': {
     "name": "Elasticsearch",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Memory",
     "category": "Search Engine",
@@ -298,13 +298,13 @@ TOOLS: dict[str, dict] = {
 },
     'meilisearch': {
     "name": "Meilisearch",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Memory",
     "category": "Search Engine",
     "installer": {
         "type": "script",
-        "cmd": "curl -L https://install.meilisearch.com | sh"
+        "cmd": "mkdir -p {tools_root}/bin && cd {tools_root}/bin && curl -L https://install.meilisearch.com | sh"
     },
     "launcher": {
         "type": "tmux",
@@ -326,7 +326,7 @@ TOOLS: dict[str, dict] = {
 },
     'graphrag': {
     "name": "GraphRAG",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Knowledge Synthesis",
     "category": "Graph RAG",
@@ -354,7 +354,7 @@ TOOLS: dict[str, dict] = {
 },
     'turbovec': {
     "name": "TurboVec",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Embedding",
     "category": "Vector Engine",
@@ -384,7 +384,7 @@ TOOLS: dict[str, dict] = {
 },
     'airweave': {
     "name": "Airweave",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Integration",
     "category": "Data Sync",
@@ -412,7 +412,7 @@ TOOLS: dict[str, dict] = {
 },
     'crawl4ai': {
     "name": "Crawl4AI",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Data Harvesting",
     "category": "Web Crawler",
@@ -440,7 +440,7 @@ TOOLS: dict[str, dict] = {
 },
     'docling': {
     "name": "Docling",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Memory",
     "category": "File Parsing",
@@ -468,7 +468,7 @@ TOOLS: dict[str, dict] = {
 },
     'markitdown': {
     "name": "MarkItDown",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "File Parsing",
     "category": "Document Converter",
@@ -496,7 +496,7 @@ TOOLS: dict[str, dict] = {
 },
     'opendataloader': {
     "name": "OpenDataLoader",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Ingestion",
     "category": "Data Pipeline",
@@ -524,7 +524,7 @@ TOOLS: dict[str, dict] = {
 },
     'whisper': {
     "name": "Whisper",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Memory",
     "category": "Audio Parsing",
@@ -552,7 +552,7 @@ TOOLS: dict[str, dict] = {
 },
     'mnemosyne': {
     "name": "Mnemosyne",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Memory",
     "category": "Spaced Repetition",
@@ -580,7 +580,7 @@ TOOLS: dict[str, dict] = {
 },
     'mnemo_cortex': {
     "name": "Mnemo Cortex",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Memory",
     "category": "Cortex Memory",
@@ -610,7 +610,7 @@ TOOLS: dict[str, dict] = {
 },
     'everos_memory': {
     "name": "EverOS Memory",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Memory",
     "category": "Persistent Memory",
@@ -638,7 +638,7 @@ TOOLS: dict[str, dict] = {
 },
     'mirofish': {
     "name": "Mirofish",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Transform",
     "category": "Data Pipeline",
@@ -666,7 +666,7 @@ TOOLS: dict[str, dict] = {
 },
     'opendataloader_pdf': {
     "name": "OpenDataLoader PDF",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Extraction",
     "category": "PDF Pipeline",
@@ -694,7 +694,7 @@ TOOLS: dict[str, dict] = {
 },
     'understand_anything': {
     "name": "Understand Anything",
-    "level": 10,
+    "level": 11,
     "layer": "Knowledge Management",
     "role": "Comprehension",
     "category": "Document Understanding",
@@ -718,6 +718,36 @@ TOOLS: dict[str, dict] = {
         "has_web": False,
         "is_ollama": False,
         "is_passive": False,
+        "is_mcp": False,
+        "is_skills_collection": False
+    }
+},
+    'mem0': {
+    "name": "Mem0",
+    "level": 11,
+    "layer": "Knowledge Management",
+    "role": "Memory",
+    "category": "Memory System",
+    "installer": {
+        "type": "uv",
+        "pkg": "mem0ai"
+    },
+    "launcher": {
+        "type": "desktop",
+        "cmd": "python3 -c \"import mem0; print('ok')\"",
+        "default_port": None
+    },
+    "deps": [],
+    "description": "Memory layer for AI applications and agents — extracts, "
+                  "stores, and retrieves long-term user/agent memories across "
+                  "sessions, backed by pluggable vector stores.",
+    "license": "Apache-2.0",
+    "flags": {
+        "has_cli": True,
+        "has_gui": False,
+        "has_web": False,
+        "is_ollama": False,
+        "is_passive": True,
         "is_mcp": False,
         "is_skills_collection": False
     }

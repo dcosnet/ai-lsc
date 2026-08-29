@@ -5,7 +5,9 @@
 <h1 align="center">AI - Local Stack Control</h1>
 
 <p align="center">
-  <strong>v3.1 — Codename: Ankh of Jah</strong><br>
+  <strong>v3.1.1 — Codename: Ankh of Jah (local-coder-mesh build)</strong><br>
+
+<p align="center"><em>This build includes the local-coder-mesh integration — see <a href="CHANGES.md">CHANGES.md</a> for the full list of changes vs upstream v3.1.</em></p>
   <a href="http://dcos.net">http://dcos.net</a>
 </p>
 
@@ -13,7 +15,7 @@
 A PySide6 desktop application for orchestrating local AI/ML tool stacks across a 10-layer architecture.
 </p>
 
-AI Local Stack Control (AI-LSC) provides a unified interface to discover, configure, launch, and manage 140 tools spanning the entire AI software stack — from GPU runtimes and inference engines to agent frameworks, security tooling, and knowledge management.
+AI Local Stack Control (AI-LSC) provides a unified interface to discover, configure, launch, and manage 181 tools spanning the entire AI software stack — from GPU runtimes and inference engines to agent frameworks, security tooling, and knowledge management.
 
 ![Overview](docs/screenshots/overview.png)
 
@@ -25,16 +27,16 @@ Every tool in the registry is classified within a 10-layer taxonomy, giving you 
 
 | Layer | Tools | Examples |
 |-------|-------|---------|
-| L1 — Host Platform | 9 | PostgreSQL, MariaDB, Redis, SQLite3, DuckDB, Podman, Docker, Tmux, Git |
-| L2 — Development Environment | 7 | Python Environment, CuPy, ripgrep, fd, tree-sitter, SST, Unsloth |
-| L3 — GPU Runtimes | 3 | CUDA Toolkit, NVIDIA Apex, Heretic |
-| L4 — Engines | 7 | Ollama, llama.cpp, KoboldCPP, Llamafile, TurboLLM, AirLLM, Locally-Uncensored |
-| L5 — Orchestrators | 26 | vLLM, Ray, LiteLLM Proxy, 9Router Proxy, LangChain, LangFlow, Dify, CrewAI, AutoGen, Wayland AI, +17 more |
+| L1 — Host Platform | 16 | PostgreSQL, MariaDB, Redis, SQLite3, DuckDB, Podman, Docker, Tmux, Git |
+| L2 — Development Environment | 33 | Python Environment, Deno, uv, Node.js, CuPy, ripgrep, fd, tree-sitter, SST, Unsloth |
+| L3 — GPU Runtimes | 3 | CUDA Toolkit, NVIDIA Apex, tinygrad |
+| L4 — Engines | 8 | Ollama, llama.cpp, KoboldCPP, Llamafile, TurboLLM, AirLLM, Locally-Uncensored |
+| L5 — Orchestrators | 53 | vLLM, SGLang, LiteLLM Proxy, 9Router Proxy, LangChain, LangFlow, Dify, CrewAI, AutoGen, Letta, OpenCode, Gemini CLI, Qwen Code, goose, Codex, +38 more |
 | L6 — Security | 6 | Keycloak, HashiCorp Vault, Trivy, Fail2Ban, ClamAV, Open Policy Agent |
 | L7 — Observability | 8 | Btop, Glances, Prometheus, Grafana, Grafana Alloy, Opik, Pulse AI, Latitude |
-| L8 — User Interfaces | 16 | Open WebUI, AnythingLLM, LibreChat, Flowise, InvokeAI, Forge (A1111), ComfyUI, Dashy, Obsidian, +7 more |
-| L9 — DevOps | 33 | Terraform, Ansible, Puppet, Pulumi, OpenTofu, AWS CDK, Crossplane, n8n, Aider, Claude Code, OpenHands, +23 more |
-| L10 — Knowledge Management | 25 | Zotero, Calibre, Paperless-ngx, Logseq, Joplin, ChromaDB, LanceDB, Qdrant, LlamaIndex, +16 more |
+| L8 — User Interfaces | 17 | Open WebUI, AnythingLLM, LibreChat, Flowise, Jan, InvokeAI, Forge (A1111), ComfyUI, Dashy, Obsidian, +7 more |
+| L9 — DevOps | 11 | Terraform, Ansible, Puppet, Pulumi, OpenTofu, AWS CDK, Crossplane, Terragrunt |
+| L10 — Knowledge Management | 26 | Zotero, Calibre, Paperless-ngx, Logseq, Joplin, Mem0, ChromaDB, LanceDB, Qdrant, LlamaIndex, +16 more |
 
 ![Infrastructure Layers](docs/screenshots/infrastructure-layers.png)
 

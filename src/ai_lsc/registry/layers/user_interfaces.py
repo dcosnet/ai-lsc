@@ -1,4 +1,4 @@
-"""Registry entries for the User Interfaces layer (L8).
+"""Registry entries for the User Interfaces layer (L9).
 
 Contains frontends, dashboards, chat UIs, image generation interfaces,
 sensory interfaces (vision, speech, voice), and knowledge graph tools.
@@ -10,7 +10,7 @@ This module is consumed by
 TOOLS: dict[str, dict] = {
     'openwebui': {
     "name": "Open WebUI",
-    "level": 8,
+    "level": 9,
     "layer": "User Interfaces",
     "role": "Face",
     "category": "Chat Frontend",
@@ -40,7 +40,7 @@ TOOLS: dict[str, dict] = {
 },
     'anythingllm': {
     "name": "AnythingLLM",
-    "level": 8,
+    "level": 9,
     "layer": "User Interfaces",
     "role": "Face",
     "category": "Chat",
@@ -68,7 +68,7 @@ TOOLS: dict[str, dict] = {
 },
     'librechat': {
     "name": "LibreChat",
-    "level": 8,
+    "level": 9,
     "layer": "User Interfaces",
     "role": "Face",
     "category": "Chat Agent Platform",
@@ -105,7 +105,7 @@ TOOLS: dict[str, dict] = {
 },
     'flowise': {
     "name": "Flowise",
-    "level": 8,
+    "level": 9,
     "layer": "User Interfaces",
     "role": "Face",
     "category": "Workflow",
@@ -133,7 +133,7 @@ TOOLS: dict[str, dict] = {
 },
     'invokeai': {
     "name": "InvokeAI",
-    "level": 8,
+    "level": 9,
     "layer": "User Interfaces",
     "role": "Face",
     "category": "Image Generation",
@@ -163,7 +163,7 @@ TOOLS: dict[str, dict] = {
 },
     'forge': {
     "name": "Forge (A1111)",
-    "level": 8,
+    "level": 9,
     "layer": "User Interfaces",
     "role": "Face",
     "category": "Image Generation",
@@ -193,7 +193,7 @@ TOOLS: dict[str, dict] = {
 },
     'dashy': {
     "name": "Dashy",
-    "level": 8,
+    "level": 9,
     "layer": "User Interfaces",
     "role": "Face",
     "category": "Homepage",
@@ -221,7 +221,7 @@ TOOLS: dict[str, dict] = {
 },
     'obsidian': {
     "name": "Obsidian",
-    "level": 8,
+    "level": 9,
     "layer": "User Interfaces",
     "role": "Face",
     "category": "Knowledge Graph Notes",
@@ -249,7 +249,7 @@ TOOLS: dict[str, dict] = {
 },
     'hermes': {
     "name": "Hermes",
-    "level": 8,
+    "level": 9,
     "layer": "User Interfaces",
     "role": "Face",
     "category": "Ecosystem Dashboard",
@@ -279,7 +279,7 @@ TOOLS: dict[str, dict] = {
 },
     'hermes_desktop': {
     "name": "Hermes Desktop",
-    "level": 8,
+    "level": 9,
     "layer": "User Interfaces",
     "role": "Face",
     "category": "Desktop Agent",
@@ -309,7 +309,7 @@ TOOLS: dict[str, dict] = {
 },
     'hermes_dashboard_page': {
     "name": "Hermes Dashboard",
-    "level": 8,
+    "level": 9,
     "layer": "User Interfaces",
     "role": "Face",
     "category": "Dashboard",
@@ -339,7 +339,7 @@ TOOLS: dict[str, dict] = {
 },
     'local_llm_launcher': {
     "name": "Local LLM Launcher",
-    "level": 8,
+    "level": 9,
     "layer": "User Interfaces",
     "role": "Face",
     "category": "LLM GUI",
@@ -369,7 +369,7 @@ TOOLS: dict[str, dict] = {
 },
     'openjarvis': {
     "name": "OpenJarvis",
-    "level": 8,
+    "level": 9,
     "layer": "User Interfaces",
     "role": "Central Intelligence",
     "category": "AI Assistant Platform",
@@ -408,7 +408,7 @@ TOOLS: dict[str, dict] = {
 },
     'deep_eye': {
     "name": "Deep Eye",
-    "level": 8,
+    "level": 9,
     "layer": "User Interfaces",
     "role": "Vision",
     "category": "Computer Vision",
@@ -438,7 +438,7 @@ TOOLS: dict[str, dict] = {
 },
     'parakeet': {
     "name": "Parakeet.cpp",
-    "level": 8,
+    "level": 9,
     "layer": "User Interfaces",
     "role": "Senses",
     "category": "Speech Recognition",
@@ -468,7 +468,7 @@ TOOLS: dict[str, dict] = {
 },
     'luxtts': {
     "name": "LuxTTS",
-    "level": 8,
+    "level": 9,
     "layer": "User Interfaces",
     "role": "Voice",
     "category": "Text-to-Speech",
@@ -494,4 +494,71 @@ TOOLS: dict[str, dict] = {
         "is_skills_collection": False
     }
 },
+    'jan': {
+    "name": "Jan",
+    "level": 9,
+    "layer": "User Interfaces",
+    "role": "Face",
+    "category": "LLM GUI",
+    "installer": {
+        "type": "npm",
+        "pkg": "@janhq/jan"
+    },
+    "launcher": {
+        "type": "desktop",
+        "cmd": "jan",
+        "default_port": None
+    },
+    "deps": [],
+    "description": "Offline-capable ChatGPT-alternative desktop app with a "
+                  "built-in llama.cpp engine and an OpenAI-compatible local "
+                  "API server at 127.0.0.1:1337.",
+    "license": "AGPL-3.0",
+    "flags": {
+        "has_cli": True,
+        "has_gui": True,
+        "has_web": False,
+        "is_ollama": False,
+        "is_passive": False,
+        "is_mcp": False,
+        "is_skills_collection": False
+    }
+},
+'hermes_webui': {
+    "name": "Hermes WebUI",
+    "level": 9,
+    "layer": "User Interfaces",
+    "role": "Face",
+    "category": "Chat Frontend",
+    "installer": {
+        "type": "uv",
+        "pkg": "open-webui"
+    },
+    "launcher": {
+        "type": "tmux",
+        "cmd": "open-webui serve --port {port} --data-dir {workspaces_root}/hermes-webui --env OLLAMA_BASE_URL=http://localhost:17051",
+        "default_port": 8081
+    },
+    "deps": [
+        "hermes_agent",
+        "ollama"
+    ],
+    "description": "Hermes-themed Open-WebUI instance running on a "
+                  "separate port (8081) with its own data volume so "
+                  "users, prompts, and RAG corpus don't collide with "
+                  "the general openwebui instance. Backend points at "
+                  "hermes_agent (17051) instead of Ollama direct, so "
+                  "every conversation goes through the Hermes runtime.",
+    "license": "MIT",
+    "flags": {
+        "has_cli": False,
+        "has_gui": False,
+        "has_web": True,
+        "is_ollama": False,
+        "is_passive": False,
+        "is_mcp": False,
+        "is_skills_collection": False
+    }
+},
+
 }

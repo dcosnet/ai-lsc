@@ -133,6 +133,10 @@ class RegistryManager:
             ).append((t_id, meta))
         return dict(sorted(layers.items()))
 
+    # Host-level prerequisites referenced in deps but not managed as
+    # registry tools (mirrors _system_deps in stack/connections.py).
+    SYSTEM_DEPS: frozenset[str] = frozenset({"kubectl", "java"})
+
     def check_dependencies(
         self, selected: list[str],
     ) -> list[str]:
@@ -142,4 +146,7 @@ class RegistryManager:
             for t in selected
             if not t.startswith("skill:")
         ))
-        return list({d for d in all_deps if d not in selected})
+        return list({
+            d for d in all_deps
+            if d not in selected and d not in self.SYSTEM_DEPS
+        })

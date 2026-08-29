@@ -3,7 +3,7 @@
 Each entry follows the standard registry schema:
 
 - ``name``: human-readable tool name
-- ``level``: 10-layer taxonomy level (1-10)
+- ``level``: 11-layer taxonomy level (1-11)
 - ``layer``: this layer name
 - ``role``: role within the layer
 - ``category``: functional category
@@ -880,6 +880,66 @@ TOOLS: dict[str, dict] = {
         "deps": [],
         "description": "Ultimate Packer for eXecutables.",
         "license": "GPL-2.0",
+        "flags": {
+            "has_cli": True,
+            "has_gui": False,
+            "has_web": False,
+            "is_ollama": False,
+            "is_passive": False,
+            "is_mcp": False,
+            "is_skills_collection": False
+        }
+    },
+    'deno': {
+        "name": "Deno",
+        "level": 2,
+        "layer": "Development Environment",
+        "role": "Language",
+        "category": "Runtime",
+        "installer": {
+            "type": "pacman",
+            "pkg": "deno"
+        },
+        "launcher": {
+            "type": "desktop",
+            "cmd": "deno --version",
+            "default_port": None
+        },
+        "deps": [],
+        "description": "JavaScript/TypeScript/WASM runtime with secure-by-default "
+                      "permissions and native TypeScript. Many MCP servers are "
+                      "distributed as `deno run` one-liners.",
+        "license": "MIT",
+        "flags": {
+            "has_cli": True,
+            "has_gui": False,
+            "has_web": False,
+            "is_ollama": False,
+            "is_passive": False,
+            "is_mcp": False,
+            "is_skills_collection": False
+        }
+    },
+    'uv': {
+        "name": "uv",
+        "level": 2,
+        "layer": "Development Environment",
+        "role": "Package Manager",
+        "category": "Build",
+        "installer": {
+            "type": "pacman",
+            "pkg": "uv"
+        },
+        "launcher": {
+            "type": "desktop",
+            "cmd": "uv --version",
+            "default_port": None
+        },
+        "deps": [],
+        "description": "Astral's ultra-fast Python package and project manager. "
+                      "Replaces pip/pipx/virtualenv workflows and is the "
+                      "installer backend for AI-LSC's Python tool installs.",
+        "license": "MIT/Apache-2.0",
         "flags": {
             "has_cli": True,
             "has_gui": False,

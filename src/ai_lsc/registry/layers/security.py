@@ -1,4 +1,4 @@
-"""Registry entries for the Security layer (L6).
+"""Registry entries for the Security layer (L7).
 
 Contains identity management, secrets management, container scanning,
 intrusion prevention, antivirus, and policy enforcement tools for
@@ -11,7 +11,7 @@ This module is consumed by
 TOOLS: dict[str, dict] = {
     'keycloak': {
     "name": "Keycloak",
-    "level": 6,
+    "level": 7,
     "layer": "Security",
     "role": "Identity",
     "category": "Auth",
@@ -39,7 +39,7 @@ TOOLS: dict[str, dict] = {
 },
     'vault': {
     "name": "HashiCorp Vault",
-    "level": 6,
+    "level": 7,
     "layer": "Security",
     "role": "Secrets",
     "category": "Secrets Management",
@@ -67,7 +67,7 @@ TOOLS: dict[str, dict] = {
 },
     'trivy': {
     "name": "Trivy",
-    "level": 6,
+    "level": 7,
     "layer": "Security",
     "role": "Scanner",
     "category": "Container Security",
@@ -95,7 +95,7 @@ TOOLS: dict[str, dict] = {
 },
     'fail2ban': {
     "name": "Fail2Ban",
-    "level": 6,
+    "level": 7,
     "layer": "Security",
     "role": "IDS",
     "category": "Intrusion Prevention",
@@ -123,7 +123,7 @@ TOOLS: dict[str, dict] = {
 },
     'clamav': {
     "name": "ClamAV",
-    "level": 6,
+    "level": 7,
     "layer": "Security",
     "role": "Scanner",
     "category": "Antivirus",
@@ -151,7 +151,7 @@ TOOLS: dict[str, dict] = {
 },
     'opa': {
     "name": "Open Policy Agent",
-    "level": 6,
+    "level": 7,
     "layer": "Security",
     "role": "Policy",
     "category": "Policy Engine",

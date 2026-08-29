@@ -1,5 +1,353 @@
 # AI-LSC Changelog
 
+## v3.1.1b — taxonomy re-org: Routing restored (11 layers), canonical 24-dir /mnt/AI layout
+
+Restores the Routing layer that was lost when the 13-layer model was
+compressed to 10 (both "L6 AI Endpoints" and "L11 Intelligent Routing"
+had been folded into Orchestrators), fixes the mis-categorized tools,
+and aligns the backend to the revised canonical `/mnt/AI/` directory
+tree. No tool count change (185 tools); validator still reports 0 errors.
+
+### New layer ladder (10 → 11)
+
+```
+L1  Host Platform          L7  Security
+L2  Development Env        L8  Observability
+L3  GPU Runtimes           L9  User Interfaces
+L4  Engines                L10 DevOps
+L5  Routing   (restored)   L11 Knowledge Management
+L6  Orchestrators
+```
+
+`NAV_LAYER_ORDER` inserts Routing between Engines and Orchestrators —
+engines serve weights, routing proxies/load-balances/meshes them into
+one OpenAI-compat endpoint, orchestrators build agent workflows on top.
+
+### Tool moves (18 tools, all layers/levels updated)
+
+| tool_id | Old | New |
+|---------|-----|-----|
+| `litellm` | L5 Orchestrators (Proxy / API Gateway) | **L5 Routing** |
+| `9router_proxy` | L5 Orchestrators (LLM Router) | **L5 Routing** |
+| `meshllm` | L5 Orchestrators (LLM Mesh) | **L5 Routing** |
+| `dify` | L5 Orchestrators (Pipeline) | **L5 Routing** |
+| `picode` | L5 Orchestrators (AI Coding Agent) | **L5 Routing** (category → `Mesh Client`) |
+| `vllm` | L5 Orchestrators (Scaling) | **L4 Engines** (role → Engine; ADR-001 always listed vLLM under Inference Engines) |
+| `sglang` | L5 Orchestrators (Scaling) | **L4 Engines** (role → Engine) |
+| `eagle_eye` | L5 Orchestrators (category literally "Observability") | **L8 Observability** |
+| `dma` | L5 Orchestrators (Build Monitoring) | **L8 Observability** |
+| `aider`, `claude_code`, `codex`, `openhands`, `opencode`, `gemini_cli`, `qwen_code`, `goose`, `zcoder` | L5 Orchestrators (AI Coding Agent) | **L10 DevOps** — matches the DB editor's `AI Coding Agent → DevOps` mapping, which previously conflicted with the registry |
+
+Remaining tools in the affected layers were renumbered (+1): 38 stay in
+Orchestrators (L6), Security L7, Observability L8, User Interfaces L9,
+DevOps L10, Knowledge Management L11. Per-layer level uniformity
+verified. `picode`'s category changed `AI Coding Agent` → `Mesh Client`
+so the category cascade cannot silently flip it back to DevOps.
+
+### Tool DB editor (`CATEGORY_MAP`)
+
+- All entries renumbered to the new ladder; map is now fully consistent
+  with the live registry (0 layer/level mismatches).
+- 13 new categories so every registry category auto-fills correctly:
+  `LLM Mesh`, `Mesh Client` (Routing); `Observability` (Observability);
+  `Build`, `Debugging`, `Shell`, `Claude Code Skill`, `Container Ops`,
+  `Infrastructure`, `Memory System`, `Model Surgery`, `Networking`,
+  `Virtualization` (previously missing entirely).
+- Fixed conflicts: `AI Coding Agent` → DevOps/L10 (role `Coding Agent`,
+  was `Autonomous Coder` at L9), `Build Monitoring` → Observability/L8,
+  `LLM Serving` → Engines/L4, `LLM Router` / `Proxy` / `Pipeline` →
+  Routing/L5.
+
+### STACK_WIRINGS (`stack/connections.py`)
+
+- 29 wiring `layer=` labels synced to the registry: the 13 moved tools
+  with wirings, plus `deep_eye`/`luxtts` (UI tools mislabeled
+  Orchestrators) and 14 pre-existing drifts (`heretic`, `unsloth`,
+  `parakeet`, `fabric`, `n8n`, `nightshift`, `hivemind`, `hermes_agent`,
+  `agno`, `hermes_dashboard_page`, `mnemo_cortex`, `everos_memory`,
+  `langflow`, `opensandbox`). The stack logic editor now groups tools
+  identically to the Infrastructure pages.
+- Stale section comments annotated: `L6: AI Endpoints` → the restored
+  Routing layer; `L10: Intelligent Routing` → folded into Orchestrators.
+
+### Canonical `/mnt/AI/` layout (26 → 24 dirs)
+
+`REQUIRED_DIRS` now matches the target tree exactly:
+
+- **Added `configs/`** — app configs templated for native runtime plus
+  app state. `main_window.config_root` moves from legacy `config/` to
+  `configs/`, taking `pipeline_state.json`, `pipeline.json`,
+  `license_approvals.json` with it; `controller_config.json` moves off
+  the `/mnt/AI/` root into `configs/`. A one-time
+  `_migrate_legacy_state_files()` pass moves old files on startup
+  (newer copies win; emptied legacy dirs are removed).
+- **Dropped from the skeleton**: `bootstraps/ai-lsc`, `staging`,
+  `registry/manifests`. `registry/` remains as app-internal storage for
+  `ecosystem.json` and manifests — auto-created on demand by
+  `RegistryManager`, no longer part of the canonical tree.
+- `paths.py`: `configs_root` added; `staging_root` / `bootstraps_root`
+  removed; the deprecated `config_root → runtime` alias now points at
+  `configs/`. Per-tool config subdirs (`configs/<tool>/`) are still
+  created on demand by `InstallerManager`.
+- `license_gate.py` / `licenses.py` doc references updated to
+  `configs/license_approvals.json`.
+
+Existing installs pick up all taxonomy changes automatically:
+`RegistryManager._sync_with_upstream()` re-syncs structural fields
+(layer, level, role, category) from the layer files on every start.
+
+## v3.1.1a — registry validator fixes (5 errors → 0)
+
+Fixes all 5 `validate_registry()` errors plus latent bugs surfaced
+during the fix pass. No tool count change (185 tools).
+
+### Installer fixes (validator errors)
+
+All five failed the "script installer cmd should reference
+{tools_root}" check — they installed into system dirs or the cwd:
+
+| tool_id | Before | After |
+|---------|--------|-------|
+| `firecracker` | extracted into `/usr/local/bin/` (and silently broken: versioned tarball dirs never landed on PATH) | extracts into `{tools_root}/firecracker/`, symlinks `firecracker` + `jailer` into `{tools_root}/bin/` |
+| `cloudflared` | downloaded to `/usr/local/bin/cloudflared` | downloads to `{tools_root}/bin/cloudflared` |
+| `llamafile` | downloaded to cwd (mismatched launcher, which already expected `{tools_root}/bin/llamafile`) | downloads to `{tools_root}/bin/llamafile` |
+| `meilisearch` | `curl \| sh` dropped binary in cwd | runs installer inside `{tools_root}/bin/` (official installer places the binary in the cwd) |
+| `grafana_alloy` | `install.sh \| sh` — **URL dead (404): upstream dropped the script** | direct release asset `alloy-linux-amd64.zip`, extracted via `python3 -m zipfile` (no unzip dependency) |
+
+### Launcher fixes (latent bugs)
+
+- `firecracker`, `cloudflared`, `grafana_alloy` launchers now use
+  absolute `{tools_root}/bin/<name>` paths. Rationale: `tools_root/bin`
+  is on PATH at install time (`installer._env()`) but **not** at launch
+  time (`enriched_env()` builds PATH from `base_bin_dir` = uv/npm bins
+  only), so bare-name launcher cmds would pass preflight then fail
+  with "command not found". Absolute paths are immune to the gap.
+- firecracker version discovery uses the Location header
+  (`curl -sIL … | grep -i '^location:'`) instead of
+  `-w '%{url_effective}'` — launcher/installer cmds are rendered with
+  `str.format()`, and the `{url_effective}` braces would raise
+  `KeyError` at render time.
+
+### Dependency fixes (phantom missing-dep warnings)
+
+- `dify` deps: `node` → `nodejs` (the actual registry tool_id).
+- `RegistryManager.check_dependencies()` now allows system-level deps
+  (`kubectl`, `java`) via a `SYSTEM_DEPS` frozenset, mirroring the
+  existing `_system_deps` pattern in `stack/connections.py`. Previously
+  `crossplane` (kubectl) and `keycloak` (java) produced permanent
+  "missing dependency" warnings that could never be satisfied.
+
+### Not fixed (observations, no behavior change)
+
+- 9 duplicate `default_port` defaults across tools (e.g. 3000 shared
+  by grafana/opik/openhands/flowise). These are overridable per
+  service row; leaving as-is unless the stack compiler should
+  auto-assign.
+- `TODO.md`'s `open_webui`/`openwebui` split no longer reproduces:
+  only `openwebui` exists in both the registry and `STACK_WIRINGS`.
+
+## v3.1.1 — local-coder-mesh integration (this build)
+
+Adds 4 new tools, corrects 1 existing tool, adds 4 new `STACK_WIRINGS`
+entries (and rewires 1), adds 1 new stack template, and aligns all
+hardcoded `/mnt/AI/` paths to the canonical 26-directory layout. No
+containers in the dev path — every tool installs natively. ai-lsc's
+Podman/Docker/LXC/Firecracker export is reserved for total-stack
+deployment exports only, as before.
+
+### New tools (181 → 185)
+
+| tool_id | Layer | What | Install |
+|---------|-------|------|---------|
+| `picode` | L5 Orchestrators | PiCode (jasonjmcghee/picode) — local code-tinker agent | git clone |
+| `meshllm` | L5 Orchestrators | MeshLLM (Mesh-LLM/mesh-llm) — native binary, pools GPUs/memory across machines, exposes OpenAI-compat API at :9337, web console at :3131. NOT a LiteLLM derivative. | script (official curl installer) |
+| `zcoder` | L5 Orchestrators | Zhipu AI Z-Coder CLI coding agent | npm `zcoder-cli` |
+| `hermes_webui` | L8 User Interfaces | Hermes-themed Open-WebUI instance on :8081 with its own data volume; backend points at `hermes_agent` (:17051) instead of Ollama direct | uv `open-webui` |
+
+### Corrected tool
+
+`graphify` was already in the registry but had wrong metadata. Fixed in place:
+
+| Field | Old | New |
+|-------|-----|-----|
+| `role` | `Graph Builder` | `Knowledge Graph Builder` |
+| `category` | `AI Agent` | `Claude Code Skill` |
+| `installer` | `git: nicely-done/graphify` | `uv: graphifyy` (PyPI; CLI is `graphify`) |
+| `license` | `Proprietary` | `MIT` (verified from pyproject.toml) |
+| `flags.has_web` | `False` | `True` (graph.html output) |
+| `flags.is_mcp` | `False` | `True` (`graphify --mcp` stdio server) |
+| `description` | 1 line generic | 10 lines accurate (CLI + Claude Code skill + MCP server + LLM backend options) |
+
+Graphify's wiring also changed — see below.
+
+### New `STACK_WIRINGS` entries (133 → 137)
+
+| tool_id | Exposes | Consumes |
+|---------|---------|----------|
+| `picode` | (none — CLI agent) | `meshllm` (primary), `litellm` (fallback), `ollama` (direct fallback) |
+| `meshllm` | `openai_api` (:9337) + `mesh_web_console` (:3131) | `ollama` (optional, for `mesh-llm client --auto` mode) |
+| `zcoder` | (none — CLI agent) | `meshllm` (primary), `litellm` (fallback), `ollama` (direct fallback) |
+| `hermes_webui` | `hermes_webui_http` (:8081) | `hermes_agent` (required, primary backend), `ollama` (optional, for RAG embeddings) |
+
+### Rewired entry
+
+`graphify` removed from the L8 passive/CLI list and given a proper
+`_reg(StackWiring(...))` block:
+
+- **Exposes**: `graphify_mcp` (stdio MCP server, no port) — start with
+  `graphify --mcp`. Other MCP-aware agents can query the knowledge graph.
+- **Consumes** (all optional, fallback chain for the extraction LLM):
+  `meshllm` (:9337/v1), `litellm` (:4000/v1), `ollama` (:11434/v1).
+  Graphify defaults to Claude (Anthropic API) but can be configured for
+  fully-local extraction by setting `OPENAI_API_BASE` to any of the
+  above.
+
+### New stack template (13 → 14)
+
+`local-coder-mesh.json` — "Local Coder Mesh — All-Ollama Coding Stack".
+17 tools: ollama, litellm, meshllm, picode, aider, odysseus, opencode,
+zcoder, graphify, hermes, hermes_agent, hermes_webui, hermes_desktop,
+openwebui, ripgrep, fd, tree_sitter.
+
+Topology: coding agents prefer MeshLLM (:9337) for mesh-pooled inference,
+fall back to LiteLLM (:4000) for proxy routing, then Ollama direct
+(:11434). Graphify builds knowledge graphs from the codebase and exposes
+an MCP server that the coding agents query. Hermes WebUI talks to
+hermes_agent (NOT Ollama direct) so every Hermes conversation flows
+through the agent runtime's tool-use layer. OpenWebUI talks to Ollama
+direct. ripgrep + fd + tree_sitter are passive filesystem tools used by
+the coding agents for repo-map / symbol navigation.
+
+Recommended models: `qwen2.5-coder:7b` (fast coding),
+`qwen2.5-coder:32b` (heavy coding), `hermes3:8b` (Hermes stack),
+`nomic-embed-text` (openwebui RAG, corpus indexing, graphify embeddings).
+MeshLLM auto-downloads a suitable model on first `serve --auto` if none
+is specified.
+
+### Path alignment to canonical `/mnt/AI/` layout
+
+Three files updated so ai-lsc's hardcoded paths match the 26-directory
+canonical layout:
+
+- **`src/ai_lsc/constants.py`** — `REQUIRED_DIRS` replaced with the 26
+  canonical entries (`bootstraps/ai-lsc`, `staging`, `backends`,
+  `distfiles`, `runtime`, `models/hot`, `models/cold`, `corpus/hot`,
+  `corpus/cold`, `datasets/wordlists`, `datasets/huggingface`,
+  `datasets/github`, `pipelines`, `registry/manifests`, `agents`,
+  `skills`, `projects/active`, `projects/labs`, `projects/vault`,
+  `blueprints`, `workspaces`, `dashboards`, `tools`, `exports/oci-images`,
+  `scripts`, `logs`). Old layout dirs (`config`, `cache`, `data`,
+  `containers`, `bin`, `tmp`, `backups`, `models/ollama`, `models/chroma`,
+  `datasets/raw`, `workspaces/hermes`, `workspaces/openwebui`,
+  `workspaces/n8n`) are NOT removed — they just become orphans. Clean
+  them up manually if desired.
+- **`src/ai_lsc/utils/paths.py`** — `build_path_tree()` expanded from 10
+  keys to 24 keys. Old keys kept and repointed at canonical subdirs.
+  New keys added: `runtime_root`, `models_hot`, `models_cold`,
+  `corpus_root`, `pipelines_root`, `agents_root`, `projects_root`,
+  `blueprints_root`, `dashboards_root`, `scripts_root`, `backends_root`,
+  `distfiles_root`, `staging_root`, `bootstraps_root`. The `config_root`
+  key is kept as a deprecated alias pointing at `/mnt/AI/runtime/` so
+  existing callers don't break — new code should use
+  `tools_root / <tool_id> / "config"` or `runtime_root / <tool>` explicitly.
+- **`src/ai_lsc/agents/litellm_config.py`** and
+  **`src/ai_lsc/agents/librechat_config.py`** — hardcoded save paths
+  moved from `/mnt/AI/config/litellm_config.yaml` and
+  `/mnt/AI/tools/librechat/librechat.yaml` to
+  `/mnt/AI/runtime/litellm/config.yaml` and
+  `/mnt/AI/runtime/librechat/config.yaml` respectively. Per-tool configs
+  for long-running services belong under `runtime/<tool>/` next to their
+  venv / cloned repo, since the spec has no top-level `/mnt/AI/config/`.
+
+### Backfill script path fixes
+
+Three helper scripts in `scripts/` had stale hardcoded absolute paths to
+`/home/z/my-project/workspace/ai-lsc` (a developer machine path that
+leaked into the v3.1 release). Replaced with
+`Path(__file__).resolve().parent.parent` so they resolve to the project
+root regardless of where the tarball is extracted:
+
+- `scripts/backfill_default_licenses.py`
+- `scripts/backfill_layer_flags.py`
+- `scripts/backfill_tool_licenses.py`
+
+### Verification (run against this build)
+
+```
+Registry: 185 tools (was 181)
+Wirings:  137 entries (was 133)
+Wiring validation errors: 0
+Registry validation errors: 5 (all pre-existing in upstream v3.1 —
+  firecracker, cloudflared, llamafile, meilisearch, grafana_alloy —
+  none introduced by this build)
+meshllm installer: uses {tools_root}/meshllm/bin (passes validator)
+Templates: 14 (was 13) — local-coder-mesh added
+Template tool resolution: 17/17 tools resolve in registry
+build_path_tree() keys: 24 (was 10)
+REQUIRED_DIRS entries: 26 (was 22)
+graphify installer: uv:graphifyy (was git:nicely-done/graphify)
+graphify license: MIT (was Proprietary)
+graphify is_mcp flag: True (was False)
+meshllm interfaces: ['openai_api' on :9337, 'mesh_web_console' on :3131]
+graphify interfaces: ['graphify_mcp' stdio]
+```
+
+### Native-only install policy
+
+Every tool in the new `local-coder-mesh` template installs natively into
+`/mnt/AI/runtime/<tool_id>/` (venv via uv/pipx) or via pacman/AUR/curl-script.
+ai-lsc's container export feature (Podman / Docker / LXC / Firecracker)
+is intentionally NOT used at install time — it's reserved for total-stack
+deployment exports via the Stack Editor, exactly as in v3.1.
+
+### Rollback
+
+To revert this entire build to upstream v3.1, restore from git or
+re-extract the original tarball. There is no separate "patch pack" to
+unapply — this is the integrated project.
+
+---
+
+## v3.1 — registry expansion: 2026-era coding agents, serving, and runtimes
+
+Adds 11 tools to the layer registry (170 → 181) and 10 `STACK_WIRINGS` entries (123 → 133), and backfills 6 missing OSI licenses into the catalog. All facts (npm/PyPI package names, default ports, licenses) were verified against current upstream docs.
+
+### New tools
+
+| tool_id | Layer | What | Install |
+|---------|-------|------|---------|
+| `deno` | L2 Development | JavaScript/TypeScript/WASM runtime; runs many MCP servers via `deno run` | pacman `deno` |
+| `uv` | L2 Development | Astral's Python package/project manager (AI-LSC's own install backend) | pacman `uv` |
+| `tinygrad` | L3 GPU Runtimes | Minimalist autograd tensor library (CUDA/AMD/CPU backends) | uv `tinygrad` |
+| `opencode` | L5 Orchestrators | SST's open-source terminal AI coding agent (TUI, LSP, 75+ providers) | npm `opencode-ai` |
+| `gemini_cli` | L5 Orchestrators | Google's open-source terminal AI agent | npm `@google/gemini-cli` |
+| `qwen_code` | L5 Orchestrators | Qwen's agentic terminal coding tool (Gemini CLI fork) | npm `@qwen-code/qwen-code` |
+| `goose` | L5 Orchestrators | Block's extensible AI agent with MCP extensions | manual (opens releases page) |
+| `letta` | L5 Orchestrators | Stateful agent framework (MemGPT) with persistent memory; `letta server` on :8283 | uv `letta` |
+| `sglang` | L5 Orchestrators | Fast LLM serving with RadixAttention; OpenAI-compat API on :30000 | uv `sglang` |
+| `jan` | L8 User Interfaces | Offline ChatGPT-alternative desktop app; OpenAI-compat local API on :1337 | npm `@janhq/jan` |
+| `mem0` | L10 Knowledge Mgmt | Memory layer for AI apps/agents; pluggable vector backends | uv `mem0ai` |
+
+`goose` uses installer type `custom` deliberately: its official install path is a `curl | sh` one-liner, which conflicts with the v3.1 no-remote-code-execution policy. The `custom` installer opens the GitHub releases page for a manual, download-first install instead. `deno` and `uv` are intentionally left unwired (language runtimes, consistent with `nodejs`/`python`).
+
+### Wiring topology (Pipeline Ticker)
+
+- **Terminal coding agents wired**: `opencode`, `gemini_cli`, `qwen_code`, `goose`, and the pre-existing `codex` each gained connections to Ollama (direct) and LiteLLM (proxied) — staging either backend now prevents orphan-flagging. `codex` had been an orphan since v3.1 because it had no `STACK_WIRINGS` entry.
+- **`sglang`** mirrors the vLLM wiring: exposes `openai_api` on :30000, consumes `cuda_driver`.
+- **`letta`** exposes its REST API on :8283 and optionally consumes PostgreSQL (`LETTA_PG_URI`) + Ollama.
+- **`jan`** exposes `openai_api` on :1337 (bundled llama.cpp engine).
+- **`mem0`** optionally consumes Ollama (LLM + embeddings) and Qdrant (vector storage).
+- **`tinygrad`** optionally consumes `cuda_driver` (it also runs on CPU/AMD).
+- `validate_wiring()` reports 0 errors across all 133 wirings.
+
+### License catalog backfill (fixes 8 pre-existing validator errors)
+
+The following SPDX IDs were referenced by layer files but missing from `registry/licenses.py`, producing `license is not in the license catalog` validation errors: `LGPL-2.1` (strace, lxc, libvirt), `GPL-1.0` (perl), `PHP-3.01` (php), `Ruby` (ruby), `MirOS` (mksh), `MIT/Apache-2.0` (rust). All six are OSI-approved and are now catalog entries (auto-approvable). The merged registry validates with **0 errors** — the only remaining messages are the 5 documented `script installer cmd should reference {{tools_root}}` warnings tied to the curl|sh policy decision (llamafile, meilisearch, grafana_alloy + the newer firecracker, cloudflared).
+
+### Docs
+
+README tool counts and the layer table were refreshed to the real merged-registry numbers (they had been stale since the DevOps→Orchestrators reorg moved the coding agents).
+
 ## v3.1 — 2026-07-07
 
 Codename: **Ankh of Jah** (continuation)

@@ -3,7 +3,7 @@
 Each entry follows the standard registry schema:
 
 - ``name``: human-readable tool name
-- ``level``: 10-layer taxonomy level (1-10)
+- ``level``: 11-layer taxonomy level (1-11)
 - ``layer``: this layer name
 - ``role``: role within the layer
 - ``category``: functional category
@@ -110,7 +110,7 @@ TOOLS: dict[str, dict] = {
     "category": "Single-File LLM",
     "installer": {
         "type": "script",
-        "cmd": "curl -LO https://github.com/Mozilla-Ocho/llamafile/releases/latest/download/llamafile && chmod +x llamafile"
+        "cmd": "mkdir -p {tools_root}/bin && curl -L https://github.com/Mozilla-Ocho/llamafile/releases/latest/download/llamafile -o {tools_root}/bin/llamafile && chmod +x {tools_root}/bin/llamafile"
     },
     "launcher": {
         "type": "desktop",
@@ -251,4 +251,68 @@ TOOLS: dict[str, dict] = {
         "is_skills_collection": False
     }
 },
+    'vllm': {
+    "name": "vLLM",
+    "level": 4,
+    "layer": "Engines",
+    "role": "Engine",
+    "category": "LLM Serving",
+    "installer": {
+        "type": "uv",
+        "pkg": "vllm"
+    },
+    "launcher": {
+        "type": "tmux",
+        "cmd": "python -m vllm.entrypoints.openai.api_server --port {port}",
+        "default_port": 8000
+    },
+    "deps": [
+        "cuda"
+    ],
+    "description": "High-throughput and memory-efficient LLM serving.",
+    "license": 'Apache-2.0',
+    "flags": {
+        "has_cli": True,
+        "has_gui": False,
+        "has_web": True,
+        "is_ollama": False,
+        "is_passive": False,
+        "is_mcp": False,
+        "is_skills_collection": False
+    }
+},
+
+    'sglang': {
+    "name": "SGLang",
+    "level": 4,
+    "layer": "Engines",
+    "role": "Engine",
+    "category": "LLM Serving",
+    "installer": {
+        "type": "uv",
+        "pkg": "sglang"
+    },
+    "launcher": {
+        "type": "tmux",
+        "cmd": "python -m sglang.launch_server --port {port}",
+        "default_port": 30000
+    },
+    "deps": [
+        "cuda"
+    ],
+    "description": "Fast LLM serving engine with RadixAttention prefix "
+                  "caching, structured generation, and an OpenAI-compatible "
+                  "API.",
+    "license": "Apache-2.0",
+    "flags": {
+        "has_cli": True,
+        "has_gui": False,
+        "has_web": True,
+        "is_ollama": False,
+        "is_passive": False,
+        "is_mcp": False,
+        "is_skills_collection": False
+    }
+},
+
 }

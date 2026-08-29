@@ -19,7 +19,7 @@ BASE_DIR: str = os.environ.get("AI_LSC_BASE_DIR", "/mnt/AI")
 CANONICAL_BASE_DIR: str = BASE_DIR
 
 # ── Filenames ────────────────────────────────────────────────────────────
-APP_VERSION: str = "3.1.0"
+APP_VERSION: str = "3.1.1"
 APP_CODENAME: str = "Ankh of Jah"
 APP_DISPLAY_NAME: str = f"AI - Local Stack Control v{APP_VERSION} - http://dcos.net"
 CONFIG_FILE: str = "controller_config.json"
@@ -31,29 +31,41 @@ MANIFEST_FILE_NAME: str = ".ai-lsc-project.json"
 JCL_FILE_NAME: str = ".ai-lsc-jobs.json"
 
 # ── Required sub-directories under BASE_DIR ────────────────────
+# The canonical /mnt/AI/ folder layout (v3.1.1b, 24 dirs).  Per-tool
+# subdirs (runtime/<tool>/, configs/<tool>/, dashboards/<tool>/) are
+# created on demand by InstallerManager; only top-level layout dirs are
+# listed here so a fresh install has the full skeleton.
+#
+# App-internal storage that is NOT part of the canonical layout:
+#   registry/          — ecosystem.json tool DB (RegistryManager mkdirs it)
+#   registry/manifests — SHA256 hashes, build logs, chunking records
+#   bootstraps/        — legacy minimal bootstrap scripts (no longer created)
+#   staging/           — legacy quarantine zone (no longer created)
 REQUIRED_DIRS: list[str] = [
-    "bin",
-    "tools",
-    "registry",
-    "config",
-    "cache",
-    "runtime",
-    "logs",
-    "skills",
-    "datasets/raw",
-    "models/ollama",
-    "models/chroma",
-    "workspaces/hermes",
-    "workspaces/openwebui",
-    "workspaces/n8n",
-    "tmp",
-    "exports",
-    "data",
-    "containers",
-    "configs",
-    "pipelines",
-    "dashboards",
-    "backups",
+    "backends",                 # S3/MinIO/Ceph connection profiles + topology
+    "distfiles",                # permanent mirror of raw source tarballs + installers
+    "runtime",                  # native compiled binaries (Ollama, llama.cpp, MinIO…)
+    "models/hot",               # active weights; loaded or VRAM-ready (SSD)
+    "models/cold",              # archived weights; offline / long-term retention (HDD)
+    "corpus/hot",               # active text indexed in Vector DBs, used by agents
+    "corpus/cold",              # raw, uningested, or unprocessed text archives
+    "datasets/wordlists",       # fuzzing lists, dictionaries, tokenization test strings
+    "datasets/huggingface",     # downloaded bulk datasets from Hugging Face
+    "datasets/github",          # scraped or exported repository data
+    "pipelines",                # ETL, chunking, and routing scripts (backends <-> DBs)
+    "configs",                  # app configs templated for native runtime + app state
+    "agents",                   # configs and chains for autonomous AI actors
+    "skills",                   # 3rd-party skill files (QA and MoE templates, …)
+    "projects/active",          # primary focus; actively developed codebases
+    "projects/labs",            # experimental, beta, or throwaway POC code
+    "projects/vault",           # archived masters, cloned refs, strict git histories
+    "blueprints",               # Dockerfiles and build contexts for Podman exports
+    "workspaces",               # interactive execution envs (Jupyter, OpenNotebook…)
+    "dashboards",               # web UIs and landing pages (Dashy, Open-WebUI, …)
+    "tools",                    # standalone compiles (built from distfiles)
+    "exports/oci-images",       # finalized Podman .tar snapshots (-> MinIO registry)
+    "scripts",                  # system admin / maintenance automation for the stack
+    "logs",                     # system, runtime, and pipeline service logs
 ]
 
 # ── Default ports for every known tool ───────────────────────────────────
@@ -123,7 +135,7 @@ TREE_SKIP_PATTERNS: set[str] = {".", "__pycache__", "node_modules", "vendor"}
 # ── Navigation layer order for the sidebar rack diagram ───────────────
 NAV_LAYER_ORDER: list[str] = [
     "Host Platform", "Development Environment", "GPU Runtimes",
-    "Engines", "Orchestrators", "Security",
+    "Engines", "Routing", "Orchestrators", "Security",
     "Observability", "User Interfaces", "DevOps",
     "Knowledge Management",
 ]

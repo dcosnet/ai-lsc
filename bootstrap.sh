@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ──────────────────────────────────────────────────────────────
-# AI Local Stack Control v3.1.0 — Ankh of Jah
+# AI Local Stack Control v3.1.1 — Ankh of Jah
 # Bootstrap Script
 #
 # Fully portable: works wherever the tarball lands.
@@ -46,7 +46,7 @@ export AI_LSC_BASE_DIR="$AI_BASE"
 
 echo ""
 echo -e "${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║     AI Local Stack Control v3.1.0 — Ankh of Jah       ║${NC}"
+echo -e "${BOLD}║     AI Local Stack Control v3.1.1 — Ankh of Jah       ║${NC}"
 echo -e "${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "${CYAN}  Project root : ${SCRIPT_DIR}${NC}"

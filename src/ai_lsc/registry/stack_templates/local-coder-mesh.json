@@ -1,0 +1,48 @@
+{
+    "id": "local-coder-mesh",
+    "name": "Local Coder Mesh — All-Ollama Coding Stack",
+    "description": "Every coding agent in this stack speaks OpenAI-compat and points at localhost Ollama, MeshLLM, or LiteLLM. Includes the four tools missing from the existing hermes-ai-coder-stack template: PiCode, MeshLLM (the native GPU-pooling mesh binary from Mesh-LLM/mesh-llm, NOT a LiteLLM re-skin), Hermes WebUI, ZCoder. Also includes Graphify for knowledge-graph-aware coding. Use this template when you want the complete local coding-agent fleet wired to one Ollama instance with no cloud calls.",
+    "version": "1.1",
+    "author": "ai-lsc-template-pack",
+    "tags": ["coding", "agent", "local-first", "ollama", "mesh", "hermes", "native", "knowledge-graph"],
+    "endpoints": {
+        "ollama_base": "http://localhost:11434/v1",
+        "litellm_base": "http://localhost:4000",
+        "meshllm_api": "http://localhost:9337/v1",
+        "meshllm_console": "http://localhost:3131",
+        "openwebui": "http://localhost:3000",
+        "hermes_webui": "http://localhost:8081",
+        "hermes_agent": "http://localhost:17051",
+        "hermes_dashboard": "http://localhost:17050"
+    },
+    "tools": [
+        "ollama",
+        "litellm",
+        "meshllm",
+        "picode",
+        "aider",
+        "odysseus",
+        "opencode",
+        "zcoder",
+        "graphify",
+        "hermes",
+        "hermes_agent",
+        "hermes_webui",
+        "hermes_desktop",
+        "openwebui",
+        "ripgrep",
+        "fd",
+        "tree_sitter"
+    ],
+    "notes": {
+        "philosophy": "One Ollama, one mesh (MeshLLM for multi-node pooling, LiteLLM for proxy routing), every coding agent speaks OpenAI-compat to localhost. No cloud calls, no containers in the dev path — ai-lsc's Podman/Docker/LXC/Firecracker export is reserved for total-stack export only.",
+        "meshllm_clarification": "MeshLLM is the native binary from https://github.com/Mesh-LLM/mesh-llm. It pools GPUs and memory across machines, exposes one OpenAI-compat API at :9337, and has a web console at :3131. It is NOT a LiteLLM re-skin — the two tools coexist in this template: MeshLLM for mesh-pooled multi-node inference, LiteLLM for proxy routing to multiple backends. Coding agents prefer MeshLLM (:9337) first, fall back to LiteLLM (:4000), then Ollama direct (:11434).",
+        "graphify_role": "Graphify (https://github.com/Graphify-Labs/graphify) builds knowledge graphs from code, docs, PDFs, and images. It runs as a CLI (pip install graphifyy), a Claude Code skill (/graphify .), or an MCP stdio server (graphify --mcp). Other agents in this stack can query graphify's MCP server to navigate the codebase graph without re-reading source files — 71.5x fewer tokens per query vs reading raw files. Uses Claude vision by default but can be configured to use MeshLLM/LiteLLM/Ollama for fully-local extraction.",
+        "topology": "ollama (11434) <- litellm (4000, proxy mesh) + meshllm (9337, native mesh) <- {picode, aider, odysseus, opencode, zcoder}. graphify builds graphs from the codebase and exposes an MCP server that the coding agents query. hermes_webui + hermes_desktop talk to hermes (17050) -> hermes_agent (17051) -> ollama. openwebui talks to ollama directly. ripgrep + fd + tree_sitter are passive filesystem tools used by the coding agents for repo-map / symbol navigation.",
+        "recommended_models": "qwen2.5-coder:7b (fast coding), qwen2.5-coder:32b (heavy coding), hermes3:8b (Hermes stack), nomic-embed-text (openwebui RAG, corpus indexing, graphify embeddings). MeshLLM auto-downloads a suitable model on first `serve --auto` if none specified.",
+        "install_order": "1) ollama (already running). 2) litellm (proxy mesh) + meshllm (native mesh binary via curl installer). 3) hermes_agent -> hermes -> hermes_webui + hermes_desktop. 4) aider, picode, odysseus, opencode, zcoder (CLI agents, all native venvs/uv/npm). 5) graphify (uv install graphifyy). 6) openwebui (native uv). 7) ripgrep, fd, tree_sitter (pacman).",
+        "native_only_policy": "Every tool in this template installs natively into /mnt/AI/runtime/<tool_id>/ (venv/uv) or via pacman/AUR/curl-script. ai-lsc's container export feature is intentionally not used at install time — it's reserved for total-stack deployment exports via the Stack Editor.",
+        "non_destructive_policy": "Applying this template never removes existing installs. ai-lsc's InstallerManager.preflight() detects existing installs and skips them unless force=True.",
+        "missing_tools_added_by_template_pack": "picode, meshllm, hermes_webui, zcoder — these four require the registry + wirings patches in this template pack before the template will compile. graphify already exists in the registry but needs the graphify-update.diff and graphify-wiring-update.diff patches to fix its URL (Graphify-Labs/graphify), license (MIT), role (Knowledge Graph Builder), installer (uv graphifyy), and wiring (MCP server + LLM backend connections). See MERGE-GUIDE.md."
+    }
+}

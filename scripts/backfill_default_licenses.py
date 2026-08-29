@@ -15,7 +15,7 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path("/home/z/my-project/workspace/ai-lsc")
+ROOT = Path(__file__).resolve().parent.parent
 LAYER_DIR = ROOT / "src/ai_lsc/registry/layers"
 DEFAULTS_PATH = ROOT / "src/ai_lsc/registry/defaults.py"
 

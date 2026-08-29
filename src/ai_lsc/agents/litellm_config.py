@@ -16,7 +16,7 @@ Usage
     config = LiteLLMConfigGenerator()
     config.add_ollama_models(ollama_port=11434)
     yaml_str = config.generate_yaml()
-    config.save("/mnt/AI/config/litellm_config.yaml")
+    config.save("/mnt/AI/runtime/litellm/config.yaml")
 """
 
 from __future__ import annotations

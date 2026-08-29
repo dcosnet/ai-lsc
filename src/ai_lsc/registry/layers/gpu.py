@@ -3,7 +3,7 @@
 Each entry follows the standard registry schema:
 
 - ``name``: human-readable tool name
-- ``level``: 10-layer taxonomy level (1-10)
+- ``level``: 11-layer taxonomy level (1-11)
 - ``layer``: this layer name
 - ``role``: role within the layer
 - ``category``: functional category
@@ -66,6 +66,36 @@ TOOLS: dict[str, dict] = {
     ],
     "description": "NVIDIA mixed precision and distributed training.",
     "license": 'Proprietary',
+    "flags": {
+        "has_cli": True,
+        "has_gui": False,
+        "has_web": False,
+        "is_ollama": False,
+        "is_passive": True,
+        "is_mcp": False,
+        "is_skills_collection": False
+    }
+},
+    'tinygrad': {
+    "name": "tinygrad",
+    "level": 3,
+    "layer": "GPU Runtimes",
+    "role": "GPU Acceleration",
+    "category": "GPU Computing",
+    "installer": {
+        "type": "uv",
+        "pkg": "tinygrad"
+    },
+    "launcher": {
+        "type": "desktop",
+        "cmd": "python3 -c \"from tinygrad import Tensor; print(Tensor([1,2,3]).sum().item())\"",
+        "default_port": None
+    },
+    "deps": [],
+    "description": "Minimalist autograd tensor library with a PyTorch-like API "
+                  "targeting CUDA, AMD, and CPU backends. Powers tinybox "
+                  "inference serving.",
+    "license": "MIT",
     "flags": {
         "has_cli": True,
         "has_gui": False,

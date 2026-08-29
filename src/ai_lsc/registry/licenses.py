@@ -20,7 +20,7 @@ Defines the three license categories the AI-LSC license gate recognizes:
    a prominent disclaimer warning about ToS restrictions before
    install.  Example: Claude Code (Anthropic ToS).
 
-The license-approvals registry (``config/license_approvals.json``) is
+The license-approvals registry (``configs/license_approvals.json``) is
 a user-editable list of SPDX IDs that have been pre-approved.  Only
 OSI-approved licenses can appear in this list — the
 :func:`LicenseGate.add_auto_approval` method rejects attempts to
@@ -222,6 +222,71 @@ CATALOG: dict[str, LicenseInfo] = {
             "Permissive license (PSF) for CPython and the Python "
             "standard library.  OSI-approved, GPL-compatible, allows "
             "commercial use and modification."
+        ),
+    ),
+    "LGPL-2.1": LicenseInfo(
+        spdx="LGPL-2.1",
+        name="GNU Lesser General Public License v2.1",
+        category=Category.OSI,
+        url="https://opensource.org/licenses/LGPL-2.1",
+        summary=(
+            "Weak copyleft license allowing linking from proprietary "
+            "software, but modifications to the LGPL-licensed code itself "
+            "must be shared under LGPL.  Used by strace, LXC, libvirt."
+        ),
+    ),
+    "GPL-1.0": LicenseInfo(
+        spdx="GPL-1.0",
+        name="GNU General Public License v1.0",
+        category=Category.OSI,
+        url="https://opensource.org/licenses/GPL-1.0",
+        summary=(
+            "The original 1989 GNU copyleft license.  Superseded by "
+            "GPL-2.0/GPL-3.0 but still applied by some legacy packages "
+            "(e.g. Perl)."
+        ),
+    ),
+    "PHP-3.01": LicenseInfo(
+        spdx="PHP-3.01",
+        name="PHP License v3.01",
+        category=Category.OSI,
+        url="https://opensource.org/licenses/PHP-3.01",
+        summary=(
+            "Permissive, PHP-specific license governing the PHP "
+            "interpreter.  Allows commercial use and modification with "
+            "copyright notice; not derivatively-named redistribution."
+        ),
+    ),
+    "Ruby": LicenseInfo(
+        spdx="Ruby",
+        name="Ruby License",
+        category=Category.OSI,
+        url="https://www.ruby-lang.org/en/about/license.txt",
+        summary=(
+            "Permissive dual license (Ruby's own terms or BSD-2-Clause) "
+            "governing the Ruby interpreter and standard library."
+        ),
+    ),
+    "MirOS": LicenseInfo(
+        spdx="MirOS",
+        name="MirOS License",
+        category=Category.OSI,
+        url="https://opensource.org/licenses/MirOS",
+        summary=(
+            "Permissive BSD-style license with attribution requirement, "
+            "used by MirBSD and mksh."
+        ),
+    ),
+    "MIT/Apache-2.0": LicenseInfo(
+        spdx="MIT/Apache-2.0",
+        name="MIT OR Apache-2.0 (dual license)",
+        category=Category.OSI,
+        url="https://opensource.org/licenses/Apache-2.0",
+        summary=(
+            "Dual licensing under MIT OR Apache-2.0 at the recipient's "
+            "choice — the standard convention for Rust crates (and tools "
+            "like uv).  Either grant applies; Apache-2.0 adds a patent "
+            "grant."
         ),
     ),
 

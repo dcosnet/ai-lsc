@@ -1,6 +1,7 @@
-"""Registry entries for the Observability layer (L7).
+"""Registry entries for the Observability layer (L8).
 
-Contains metrics, dashboards, tracing, AI monitoring, and LLM evaluation tools.
+Contains metrics, dashboards, tracing, AI monitoring, LLM
+evaluation, and build/system monitoring tools.
 
 This module is consumed by
 :mod:`ai_lsc.registry.loader`.
@@ -9,7 +10,7 @@ This module is consumed by
 TOOLS: dict[str, dict] = {
     'btop': {
     "name": "Btop",
-    "level": 7,
+    "level": 8,
     "layer": "Observability",
     "role": "Dashboard",
     "category": "Metrics",
@@ -37,7 +38,7 @@ TOOLS: dict[str, dict] = {
 },
     'glances': {
     "name": "Glances",
-    "level": 7,
+    "level": 8,
     "layer": "Observability",
     "role": "Dashboard",
     "category": "Metrics",
@@ -65,7 +66,7 @@ TOOLS: dict[str, dict] = {
 },
     'prometheus': {
     "name": "Prometheus",
-    "level": 7,
+    "level": 8,
     "layer": "Observability",
     "role": "Metrics Collector",
     "category": "Metrics",
@@ -93,7 +94,7 @@ TOOLS: dict[str, dict] = {
 },
     'grafana': {
     "name": "Grafana",
-    "level": 7,
+    "level": 8,
     "layer": "Observability",
     "role": "Dashboard",
     "category": "Visualization",
@@ -121,17 +122,17 @@ TOOLS: dict[str, dict] = {
 },
     'grafana_alloy': {
     "name": "Grafana Alloy",
-    "level": 7,
+    "level": 8,
     "layer": "Observability",
     "role": "Collector",
     "category": "Telemetry",
     "installer": {
         "type": "script",
-        "cmd": "curl -fsSL https://raw.githubusercontent.com/grafana/alloy/main/install.sh | sh"
+        "cmd": "mkdir -p {tools_root}/bin {tools_root}/alloy && curl -fsSL https://github.com/grafana/alloy/releases/latest/download/alloy-linux-amd64.zip -o {tools_root}/alloy/alloy.zip && python3 -m zipfile -e {tools_root}/alloy/alloy.zip {tools_root}/alloy && mv {tools_root}/alloy/alloy-linux-amd64 {tools_root}/bin/alloy && chmod +x {tools_root}/bin/alloy"
     },
     "launcher": {
         "type": "tmux",
-        "cmd": "alloy run --server.http.listen-port={port}",
+        "cmd": "{tools_root}/bin/alloy run --server.http.listen-port={port}",
         "default_port": 12345
     },
     "deps": [
@@ -151,7 +152,7 @@ TOOLS: dict[str, dict] = {
 },
     'opik': {
     "name": "Opik",
-    "level": 7,
+    "level": 8,
     "layer": "Observability",
     "role": "LLM Tracing",
     "category": "AI Observability",
@@ -179,7 +180,7 @@ TOOLS: dict[str, dict] = {
 },
     'pulse_ai': {
     "name": "Pulse AI",
-    "level": 7,
+    "level": 8,
     "layer": "Observability",
     "role": "Health Monitor",
     "category": "AI Monitoring",
@@ -207,7 +208,7 @@ TOOLS: dict[str, dict] = {
 },
     'latitude': {
     "name": "Latitude",
-    "level": 7,
+    "level": 8,
     "layer": "Observability",
     "role": "Evaluation",
     "category": "LLM Evaluation",
@@ -235,4 +236,64 @@ TOOLS: dict[str, dict] = {
         "is_skills_collection": False
     }
 },
+    'eagle_eye': {
+    "name": "Eagle Eye",
+    "level": 8,
+    "layer": "Observability",
+    "role": "Monitoring",
+    "category": "Observability",
+    "installer": {
+        "type": "git",
+        "pkg": "https://github.com/nicely-done/eagle_eye"
+    },
+    "launcher": {
+        "type": "desktop",
+        "cmd": "eagle_eye --version",
+        "default_port": None
+    },
+    "deps": [],
+    "description": "AI-powered observability and monitoring agent.",
+    "license": 'Proprietary',
+    "flags": {
+        "has_cli": True,
+        "has_gui": False,
+        "has_web": False,
+        "is_ollama": False,
+        "is_passive": False,
+        "is_mcp": False,
+        "is_skills_collection": False
+    }
+},
+
+    'dma': {
+    "name": "DMA (Distcc Monitor Agent)",
+    "level": 8,
+    "layer": "Observability",
+    "role": "Monitoring",
+    "category": "Build Monitoring",
+    "installer": {
+        "type": "git",
+        "pkg": "https://github.com/distcc/dma"
+    },
+    "launcher": {
+        "type": "desktop",
+        "cmd": "dma --version",
+        "default_port": None
+    },
+    "deps": [
+        "distcc"
+    ],
+    "description": "Monitor for distributed compilation with distcc.",
+    "license": 'Proprietary',
+    "flags": {
+        "has_cli": True,
+        "has_gui": False,
+        "has_web": False,
+        "is_ollama": False,
+        "is_passive": False,
+        "is_mcp": False,
+        "is_skills_collection": False
+    }
+},
+
 }

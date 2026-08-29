@@ -632,7 +632,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="heretic",
-    layer="GPU Runtimes",
+    layer="Engines",
     interfaces=[],
     connections=[
         Connection(
@@ -656,7 +656,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="unsloth",
-    layer="GPU Runtimes",
+    layer="Development Environment",
     interfaces=[],
     connections=[
         Connection(
@@ -771,7 +771,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="vllm",
-    layer="Orchestrators",
+    layer="Engines",
     interfaces=[
         ToolInterface(
             interface_id="openai_api",
@@ -931,12 +931,12 @@ _reg(StackWiring(
 
 
 # ──────────────────────────────────────────────────────────────────
-# L6: AI Endpoints
+# L6: AI Endpoints  (→ the restored "Routing" layer in the 11-layer taxonomy)
 # ──────────────────────────────────────────────────────────────────
 
 _reg(StackWiring(
     tool_id="litellm",
-    layer="Orchestrators",
+    layer="Routing",
     interfaces=[
         ToolInterface(
             interface_id="openai_api",
@@ -1015,7 +1015,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="9router_proxy",
-    layer="Orchestrators",
+    layer="Routing",
     interfaces=[
         ToolInterface(
             interface_id="router_api",
@@ -1041,7 +1041,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="deep_eye",
-    layer="Orchestrators",
+    layer="User Interfaces",
     interfaces=[
         ToolInterface(
             interface_id="deep_eye_api",
@@ -1066,7 +1066,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="luxtts",
-    layer="Orchestrators",
+    layer="User Interfaces",
     interfaces=[
         ToolInterface(
             interface_id="tts_api",
@@ -1234,7 +1234,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="parakeet",
-    layer="Knowledge Management",
+    layer="User Interfaces",
     interfaces=[
         ToolInterface(
             interface_id="parakeet_api",
@@ -1306,7 +1306,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="fabric",
-    layer="Knowledge Management",
+    layer="Orchestrators",
     interfaces=[],
     connections=[],
     context=EngineeringContext(
@@ -1408,7 +1408,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="n8n",
-    layer="DevOps",
+    layer="Orchestrators",
     interfaces=[
         ToolInterface(
             interface_id="n8n_api",
@@ -1454,7 +1454,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="nightshift",
-    layer="DevOps",
+    layer="Orchestrators",
     interfaces=[
         ToolInterface(
             interface_id="nightshift_api",
@@ -1470,7 +1470,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="hivemind",
-    layer="DevOps",
+    layer="Orchestrators",
     interfaces=[
         ToolInterface(
             interface_id="hivemind_api",
@@ -1495,7 +1495,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="hermes_agent",
-    layer="DevOps",
+    layer="Orchestrators",
     interfaces=[
         ToolInterface(
             interface_id="hermes_agent_api",
@@ -1546,7 +1546,7 @@ _reg(StackWiring(
 # Passive / CLI-only tools in L8 — no interfaces or network connections
 for _tid in [
     "agent_reach", "agentic_os", "aider", "algory", "atlas_os",
-    "claude_code", "eagle_eye", "graphify", "headroom", "honcho",
+    "claude_code", "eagle_eye", "headroom", "honcho",
     "loop_engineering", "mcp_drift_state_tracker", "nvidia_agent_skills",
     "ponytail", "promptops", "skillspector", "spec_kit", "synapscli",
     "wayland_ai",
@@ -1595,7 +1595,7 @@ for _tid in [
 # agno has a web interface but no deps in defaults
 _reg(StackWiring(
     tool_id="agno",
-    layer="DevOps",
+    layer="Orchestrators",
     interfaces=[
         ToolInterface(
             interface_id="agno_web",
@@ -1787,7 +1787,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="hermes_dashboard_page",
-    layer="Observability",
+    layer="User Interfaces",
     interfaces=[
         ToolInterface(
             interface_id="dashboard_api",
@@ -1837,7 +1837,7 @@ _reg(StackWiring(
 
 
 # ──────────────────────────────────────────────────────────────────
-# L10: Intelligent Routing
+# L10: Intelligent Routing  (folded into "Orchestrators" in the 11-layer taxonomy)
 # ──────────────────────────────────────────────────────────────────
 
 _reg(StackWiring(
@@ -1892,7 +1892,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="mnemo_cortex",
-    layer="Orchestrators",
+    layer="Knowledge Management",
     interfaces=[
         ToolInterface(
             interface_id="mnemo_cortex_api",
@@ -1942,7 +1942,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="everos_memory",
-    layer="Orchestrators",
+    layer="Knowledge Management",
     interfaces=[
         ToolInterface(
             interface_id="everos_memory_api",
@@ -2049,7 +2049,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="dify",
-    layer="User Interfaces",
+    layer="Routing",
     interfaces=[
         ToolInterface(
             interface_id="dify_web",
@@ -2271,7 +2271,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="langflow",
-    layer="User Interfaces",
+    layer="Orchestrators",
     interfaces=[
         ToolInterface(
             interface_id="langflow_web",
@@ -2381,7 +2381,7 @@ for _tid in ["hermes_desktop", "local_llm_launcher"]:
 
 _reg(StackWiring(
     tool_id="opensandbox",
-    layer="DevOps",
+    layer="Orchestrators",
     interfaces=[
         ToolInterface(
             interface_id="opensandbox_web",
@@ -2529,6 +2529,378 @@ for _tid in [
     ))
 
 
+# ──────────────────────────────────────────────────────────────────
+# L5 additions: terminal coding agents (registry expansion pass)
+# (coding agents now live in DevOps L10; meshllm/picode in Routing L5)
+# opencode / gemini_cli / qwen_code / goose / codex — all multi-provider
+# CLI agents that consume an OpenAI-compatible endpoint.  Wired to both
+# Ollama (direct) and LiteLLM (proxied) so staging either backend
+# prevents orphan-flagging in the Pipeline Ticker.
+# ──────────────────────────────────────────────────────────────────
+
+_CODING_AGENT_CTX = EngineeringContext(
+    decision="Terminal coding agents consume an OpenAI-compatible "
+             "chat endpoint for LLM inference.",
+    observation="Every modern coding agent (opencode, Gemini CLI, "
+                "Qwen Code, goose, Codex) speaks the OpenAI wire "
+                "format for at least one provider slot.",
+    alternatives="Native provider SDKs (Anthropic, Google) or a "
+                 "custom proxy.",
+    constraints="The endpoint must be reachable and expose "
+                "/v1/chat/completions.",
+    reasoning="OpenAI-compat is the de-facto agent ↔ LLM contract; "
+              "pointing the agents at localhost keeps inference "
+              "local per AI-LSC policy.",
+    verification="Set the agent's base-URL env var to "
+                 "http://127.0.0.1:11434/v1 and list models.",
+    lineage="Mirrors the OpenAI API spec; adopted by Ollama, vLLM, "
+            "SGLang, LiteLLM.",
+    assumptions="At least one model is served by the target backend.",
+)
+
+_reg(StackWiring(
+    tool_id="opencode",
+    layer="DevOps",
+    interfaces=[],
+    connections=[
+        Connection(
+            target_tool="ollama",
+            interface_id="openai_api",
+            purpose="Local LLM inference for terminal coding sessions.",
+            config_key="OPENAI_BASE_URL (ollama provider, opencode.json)",
+            required=False,
+            context=_CODING_AGENT_CTX,
+        ),
+        Connection(
+            target_tool="litellm",
+            interface_id="openai_api",
+            purpose="Multi-model routing via LiteLLM proxy.",
+            config_key="OPENAI_BASE_URL",
+            required=False,
+            context=_LITELLM_CONSUMER_CTX,
+        ),
+    ],
+))
+
+_reg(StackWiring(
+    tool_id="gemini_cli",
+    layer="DevOps",
+    interfaces=[],
+    connections=[
+        Connection(
+            target_tool="ollama",
+            interface_id="openai_api",
+            purpose="Local LLM inference via the openai-compat provider.",
+            config_key="OPENAI_BASE_URL",
+            required=False,
+            context=_CODING_AGENT_CTX,
+        ),
+        Connection(
+            target_tool="litellm",
+            interface_id="openai_api",
+            purpose="Multi-model routing via LiteLLM proxy.",
+            config_key="OPENAI_BASE_URL",
+            required=False,
+            context=_LITELLM_CONSUMER_CTX,
+        ),
+    ],
+))
+
+_reg(StackWiring(
+    tool_id="qwen_code",
+    layer="DevOps",
+    interfaces=[],
+    connections=[
+        Connection(
+            target_tool="ollama",
+            interface_id="openai_api",
+            purpose="Local Qwen model inference via openai-compat provider.",
+            config_key="OPENAI_BASE_URL",
+            required=False,
+            context=_CODING_AGENT_CTX,
+        ),
+        Connection(
+            target_tool="litellm",
+            interface_id="openai_api",
+            purpose="Multi-model routing via LiteLLM proxy.",
+            config_key="OPENAI_BASE_URL",
+            required=False,
+            context=_LITELLM_CONSUMER_CTX,
+        ),
+    ],
+))
+
+_reg(StackWiring(
+    tool_id="goose",
+    layer="DevOps",
+    interfaces=[],
+    connections=[
+        Connection(
+            target_tool="ollama",
+            interface_id="openai_api",
+            purpose="Local LLM backend for goose sessions and MCP extensions.",
+            config_key="GOOSE_PROVIDER / OPENAI_BASE_URL",
+            required=False,
+            context=_CODING_AGENT_CTX,
+        ),
+        Connection(
+            target_tool="litellm",
+            interface_id="openai_api",
+            purpose="Multi-model routing via LiteLLM proxy.",
+            config_key="OPENAI_BASE_URL",
+            required=False,
+            context=_LITELLM_CONSUMER_CTX,
+        ),
+    ],
+))
+
+# codex existed in the registry since v3.1 but had no STACK_WIRINGS
+# entry, so it was flagged as an orphan by the Pipeline Ticker whenever
+# it was staged.  This wiring closes that gap.
+_reg(StackWiring(
+    tool_id="codex",
+    layer="DevOps",
+    interfaces=[],
+    connections=[
+        Connection(
+            target_tool="ollama",
+            interface_id="openai_api",
+            purpose="Local LLM inference for terminal coding sessions.",
+            config_key="OPENAI_BASE_URL",
+            required=False,
+            context=_CODING_AGENT_CTX,
+        ),
+        Connection(
+            target_tool="litellm",
+            interface_id="openai_api",
+            purpose="Multi-model routing via LiteLLM proxy.",
+            config_key="OPENAI_BASE_URL",
+            required=False,
+            context=_LITELLM_CONSUMER_CTX,
+        ),
+    ],
+))
+
+_reg(StackWiring(
+    tool_id="letta",
+    layer="Orchestrators",
+    interfaces=[
+        ToolInterface(
+            interface_id="http_api",
+            protocol="HTTP",
+            api_format="REST",
+            port=8283,
+            auth="Optional password (LETTA_SERVER_PASSWORD)",
+            description="Letta agent server REST API — create/state/"
+                        "message agents with persistent memory.",
+            context=EngineeringContext(
+                decision="Expose the Letta server REST API as its "
+                         "primary interface.",
+                observation="Letta (formerly MemGPT) manages stateful "
+                            "agents whose memory/context survives across "
+                            "sessions; the REST API is the management "
+                            "surface.",
+                alternatives="Python SDK in-process, or Letta Cloud "
+                             "(SaaS — excluded by policy).",
+                constraints="Requires a database — SQLite by default, "
+                            "PostgreSQL recommended for persistence.",
+                reasoning="A local agent-memory server complements "
+                          "stateless coding agents in the stack.",
+                verification="curl http://localhost:8283/v1/agents",
+                lineage="Letta — https://docs.letta.com/",
+            ),
+        ),
+    ],
+    connections=[
+        Connection(
+            target_tool="ollama",
+            interface_id="openai_api",
+            purpose="LLM inference for agent reasoning and memory operations.",
+            config_key="LETTA_INFERENCE_BASE_URL / model config",
+            required=False,
+            context=_OLLAMA_CONSUMER_CTX,
+        ),
+        Connection(
+            target_tool="postgresql",
+            interface_id="postgresql",
+            purpose="Persistent agent/state storage (SQLite fallback).",
+            config_key="LETTA_PG_URI",
+            required=False,
+            context=EngineeringContext(
+                decision="PostgreSQL as the optional durable backend for "
+                         "Letta's state store.",
+                observation="Letta defaults to SQLite; PostgreSQL is "
+                            "recommended for multi-user / long-lived "
+                            "deployments.",
+                alternatives="Built-in SQLite (zero-config).",
+                reasoning="Sharing one PostgreSQL instance with other "
+                          "stack tools keeps state management uniform.",
+                verification="letta server with LETTA_PG_URI set; "
+                             "inspect created tables.",
+                lineage="Letta — https://docs.letta.com/",
+            ),
+        ),
+    ],
+))
+
+_reg(StackWiring(
+    tool_id="sglang",
+    layer="Engines",
+    interfaces=[
+        ToolInterface(
+            interface_id="openai_api",
+            protocol="HTTP",
+            api_format="OpenAI",
+            port=30000,
+            base_path="/v1",
+            auth="None (or API key if configured)",
+            description="SGLang OpenAI-compatible API: /v1/chat/completions, "
+                        "/v1/models, /v1/embeddings.  High-throughput serving "
+                        "with RadixAttention prefix caching.",
+            context=EngineeringContext(
+                decision="Expose SGLang's OpenAI-compatible API as its "
+                         "primary interface.",
+                observation="SGLang rivals vLLM on throughput for "
+                            "many-workload serving, and prefix caching "
+                            "benefits agentic loops that resend context.",
+                alternatives="vLLM (port 8000), Ollama, llama.cpp server.",
+                constraints="Requires a CUDA GPU with sufficient VRAM for "
+                            "the target model.",
+                reasoning="OpenAI API compatibility lets every consumer in "
+                          "the stack use SGLang without code changes.",
+                verification="curl http://localhost:30000/v1/models",
+                lineage="SGLang — https://docs.sglang.ai/",
+            ),
+        ),
+    ],
+    connections=[
+        Connection(
+            target_tool="cuda",
+            interface_id="cuda_driver",
+            purpose="GPU-accelerated inference kernels.",
+            config_key="CUDA_VISIBLE_DEVICES",
+            required=True,
+            context=EngineeringContext(
+                decision="SGLang requires CUDA for its serving kernels.",
+                observation="SGLang's throughput comes from custom CUDA "
+                            "kernels and RadixAttention.",
+                reasoning="SGLang without a GPU has no advantage over "
+                          "llama.cpp on CPU.",
+                verification="nvidia-smi confirms driver and GPU availability.",
+                lineage="SGLang — https://docs.sglang.ai/",
+            ),
+        ),
+    ],
+))
+
+# ──────────────────────────────────────────────────────────────────
+# L8 / L10 / L3 additions: jan, mem0, tinygrad
+# ──────────────────────────────────────────────────────────────────
+
+_reg(StackWiring(
+    tool_id="jan",
+    layer="User Interfaces",
+    interfaces=[
+        ToolInterface(
+            interface_id="openai_api",
+            protocol="HTTP",
+            api_format="OpenAI",
+            port=1337,
+            base_path="/v1",
+            auth="None (local only)",
+            description="Jan's built-in OpenAI-compatible local API server "
+                        "powered by its bundled llama.cpp engine — a "
+                        "drop-in replacement for cloud APIs.",
+            context=EngineeringContext(
+                decision="Expose Jan's local API server as its wiring "
+                         "interface.",
+                observation="Jan is a self-contained desktop app: engine, "
+                            "model manager, and API server in one; the API "
+                            "server listens on 127.0.0.1:1337.",
+                alternatives="Ollama as the engine with a separate chat UI.",
+                constraints="The API server toggle must be enabled in Jan's "
+                            "settings; Electron desktop UI is not "
+                            "web-embeddable.",
+                reasoning="A GUI chat app that also serves an "
+                          "OpenAI-compatible endpoint doubles as an "
+                          "inference provider for other stack tools.",
+                verification="curl http://127.0.0.1:1337/v1/models",
+                lineage="Jan — https://jan.ai/docs/desktop/api-server",
+                assumptions="API server enabled (default on recent builds).",
+            ),
+        ),
+    ],
+    connections=[],
+))
+
+_reg(StackWiring(
+    tool_id="mem0",
+    layer="Knowledge Management",
+    interfaces=[],
+    connections=[
+        Connection(
+            target_tool="ollama",
+            interface_id="openai_api",
+            purpose="LLM inference for memory extraction/summarisation "
+                    "and embeddings for memory vectors.",
+            config_key="OPENAI_BASE_URL / embedding model config",
+            required=False,
+            context=_OLLAMA_CONSUMER_CTX,
+        ),
+        Connection(
+            target_tool="qdrant",
+            interface_id="http_api",
+            purpose="Vector storage for long-term memories.",
+            config_key="QDRANT_HOST",
+            required=False,
+            context=EngineeringContext(
+                decision="Qdrant as an optional external vector backend "
+                         "for stored memories.",
+                observation="Mem0 ships with an embedded vector store by "
+                            "default and supports pluggable backends "
+                            "(Qdrant, Chroma, pgvector).",
+                alternatives="Mem0's built-in store, or ChromaDB.",
+                reasoning="Sharing one Qdrant instance across knowledge "
+                          "tools keeps embeddings co-located.",
+                verification="Configure vector_store.provider=qdrant in "
+                             "mem0 config; run a memory add + search.",
+                lineage="Mem0 — https://docs.mem0.ai/",
+            ),
+        ),
+    ],
+))
+
+_reg(StackWiring(
+    tool_id="tinygrad",
+    layer="GPU Runtimes",
+    interfaces=[],
+    connections=[
+        Connection(
+            target_tool="cuda",
+            interface_id="cuda_driver",
+            purpose="GPU-accelerated tensor ops on NVIDIA backends.",
+            config_key="CUDA_VISIBLE_DEVICES",
+            required=False,
+            context=EngineeringContext(
+                decision="CUDA is optional — tinygrad also runs on CPU and "
+                         "AMD backends.",
+                observation="tinygrad's lazy execution compiles kernels per "
+                            "backend at runtime; the NVIDIA backend needs "
+                            "the CUDA driver.",
+                alternatives="CuPy for NumPy-compat GPU arrays; PyTorch for "
+                             "a full training stack.",
+                reasoning="Wiring CUDA (optionally) surfaces tinygrad in "
+                          "the ticker when a GPU stack is staged, without "
+                          "forcing it on CPU-only hosts.",
+                verification="python3 -c \"from tinygrad import Tensor; "
+                             "print(Tensor([1,2,3]).sum().item())\"",
+                lineage="tinygrad — https://github.com/tinygrad/tinygrad",
+            ),
+        ),
+    ],
+))
+
+
 # ══════════════════════════════════════════════════════════════════
 # Topology query helpers
 # ══════════════════════════════════════════════════════════════════
@@ -2637,3 +3009,391 @@ def validate_wiring() -> list[str]:
                     f"(available: {sorted(target_iface_ids) or 'none'})"
                 )
     return errors
+
+# ──────────────────────────────────────────────────────────────────
+# Graphify — knowledge graph builder + MCP server (rewired from passive)
+# Removed from the L8 passive/CLI list above and given a proper wiring
+# since graphify is both a CLI tool and an MCP stdio server.
+# ──────────────────────────────────────────────────────────────────
+_reg(StackWiring(
+    tool_id="graphify",
+    layer="Orchestrators",
+    interfaces=[
+        ToolInterface(
+            interface_id="graphify_mcp",
+            protocol="stdio",
+            api_format="MCP",
+            port=None,
+            base_path="",
+            auth="None (local stdio)",
+            description="Graphify MCP stdio server. Start with "
+                        "`graphify --mcp`. Other MCP-aware agents "
+                        "(Claude Code, opencode with MCP support, "
+                        "etc.) can query the knowledge graph via the "
+                        "standard MCP protocol. Exposes tools for "
+                        "graph query, path finding, and concept "
+                        "explanation.",
+            context=EngineeringContext(
+                decision="Expose graphify as an MCP server so other "
+                         "agents can query its knowledge graph.",
+                observation="Graphify's --mcp mode runs a stdio MCP "
+                            "server. Any MCP-aware agent can call "
+                            "graphify's query/path/explain tools to "
+                            "navigate the codebase graph without "
+                            "re-reading source files.",
+                alternatives="CLI-only mode (graphify query '...') "
+                             "or direct graph.json consumption.",
+                constraints="Graph must be built first via "
+                            "`graphify .` before the MCP server can "
+                            "answer queries.",
+                reasoning="MCP is the standard agent-to-tool protocol. "
+                          "Exposing graphify via MCP lets every coding "
+                          "agent in the stack benefit from the "
+                          "knowledge graph without each one needing "
+                          "a custom graphify integration.",
+                verification="Start `graphify --mcp` and send an MCP "
+                             "initialize request on stdin.",
+                lineage="Graphify — https://github.com/Graphify-Labs/graphify",
+                assumptions="graphify installed (uv tool graphifyy) and "
+                            "a graph has been built in the working "
+                            "directory.",
+            ),
+        ),
+    ],
+    connections=[
+        Connection(
+            target_tool="meshllm",
+            interface_id="openai_api",
+            purpose="Optional LLM backend for graphify's vision/extraction "
+                    "pass. Graphify defaults to Claude (Anthropic API); "
+                    "users who want fully-local extraction can configure "
+                    "it to use MeshLLM (:9337/v1) instead.",
+            config_key="OPENAI_API_BASE (set to http://localhost:9337/v1 "
+                       "to route extraction through the mesh)",
+            required=False,
+            context=EngineeringContext(
+                decision="Graphify can use MeshLLM as its extraction "
+                         "backend instead of Claude.",
+                observation="Graphify uses an LLM to extract concepts "
+                            "and relationships from files. The default "
+                            "is Claude (Anthropic), but it speaks "
+                            "OpenAI-compat so any OpenAI-format endpoint "
+                            "works.",
+                reasoning="For a fully-local stack, route graphify's "
+                          "extraction through MeshLLM or Ollama direct. "
+                          "Claude gives better vision results for "
+                          "images/diagrams, so the connection is "
+                          "optional — users choose.",
+                lineage="Graphify docs — https://github.com/Graphify-Labs/graphify",
+                assumptions="MeshLLM has a vision-capable model if the "
+                            "corpus contains images.",
+            ),
+        ),
+        Connection(
+            target_tool="litellm",
+            interface_id="openai_api",
+            purpose="Fallback LLM backend (general LiteLLM proxy on :4000).",
+            config_key="OPENAI_API_BASE",
+            required=False,
+            context=_LITELLM_CONSUMER_CTX,
+        ),
+        Connection(
+            target_tool="ollama",
+            interface_id="openai_api",
+            purpose="Direct Ollama fallback for extraction (bypass both "
+                    "meshes). Useful for single-node setups without "
+                    "MeshLLM.",
+            config_key="OPENAI_API_BASE (set to http://localhost:11434/v1)",
+            required=False,
+            context=EngineeringContext(
+                decision="Ollama direct as a third extraction option.",
+                observation="Same OpenAI-compat contract as MeshLLM "
+                            "and LiteLLM.",
+                reasoning="Single-node users who don't need mesh "
+                          "pooling can point graphify straight at "
+                          "Ollama for the extraction LLM calls.",
+            ),
+        ),
+    ],
+))
+
+_reg(StackWiring(
+    tool_id="meshllm",
+    layer="Routing",
+    interfaces=[
+        ToolInterface(
+            interface_id="openai_api",
+            protocol="HTTP",
+            api_format="OpenAI",
+            port=9337,
+            base_path="/v1",
+            auth="API key (MESH_LLM_KEY, optional — local mesh is open by default)",
+            description="MeshLLM unified API. Exposes a single "
+                        "OpenAI-compatible endpoint that routes requests "
+                        "across pooled GPUs/memory. Supports "
+                        "/v1/chat/completions, /v1/models, "
+                        "/v1/embeddings. The mesh decides whether a "
+                        "model runs locally, routes to a peer node, or "
+                        "uses Skippy stage splits for models too large "
+                        "for one box. Use model='mesh' to fan out one "
+                        "prompt to every model in the mesh (MoA gateway).",
+            context=EngineeringContext(
+                decision="MeshLLM as the mesh-pooling LLM gateway for "
+                         "multi-node inference.",
+                observation="MeshLLM pools GPUs and memory across "
+                            "machines. Every node exposes the same /v1 "
+                            "API. Requests are routed by the 'model' "
+                            "field to the peer that can serve that "
+                            "model. QUIC end-to-end encrypts peer "
+                            "traffic via Iroh relays.",
+                alternatives="LiteLLM (proxy only, no mesh pooling), "
+                             "vLLM (single-node high-throughput), "
+                             "direct Ollama (single-node).",
+                constraints="mesh-llm setup must be run before first "
+                            "serve. Multi-node mesh requires peers to "
+                            "be discoverable via Nostr (public mesh) "
+                            "or invite token (private mesh).",
+                reasoning="MeshLLM is the only tool in the stack that "
+                          "can split a model too large for one GPU "
+                          "across multiple nodes (Skippy stage splits). "
+                          "For single-node workloads, Ollama or LiteLLM "
+                          "are simpler; MeshLLM shines when you add a "
+                          "second machine.",
+                verification="curl http://localhost:9337/v1/models",
+                lineage="MeshLLM — https://github.com/Mesh-LLM/mesh-llm",
+                assumptions="mesh-llm binary installed and `mesh-llm "
+                            "setup` completed. At least one model is "
+                            "available (auto-downloaded by `serve --auto` "
+                            "or specified via --model).",
+            ),
+        ),
+        ToolInterface(
+            interface_id="mesh_web_console",
+            protocol="HTTP",
+            api_format="REST",
+            port=3131,
+            base_path="",
+            auth="None (local only)",
+            description="MeshLLM web console. Browser UI for mesh "
+                        "management, node inventory, model routing, "
+                        "and peer discovery. Use `mesh-llm serve "
+                        "--headless` to hide the console while "
+                        "keeping the management API.",
+            context=EngineeringContext(
+                decision="Expose a separate web console port for mesh "
+                         "management.",
+                observation="The console is a browser UI distinct from "
+                            "the OpenAI-compat API. Operators use it "
+                            "to monitor mesh health, add peers, and "
+                            "configure model routing.",
+                reasoning="Separating management UI from inference API "
+                          "lets operators lock down :9337 (inference) "
+                          "while keeping :3131 (console) accessible "
+                          "only on the LAN.",
+                verification="curl http://localhost:3131/",
+                lineage="MeshLLM console — https://github.com/Mesh-LLM/mesh-llm",
+                assumptions="MeshLLM was started without --headless.",
+            ),
+        ),
+    ],
+    connections=[
+        Connection(
+            target_tool="ollama",
+            interface_id="openai_api",
+            purpose="Optional: use Ollama as a local-model backend via "
+                    "`mesh-llm client --auto` (API-only client mode). "
+                    "When configured, MeshLLM routes to Ollama for "
+                    "models not served by the mesh itself.",
+            config_key="mesh-llm client --auto (reads OLLAMA_BASE_URL)",
+            required=False,
+            context=EngineeringContext(
+                decision="Ollama is an OPTIONAL backend for MeshLLM, "
+                         "not a required one.",
+                observation="MeshLLM can load GGUF models directly "
+                            "(--model /path/to/model.gguf) without "
+                            "Ollama. The `mesh-llm client --auto` "
+                            "subcommand turns MeshLLM into a pure "
+                            "client that routes to other meshes or "
+                            "Ollama-compatible backends.",
+                reasoning="In the local-coder-mesh stack, most users "
+                          "will run MeshLLM standalone (it auto-"
+                          "downloads a suitable model). The Ollama "
+                          "connection is for users who want to expose "
+                          "their existing Ollama model fleet through "
+                          "the mesh routing layer.",
+            ),
+        ),
+    ],
+))
+
+# ──────────────────────────────────────────────────────────────────
+# PiCode — coding agent, consumes mesh first, falls back to LiteLLM + Ollama
+# ──────────────────────────────────────────────────────────────────
+_reg(StackWiring(
+    tool_id="picode",
+    layer="Routing",
+    interfaces=[],
+    connections=[
+        Connection(
+            target_tool="meshllm",
+            interface_id="openai_api",
+            purpose="Primary LLM route for PiCode — mesh-pooled inference "
+                    "across all available nodes.",
+            config_key="OPENAI_API_BASE (set to http://localhost:9337/v1)",
+            required=False,
+            context=EngineeringContext(
+                decision="PiCode points at MeshLLM first.",
+                observation="MeshLLM's :9337 endpoint gives PiCode "
+                            "access to every model in the mesh via "
+                            "one URL.",
+                alternatives="LiteLLM proxy (localhost:4000) or direct "
+                             "Ollama (localhost:11434).",
+                reasoning="Mesh-pooled inference is preferable when "
+                          "available — it can serve models larger than "
+                          "any single GPU via Skippy stage splits.",
+                verification="Set OPENAI_API_BASE=http://localhost:9337/v1 "
+                             "and list models.",
+                lineage="PiCode — https://github.com/jasonjmcghee/picode",
+                assumptions="MeshLLM is running and has at least one "
+                            "model available.",
+            ),
+        ),
+        Connection(
+            target_tool="litellm",
+            interface_id="openai_api",
+            purpose="Fallback mesh (general LiteLLM proxy on :4000).",
+            config_key="OPENAI_API_BASE",
+            required=False,
+            context=_LITELLM_CONSUMER_CTX,
+        ),
+        Connection(
+            target_tool="ollama",
+            interface_id="openai_api",
+            purpose="Direct Ollama fallback (bypass both meshes).",
+            config_key="OPENAI_API_BASE",
+            required=False,
+            context=_CODING_AGENT_CTX,
+        ),
+    ],
+))
+
+# ──────────────────────────────────────────────────────────────────
+# ZCoder — coding agent, same consumer pattern as PiCode
+# ──────────────────────────────────────────────────────────────────
+_reg(StackWiring(
+    tool_id="zcoder",
+    layer="DevOps",
+    interfaces=[],
+    connections=[
+        Connection(
+            target_tool="meshllm",
+            interface_id="openai_api",
+            purpose="Primary LLM route for ZCoder — mesh-pooled inference.",
+            config_key="OPENAI_API_BASE (set to http://localhost:9337/v1)",
+            required=False,
+            context=EngineeringContext(
+                decision="ZCoder points at MeshLLM first.",
+                observation="Same OpenAI-compat contract as PiCode.",
+                reasoning="Consistent routing across all coding agents "
+                          "in the stack — they all prefer the mesh.",
+                lineage="ZCoder (Zhipu AI)",
+                assumptions="MeshLLM is running.",
+            ),
+        ),
+        Connection(
+            target_tool="litellm",
+            interface_id="openai_api",
+            purpose="Fallback mesh (general LiteLLM proxy).",
+            config_key="OPENAI_API_BASE",
+            required=False,
+            context=_LITELLM_CONSUMER_CTX,
+        ),
+        Connection(
+            target_tool="ollama",
+            interface_id="openai_api",
+            purpose="Direct Ollama fallback (bypass both meshes).",
+            config_key="OPENAI_API_BASE",
+            required=False,
+            context=_CODING_AGENT_CTX,
+        ),
+    ],
+))
+
+# ──────────────────────────────────────────────────────────────────
+# Hermes WebUI — web frontend, backend is hermes_agent (NOT ollama direct)
+# ──────────────────────────────────────────────────────────────────
+_reg(StackWiring(
+    tool_id="hermes_webui",
+    layer="User Interfaces",
+    interfaces=[
+        ToolInterface(
+            interface_id="hermes_webui_http",
+            protocol="HTTP",
+            api_format="REST",
+            port=8081,
+            base_path="",
+            auth="WebUI auth (first-run admin signup)",
+            description="Hermes-themed Open-WebUI instance. Separate "
+                        "port (8081) and data volume from the general "
+                        "openwebui instance so user accounts and RAG "
+                        "corpus don't collide.",
+            context=EngineeringContext(
+                decision="Run a second Open-WebUI instance dedicated "
+                         "to the Hermes stack.",
+                observation="Open-WebUI supports multiple instances "
+                            "with separate data-dir flags. The general "
+                            "openwebui tool already occupies :3000 with "
+                            "Ollama direct as backend.",
+                alternatives="Use a single Open-WebUI instance with "
+                             "model name prefixes (hermes/*).",
+                constraints="Must run on a different port (8081) and "
+                            "data-dir than the general openwebui.",
+                reasoning="Dedicated Hermes UI keeps the Hermes agent "
+                          "runtime as the single backend, so every "
+                          "Hermes WebUI conversation flows through "
+                          "hermes_agent's tool-use / function-calling "
+                          "layer instead of raw Ollama.",
+                verification="curl http://localhost:8081/health",
+                lineage="Open-WebUI — https://github.com/open-webui/open-webui",
+                assumptions="hermes_agent is running on :17051.",
+            ),
+        ),
+    ],
+    connections=[
+        Connection(
+            target_tool="hermes_agent",
+            interface_id="hermes_agent_api",
+            purpose="Primary backend — every chat goes through the "
+                    "Hermes agent runtime (tool use, function calling).",
+            config_key="OLLAMA_BASE_URL (set to http://localhost:17051)",
+            required=True,
+            context=EngineeringContext(
+                decision="Hermes WebUI talks to hermes_agent, NOT "
+                         "Ollama direct.",
+                observation="hermes_agent exposes an OpenAI-compat "
+                            "endpoint on :17051 that wraps Ollama with "
+                            "Hermes function-calling logic.",
+                reasoning="Routing through hermes_agent gives the "
+                          "WebUI access to Hermes tool use without "
+                          "requiring the user to wire it manually.",
+            ),
+        ),
+        Connection(
+            target_tool="ollama",
+            interface_id="openai_api",
+            purpose="Embedding model for RAG (nomic-embed-text). "
+                    "Embeddings bypass hermes_agent for speed.",
+            config_key="OLLAMA_BASE_URL (RAG_EMBEDDING_ENGINE=ollama)",
+            required=False,
+            context=EngineeringContext(
+                decision="Use Ollama direct for embeddings, "
+                         "hermes_agent for chat.",
+                observation="Embeddings don't need Hermes function "
+                            "calling — direct Ollama is faster.",
+                reasoning="Splitting chat vs. embedding traffic "
+                          "keeps hermes_agent focused on tool-use "
+                          "calls.",
+            ),
+        ),
+    ],
+))

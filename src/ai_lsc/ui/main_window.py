@@ -210,13 +210,14 @@ if _HAS_QT:
             self.logs_root: str = os.path.join(self.base_dir, "logs")
             self.skills_root: str = os.path.join(self.base_dir, "skills")
             self.datasets_root: str = os.path.join(self.base_dir, "datasets")
-            self.config_root: str = os.path.join(self.base_dir, "config")
+            self.config_root: str = os.path.join(self.base_dir, "configs")
             self.workspaces_root: str = os.path.join(
                 self.base_dir, "workspaces"
             )
             self.exports_root: str = os.path.join(self.base_dir, "exports")
 
             self._setup_environment_hierarchy()
+            self._migrate_legacy_state_files()
 
             self.dtach_bin: str | None = find_binary("dtach-ng", "dtach")
             # License gate — checks every tool's license before the
@@ -290,6 +291,62 @@ if _HAS_QT:
         # ───────────────────────────────────────────────────────────────
         # Environment setup
         # ───────────────────────────────────────────────────────────────
+
+        def _migrate_legacy_state_files(self) -> None:
+            """One-time migration to the canonical configs/ directory.
+
+            v3.1.1b moved app state into <base_dir>/configs/.  Older
+            installs kept files in three legacy locations:
+              * <base_dir>/config/           (pipeline_state.json, license_approvals.json)
+              * <base_dir>/controller_config.json  (config persisted at the root)
+            Files are moved only when no newer copy exists in configs/;
+            emptied legacy dirs are removed.  Never raises.
+            """
+            import shutil
+
+            legacy_dir = os.path.join(self.base_dir, "config")
+            candidates: list[tuple[str, str]] = []
+            if os.path.isdir(legacy_dir):
+                for fname in os.listdir(legacy_dir):
+                    if fname.endswith(".json"):
+                        candidates.append(
+                            (os.path.join(legacy_dir, fname), fname)
+                        )
+            root_cfg = os.path.join(self.base_dir, CONFIG_FILE)
+            if os.path.isfile(root_cfg):
+                candidates.append((root_cfg, CONFIG_FILE))
+
+            moved: list[str] = []
+            for src_path, fname in candidates:
+                dst_path = os.path.join(self.config_root, fname)
+                try:
+                    if not os.path.exists(dst_path):
+                        shutil.move(src_path, dst_path)
+                        moved.append(fname)
+                    elif os.path.getmtime(src_path) > os.path.getmtime(dst_path):
+                        # legacy copy is newer — keep it, drop the old one
+                        shutil.move(
+                            src_path, dst_path + ".legacy.bak"
+                        )
+                        moved.append(fname + " (kept as .legacy.bak)")
+                    else:
+                        os.remove(src_path)
+                except OSError:
+                    continue
+
+            # remove the legacy config/ dir when it is now empty
+            try:
+                if os.path.isdir(legacy_dir) and not os.listdir(legacy_dir):
+                    os.rmdir(legacy_dir)
+            except OSError:
+                pass
+
+            if moved:
+                from ai_lsc.utils.logging import get_logger
+                get_logger(__name__).info(
+                    "Migrated legacy state files to %s: %s",
+                    self.config_root, ", ".join(moved),
+                )
 
         def _setup_environment_hierarchy(self) -> None:
             for d in REQUIRED_DIRS:
@@ -1480,7 +1537,7 @@ if _HAS_QT:
         def _load_config(self) -> dict:
             # H-02: resolve config relative to BASE_DIR (not the cwd the
             # app was launched from).
-            config_path = os.path.join(self.base_dir, CONFIG_FILE)
+            config_path = os.path.join(self.config_root, CONFIG_FILE)
             if os.path.exists(config_path):
                 try:
                     with open(config_path, encoding="utf-8") as f:
@@ -1507,7 +1564,10 @@ if _HAS_QT:
                 "services": services_data,
             }
             # H-02 + H-03: write under base_dir atomically.
-            _atomic_write_json(os.path.join(self.base_dir, CONFIG_FILE), config)
+            os.makedirs(self.config_root, exist_ok=True)
+            _atomic_write_json(
+                os.path.join(self.config_root, CONFIG_FILE), config
+            )
 
         def closeEvent(self, event) -> None:
             self.save_config()

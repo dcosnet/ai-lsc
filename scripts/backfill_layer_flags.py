@@ -14,7 +14,7 @@ import re
 import sys
 from pathlib import Path
 
-LAYER_DIR = Path("/home/z/my-project/workspace/ai-lsc/src/ai_lsc/registry/layers")
+LAYER_DIR = Path(__file__).resolve().parent.parent / "src/ai_lsc/registry/layers"
 REQUIRED_KEYS = [
     "has_cli",
     "has_gui",

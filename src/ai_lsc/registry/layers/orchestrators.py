@@ -1,46 +1,18 @@
-"""Registry entries for the Orchestrators layer (L5).
+"""Registry entries for the Orchestrators layer (L6).
 
-Contains distributed compute, LLM serving, agent orchestration,
-workflow routing, pipeline coordination, and multi-agent frameworks.
+Contains distributed compute, agent orchestration, workflow
+engines, pipeline coordination, and multi-agent frameworks.
+(LLM serving moved to Engines; routing/gateways to Routing;
+coding agents to DevOps in the 11-layer taxonomy.)
 
 This module is consumed by
 :mod:`ai_lsc.registry.loader`.
 """
 
 TOOLS: dict[str, dict] = {
-    'vllm': {
-    "name": "vLLM",
-    "level": 5,
-    "layer": "Orchestrators",
-    "role": "Scaling",
-    "category": "LLM Serving",
-    "installer": {
-        "type": "uv",
-        "pkg": "vllm"
-    },
-    "launcher": {
-        "type": "tmux",
-        "cmd": "python -m vllm.entrypoints.openai.api_server --port {port}",
-        "default_port": 8000
-    },
-    "deps": [
-        "cuda"
-    ],
-    "description": "High-throughput and memory-efficient LLM serving.",
-    "license": 'Apache-2.0',
-    "flags": {
-        "has_cli": True,
-        "has_gui": False,
-        "has_web": True,
-        "is_ollama": False,
-        "is_passive": False,
-        "is_mcp": False,
-        "is_skills_collection": False
-    }
-},
     'distcc': {
     "name": "DistCC",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Distribution",
     "category": "Distributed Compilation",
@@ -66,39 +38,9 @@ TOOLS: dict[str, dict] = {
         "is_skills_collection": False
     }
 },
-    'dma': {
-    "name": "DMA (Distcc Monitor Agent)",
-    "level": 5,
-    "layer": "Orchestrators",
-    "role": "Monitoring",
-    "category": "Build Monitoring",
-    "installer": {
-        "type": "git",
-        "pkg": "https://github.com/distcc/dma"
-    },
-    "launcher": {
-        "type": "desktop",
-        "cmd": "dma --version",
-        "default_port": None
-    },
-    "deps": [
-        "distcc"
-    ],
-    "description": "Monitor for distributed compilation with distcc.",
-    "license": 'Proprietary',
-    "flags": {
-        "has_cli": True,
-        "has_gui": False,
-        "has_web": False,
-        "is_ollama": False,
-        "is_passive": False,
-        "is_mcp": False,
-        "is_skills_collection": False
-    }
-},
     'ray': {
     "name": "Ray",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Scaling",
     "category": "Distributed Compute",
@@ -126,7 +68,7 @@ TOOLS: dict[str, dict] = {
 },
     'pssh': {
     "name": "PSSH (Parallel SSH)",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Coordination",
     "category": "Cluster SSH",
@@ -152,67 +94,9 @@ TOOLS: dict[str, dict] = {
         "is_skills_collection": False
     }
 },
-    'litellm': {
-    "name": "LiteLLM Proxy",
-    "level": 5,
-    "layer": "Orchestrators",
-    "role": "API Gateway",
-    "category": "Proxy",
-    "installer": {
-        "type": "uv",
-        "pkg": "litellm"
-    },
-    "launcher": {
-        "type": "tmux",
-        "cmd": "litellm --port {port}",
-        "default_port": 4000
-    },
-    "deps": [],
-    "description": "Call 100+ LLMs using the OpenAI format.",
-    "license": 'MIT',
-    "flags": {
-        "has_cli": True,
-        "has_gui": False,
-        "has_web": True,
-        "is_ollama": False,
-        "is_passive": False,
-        "is_mcp": False,
-        "is_skills_collection": False
-    }
-},
-    '9router_proxy': {
-    "name": "9Router Proxy",
-    "level": 5,
-    "layer": "Orchestrators",
-    "role": "API Gateway",
-    "category": "LLM Router",
-    "installer": {
-        "type": "git",
-        "pkg": "https://github.com/nicely-done/9router"
-    },
-    "launcher": {
-        "type": "tmux",
-        "cmd": "cd {tools_root}/9router && python3 main.py --port {port}",
-        "default_port": 4001
-    },
-    "deps": [
-        "ollama"
-    ],
-    "description": "Intelligent LLM request router and load balancer.",
-    "license": 'MIT',
-    "flags": {
-        "has_cli": True,
-        "has_gui": False,
-        "has_web": True,
-        "is_ollama": False,
-        "is_passive": False,
-        "is_mcp": False,
-        "is_skills_collection": False
-    }
-},
     'langchain': {
     "name": "LangChain",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Orchestration",
     "category": "LLM Framework",
@@ -240,7 +124,7 @@ TOOLS: dict[str, dict] = {
 },
     'langflow': {
     "name": "LangFlow",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Visual Builder",
     "category": "Workflow",
@@ -268,7 +152,7 @@ TOOLS: dict[str, dict] = {
 },
     'crewai': {
     "name": "CrewAI",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Brain",
     "category": "Agent Workflow",
@@ -296,7 +180,7 @@ TOOLS: dict[str, dict] = {
 },
     'autogen': {
     "name": "AutoGen",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Brain",
     "category": "Agent Workflow",
@@ -324,7 +208,7 @@ TOOLS: dict[str, dict] = {
 },
     'openai_swarm': {
     "name": "OpenAI Swarm",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Multi-Agent",
     "category": "Agent Framework",
@@ -352,7 +236,7 @@ TOOLS: dict[str, dict] = {
 },
     'agno': {
     "name": "Agno",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Agent Framework",
     "category": "AI Agent",
@@ -380,7 +264,7 @@ TOOLS: dict[str, dict] = {
 },
     'nvidia_agent_skills': {
     "name": "NVIDIA Agent Skills",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Tool Integration",
     "category": "Agent Toolkit",
@@ -410,7 +294,7 @@ TOOLS: dict[str, dict] = {
 },
     'openbrain': {
     "name": "OpenBrain",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Brain",
     "category": "Reasoning Engine",
@@ -440,7 +324,7 @@ TOOLS: dict[str, dict] = {
 },
     'odysseus': {
     "name": "Odysseus",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Reasoning",
     "category": "Agent Workflow",
@@ -468,42 +352,9 @@ TOOLS: dict[str, dict] = {
         "is_skills_collection": False
     }
 },
-    'dify': {
-    "name": "Dify",
-    "level": 5,
-    "layer": "Orchestrators",
-    "role": "Pipeline Orchestrator",
-    "category": "Pipeline",
-    "installer": {
-        "type": "git",
-        "pkg": "https://github.com/langgenius/dify.git"
-    },
-    "launcher": {
-        "type": "tmux",
-        "cmd": "cd {tools_root}/dify/api && poetry run flask run --host 0.0.0.0 --port={port}",
-        "default_port": 5001
-    },
-    "deps": [
-        "postgresql",
-        "redis",
-        "python",
-        "node"
-    ],
-    "description": "LLM application development platform (native install). Requires Poetry, Node.js 18+, FFmpeg. Backend (Flask) + Celery worker + Next.js frontend run as separate services.",
-    "license": 'Dify-OSL',
-    "flags": {
-        "has_cli": False,
-        "has_gui": False,
-        "has_web": True,
-        "is_ollama": False,
-        "is_passive": False,
-        "is_mcp": False,
-        "is_skills_collection": False
-    }
-},
     'n8n': {
     "name": "n8n",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Workflow Orchestrator",
     "category": "Workflow Automation",
@@ -534,7 +385,7 @@ TOOLS: dict[str, dict] = {
 },
     'fabric': {
     "name": "Fabric",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Curation",
     "category": "AI Augmentation",
@@ -564,7 +415,7 @@ TOOLS: dict[str, dict] = {
 },
     'synapscli': {
     "name": "SynapsCLI",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Agent",
     "category": "AI Agent",
@@ -593,7 +444,7 @@ TOOLS: dict[str, dict] = {
 },
     'hivemind': {
     "name": "HiveMind",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Coordination",
     "category": "Multi-Agent",
@@ -623,7 +474,7 @@ TOOLS: dict[str, dict] = {
 },
     'hermes_agent': {
     "name": "Hermes Agent",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Agent",
     "category": "AI Agent",
@@ -653,7 +504,7 @@ TOOLS: dict[str, dict] = {
 },
     'agentic_os': {
     "name": "Agentic OS",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Hands",
     "category": "Agent OS",
@@ -683,7 +534,7 @@ TOOLS: dict[str, dict] = {
 },
     'mcp_drift_state_tracker': {
     "name": "MCP Drift State Tracker",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Code Audit",
     "category": "MCP Server",
@@ -713,7 +564,7 @@ TOOLS: dict[str, dict] = {
 },
     'glassmind': {
     "name": "GlassMind",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Reasoning",
     "category": "Reasoning Engine",
@@ -741,121 +592,9 @@ TOOLS: dict[str, dict] = {
         "is_skills_collection": False
     }
 },
-    'aider': {
-    "name": "Aider",
-    "level": 5,
-    "layer": "Orchestrators",
-    "role": "Coding Agent",
-    "category": "AI Coding Agent",
-    "installer": {
-        "type": "uv",
-        "pkg": "aider-chat"
-    },
-    "launcher": {
-        "type": "desktop",
-        "cmd": "aider --version",
-        "default_port": None
-    },
-    "deps": [],
-    "description": "AI pair programming assistant that works in your terminal.",
-    "license": 'Apache-2.0',
-    "flags": {
-        "has_cli": True,
-        "has_gui": False,
-        "has_web": False,
-        "is_ollama": False,
-        "is_passive": False,
-        "is_mcp": False,
-        "is_skills_collection": False
-    }
-},
-    'claude_code': {
-    "name": "Claude Code",
-    "level": 5,
-    "layer": "Orchestrators",
-    "role": "Coding Agent",
-    "category": "AI Coding Agent",
-    "installer": {
-        "type": "npm",
-        "pkg": "@anthropic-ai/claude-code"
-    },
-    "launcher": {
-        "type": "desktop",
-        "cmd": "claude --version",
-        "default_port": None
-    },
-    "deps": [],
-    "description": "Anthropic's CLI-based AI coding agent powered by Claude.",
-    "license": 'Proprietary',
-    "flags": {
-        "has_cli": True,
-        "has_gui": False,
-        "has_web": False,
-        "is_ollama": False,
-        "is_passive": False,
-        "is_mcp": False,
-        "is_skills_collection": False
-    }
-},
-    'codex': {
-    "name": "Codex",
-    "level": 5,
-    "layer": "Orchestrators",
-    "role": "Coding Agent",
-    "category": "AI Coding Agent",
-    "installer": {
-        "type": "npm",
-        "pkg": "@openai/codex"
-    },
-    "launcher": {
-        "type": "desktop",
-        "cmd": "codex --version",
-        "default_port": None
-    },
-    "deps": [],
-    "description": "OpenAI's CLI-based AI coding agent powered by GPT.",
-    "license": 'Proprietary',
-    "flags": {
-        "has_cli": True,
-        "has_gui": False,
-        "has_web": False,
-        "is_ollama": False,
-        "is_passive": False,
-        "is_mcp": False,
-        "is_skills_collection": False
-    }
-},
-    'openhands': {
-    "name": "OpenHands",
-    "level": 5,
-    "layer": "Orchestrators",
-    "role": "Coding Agent",
-    "category": "AI Coding Agent",
-    "installer": {
-        "type": "uv",
-        "pkg": "openhands-ai"
-    },
-    "launcher": {
-        "type": "tmux",
-        "cmd": "openhands serve --port {port}",
-        "default_port": 3000
-    },
-    "deps": [],
-    "description": "Open-source AI coding agent platform with web UI for autonomous software engineering.",
-    "license": 'MIT',
-    "flags": {
-        "has_cli": True,
-        "has_gui": False,
-        "has_web": True,
-        "is_ollama": False,
-        "is_passive": False,
-        "is_mcp": False,
-        "is_skills_collection": False
-    }
-},
     'honcho': {
     "name": "Honcho",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Process Manager",
     "category": "Workflow Automation",
@@ -881,43 +620,15 @@ TOOLS: dict[str, dict] = {
         "is_skills_collection": False
     }
 },
-    'eagle_eye': {
-    "name": "Eagle Eye",
-    "level": 5,
-    "layer": "Orchestrators",
-    "role": "Monitoring",
-    "category": "Observability",
-    "installer": {
-        "type": "git",
-        "pkg": "https://github.com/nicely-done/eagle_eye"
-    },
-    "launcher": {
-        "type": "desktop",
-        "cmd": "eagle_eye --version",
-        "default_port": None
-    },
-    "deps": [],
-    "description": "AI-powered observability and monitoring agent.",
-    "license": 'Proprietary',
-    "flags": {
-        "has_cli": True,
-        "has_gui": False,
-        "has_web": False,
-        "is_ollama": False,
-        "is_passive": False,
-        "is_mcp": False,
-        "is_skills_collection": False
-    }
-},
     'graphify': {
     "name": "Graphify",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
-    "role": "Graph Builder",
-    "category": "AI Agent",
+    "role": "Knowledge Graph Builder",
+    "category": "Claude Code Skill",
     "installer": {
-        "type": "git",
-        "pkg": "https://github.com/nicely-done/graphify"
+        "type": "uv",
+        "pkg": "graphifyy"
     },
     "launcher": {
         "type": "desktop",
@@ -925,21 +636,31 @@ TOOLS: dict[str, dict] = {
         "default_port": None
     },
     "deps": [],
-    "description": "Graph-based knowledge and workflow visualization agent.",
-    "license": 'Proprietary',
+    "description": "Knowledge graph builder for code, docs, PDFs, and "
+                  "images. Installs as a Claude Code skill (type "
+                  "`/graphify .` in Claude Code) or runs standalone "
+                  "via CLI. Builds interactive graph.html, Obsidian "
+                  "vault, Wikipedia-style wiki, and persistent "
+                  "graph.json from any folder. MCP stdio server mode "
+                  "(`graphify --mcp`) lets other agents query the "
+                  "graph. Uses Claude vision by default; can be "
+                  "configured to use any OpenAI-compat endpoint "
+                  "(MeshLLM, LiteLLM, Ollama) for extraction. PyPI "
+                  "package is `graphifyy` (CLI is `graphify`).",
+    "license": "MIT",
     "flags": {
         "has_cli": True,
         "has_gui": False,
-        "has_web": False,
+        "has_web": True,
         "is_ollama": False,
         "is_passive": False,
-        "is_mcp": False,
+        "is_mcp": True,
         "is_skills_collection": False
     }
 },
     'headroom': {
     "name": "Headroom",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Resource Manager",
     "category": "Infrastructure",
@@ -967,7 +688,7 @@ TOOLS: dict[str, dict] = {
 },
     'loop_engineering': {
     "name": "Loop Engineering",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Engineering Loop",
     "category": "Workflow Automation",
@@ -995,7 +716,7 @@ TOOLS: dict[str, dict] = {
 },
     'nightshift': {
     "name": "Nightshift",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Night Ops",
     "category": "Workflow Automation",
@@ -1023,7 +744,7 @@ TOOLS: dict[str, dict] = {
 },
     'opensandbox': {
     "name": "OpenSandbox",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Sandbox",
     "category": "Container Ops",
@@ -1051,7 +772,7 @@ TOOLS: dict[str, dict] = {
 },
     'ponytail': {
     "name": "Ponytail",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "CI/CD",
     "category": "Workflow Automation",
@@ -1079,7 +800,7 @@ TOOLS: dict[str, dict] = {
 },
     'promptops': {
     "name": "PromptOps",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Prompt Ops",
     "category": "AI Agent",
@@ -1107,7 +828,7 @@ TOOLS: dict[str, dict] = {
 },
     'agent_reach': {
     "name": "Agent Reach",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Agent Discovery",
     "category": "Multi-Agent",
@@ -1135,7 +856,7 @@ TOOLS: dict[str, dict] = {
 },
     'algory': {
     "name": "Algory",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Algorithm",
     "category": "AI Agent",
@@ -1163,7 +884,7 @@ TOOLS: dict[str, dict] = {
 },
     'atlas_os': {
     "name": "Atlas OS",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "OS Framework",
     "category": "Agent OS",
@@ -1191,7 +912,7 @@ TOOLS: dict[str, dict] = {
 },
     'career_ops': {
     "name": "Career Ops",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Career Ops",
     "category": "Workflow Automation",
@@ -1219,7 +940,7 @@ TOOLS: dict[str, dict] = {
 },
     'container_tool': {
     "name": "Container Tool",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Containerization",
     "category": "Container Ops",
@@ -1247,7 +968,7 @@ TOOLS: dict[str, dict] = {
 },
     'pm_skills': {
     "name": "PM Skills",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Project Management",
     "category": "Workflow Automation",
@@ -1275,7 +996,7 @@ TOOLS: dict[str, dict] = {
 },
     'skillspector': {
     "name": "Skillspector",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Skill Inspector",
     "category": "AI Agent",
@@ -1303,7 +1024,7 @@ TOOLS: dict[str, dict] = {
 },
     'spec_kit': {
     "name": "Spec Kit",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Specification",
     "category": "AI Agent",
@@ -1331,7 +1052,7 @@ TOOLS: dict[str, dict] = {
 },
 'wayland_ai': {
     "name": "Wayland AI",
-    "level": 5,
+    "level": 6,
     "layer": "Orchestrators",
     "role": "Agent Orchestrator",
     "category": "AI Agent",
@@ -1358,4 +1079,35 @@ TOOLS: dict[str, dict] = {
         "is_skills_collection": False
     }
 },
+    'letta': {
+    "name": "Letta",
+    "level": 6,
+    "layer": "Orchestrators",
+    "role": "Agent Framework",
+    "category": "Agent Framework",
+    "installer": {
+        "type": "uv",
+        "pkg": "letta"
+    },
+    "launcher": {
+        "type": "tmux",
+        "cmd": "letta server --port {port}",
+        "default_port": 8283
+    },
+    "deps": [],
+    "description": "Stateful agent framework (MemGPT) with persistent memory, "
+                  "self-editing agents, and a REST API server for agent "
+                  "management.",
+    "license": "Apache-2.0",
+    "flags": {
+        "has_cli": True,
+        "has_gui": False,
+        "has_web": True,
+        "is_ollama": False,
+        "is_passive": False,
+        "is_mcp": False,
+        "is_skills_collection": False
+    }
+},
+
 }

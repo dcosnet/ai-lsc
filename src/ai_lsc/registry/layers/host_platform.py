@@ -3,7 +3,7 @@
 Each entry follows the standard registry schema:
 
 - ``name``: human-readable tool name
-- ``level``: 10-layer taxonomy level (1-10)
+- ``level``: 11-layer taxonomy level (1-11)
 - ``layer``: this layer name
 - ``role``: role within the layer
 - ``category``: functional category
@@ -306,11 +306,11 @@ TOOLS: dict[str, dict] = {
     "category": "Virtualization",
     "installer": {
         "type": "script",
-        "cmd": "curl -fsSL https://github.com/firecracker-microvm/firecracker/releases/latest/download/firecracker-v$(curl -s https://api.github.com/repos/firecracker-microvm/firecracker/releases/latest | grep tag_name | cut -d'\"' -f4)-x86_64.tgz | tar xz -C /usr/local/bin/"
+        "cmd": "mkdir -p {tools_root}/bin {tools_root}/firecracker && FC_VER=$(curl -sIL https://github.com/firecracker-microvm/firecracker/releases/latest | grep -i '^location:' | tail -1 | sed 's|.*/tag/||' | tr -d '\r') && curl -fsSL 'https://github.com/firecracker-microvm/firecracker/releases/download/$FC_VER/firecracker-$FC_VER-x86_64.tgz' | tar xz -C {tools_root}/firecracker --strip-components=1 && ln -sf {tools_root}/firecracker/firecracker-$FC_VER-x86_64 {tools_root}/bin/firecracker && ln -sf {tools_root}/firecracker/jailer-$FC_VER-x86_64 {tools_root}/bin/jailer"
     },
     "launcher": {
         "type": "desktop",
-        "cmd": "firecracker --version",
+        "cmd": "{tools_root}/bin/firecracker --version",
         "default_port": None
     },
     "deps": [],
@@ -390,11 +390,11 @@ TOOLS: dict[str, dict] = {
     "category": "Networking",
     "installer": {
         "type": "script",
-        "cmd": "curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /usr/local/bin/cloudflared && chmod +x /usr/local/bin/cloudflared"
+        "cmd": "mkdir -p {tools_root}/bin && curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o {tools_root}/bin/cloudflared && chmod +x {tools_root}/bin/cloudflared"
     },
     "launcher": {
         "type": "tmux",
-        "cmd": "cloudflared tunnel --url http://localhost:{port}",
+        "cmd": "{tools_root}/bin/cloudflared tunnel --url http://localhost:{port}",
         "default_port": 8080
     },
     "deps": [],
