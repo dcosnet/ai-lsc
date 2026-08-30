@@ -198,10 +198,10 @@ EXTRA_CATEGORY_LAYERS: dict[str, str] = {
     "Observability": "Human Interface & System Operations",
 }
 
-# The v3.1.1b db_manager (restored from the routing tarball) carries a
+# The v3.1.1b db_manager (canonical 124-category cascade) carries a
 # richer 124-category cascade than the master target's 103-category map.
-# These alt-only categories are preserved and translated to the 10-layer
-# taxonomy so the categorisation cascade keeps its full coverage.
+# These alt-only categories are translated to the 10-layer taxonomy so
+# the categorisation cascade keeps its full coverage.
 ALT_CATEGORY_TRANSLATIONS: dict[str, str] = {
     "AI Assistant Platform": "Human Interface & System Operations",
     "AI Augmentation": "Multi-Agent Orchestration Runtimes",
@@ -665,7 +665,7 @@ SECTION_RENAMES = [
      "# L3: GPU Runtime  →  Layer 3: GPU Acceleration & Optimization"),
     ("# L4: Inference Engines",
      "# L4: Inference Engines  →  Layer 4: Local Inference Engines"),
-    ("# L6: AI Endpoints  (→ the restored \"Routing\" layer in the 11-layer taxonomy)",
+    ("# L6: AI Endpoints  (→ the L5 \"Routing\" layer in the 11-layer taxonomy)",
      "# L6: AI Endpoints  →  Layer 5: Intelligent API Routers & Proxies (10-layer taxonomy)"),
     ("# L10: Intelligent Routing  (folded into \"Orchestrators\" in the 11-layer taxonomy)",
      "# L10: Intelligent Routing  →  Layer 5: Intelligent API Routers & Proxies (10-layer taxonomy)"),
@@ -754,8 +754,8 @@ def category_map_lines(cmap: dict[str, dict]) -> str:
 
 
 def stage_category_map() -> None:
-    # read the current CATEGORY_MAP from the restored v3.1.1b db_manager
-    # (full 124-category cascade in the old 11-layer taxonomy)
+    # Read the current CATEGORY_MAP from the canonical v3.1.1b db_manager
+    # (full 124-category cascade in the old 11-layer taxonomy).
     dbm = SRC / "ai_lsc" / "ui" / "pages" / "db_manager.py"
     content = dbm.read_text(encoding="utf-8")
     m = re.search(

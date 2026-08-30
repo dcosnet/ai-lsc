@@ -5,8 +5,8 @@
 **Pass scope**: CRITICAL (C-01, C-02, C-03, C-04, C-06, C-07) + all 24 HIGH + all 42 MEDIUM + all 20 LOW
 **Pass status**: 91 of 93 findings addressed in code; 2 explicitly skipped per user instruction
 **Double-check pass**: 19/19 functional spot-checks pass; 2 latent bugs found and fixed (see "Bugs caught during double-check" below)
-**v3.2 note**: the 10-layer taxonomy migration preserved every curl|sh
-site below verbatim — the restored installer cmds (ollama, llamafile,
+**v3.2 note**: the 10-layer taxonomy migration carries every curl|sh
+site below verbatim — the canonical installer cmds (ollama, llamafile,
 qdrant, grafana_alloy, meilisearch, fabric) are byte-identical to the
 pre-migration registry, so the C-05 policy state is unchanged.
 

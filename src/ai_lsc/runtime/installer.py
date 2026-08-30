@@ -574,6 +574,8 @@ class InstallerManager:
         """
         dest = os.path.join(self.tools_root, tool_id)
         git_dir = os.path.join(dest, ".git")
+
+        # Step-down: each branch resolves one situation and assigns msg.
         if os.path.isdir(git_dir):
             try:
                 subprocess.run(
@@ -586,36 +588,22 @@ class InstallerManager:
                     "git pull failed for %s (%s); re-cloning fresh",
                     tool_id, exc,
                 )
-                backup = dest + ".bak." + str(int(time.time()))
-                shutil.move(dest, backup)
-                os.makedirs(dest, exist_ok=True)
-                subprocess.run(
-                    ["git", "clone", pkg, dest],
-                    check=True, timeout=600,
-                )
+                backup = self._backup_existing(dest)
+                self._clone_fresh(pkg, dest)
                 msg = (
                     f"Git source re-cloned (pull failed, "
                     f"old copy at {backup}): {dest}"
                 )
         elif os.path.exists(dest):
             # Dir exists but is not a git repo — back it up and clone.
-            backup = dest + ".bak." + str(int(time.time()))
-            shutil.move(dest, backup)
-            os.makedirs(dest, exist_ok=True)
-            subprocess.run(
-                ["git", "clone", pkg, dest],
-                check=True, timeout=600,
-            )
+            backup = self._backup_existing(dest)
+            self._clone_fresh(pkg, dest)
             msg = (
                 f"Git source cloned (existing non-git dir backed up "
                 f"at {backup}): {dest}"
             )
         else:
-            os.makedirs(dest, exist_ok=True)
-            subprocess.run(
-                ["git", "clone", pkg, dest],
-                check=True, timeout=600,
-            )
+            self._clone_fresh(pkg, dest)
             msg = f"Git source cloned: {dest}"
 
         if post_install:
@@ -638,6 +626,9 @@ class InstallerManager:
         """
         dest = os.path.join(self.tools_root, tool_id)
         git_dir = os.path.join(dest, ".git")
+
+        # Step-down: each branch resolves one situation, runs the
+        # appropriate clone/pull+yarn sequence, and assigns msg.
         if os.path.isdir(git_dir):
             try:
                 subprocess.run(
@@ -653,12 +644,8 @@ class InstallerManager:
                     "git pull / yarn install failed for %s (%s); re-cloning",
                     tool_id, exc,
                 )
-                backup = dest + ".bak." + str(int(time.time()))
-                shutil.move(dest, backup)
-                os.makedirs(dest, exist_ok=True)
-                subprocess.run(
-                    ["git", "clone", pkg, dest], check=True, timeout=600,
-                )
+                backup = self._backup_existing(dest)
+                self._clone_fresh(pkg, dest)
                 subprocess.run(
                     ["yarn", "install"], cwd=dest, check=True, timeout=300,
                 )
@@ -667,12 +654,8 @@ class InstallerManager:
                     f"old copy at {backup}): {dest}"
                 )
         elif os.path.exists(dest):
-            backup = dest + ".bak." + str(int(time.time()))
-            shutil.move(dest, backup)
-            os.makedirs(dest, exist_ok=True)
-            subprocess.run(
-                ["git", "clone", pkg, dest], check=True, timeout=600,
-            )
+            backup = self._backup_existing(dest)
+            self._clone_fresh(pkg, dest)
             subprocess.run(
                 ["yarn", "install"], cwd=dest, check=True, timeout=300,
             )
@@ -681,10 +664,7 @@ class InstallerManager:
                 f"up at {backup}): {dest}"
             )
         else:
-            os.makedirs(dest, exist_ok=True)
-            subprocess.run(
-                ["git", "clone", pkg, dest], check=True, timeout=600,
-            )
+            self._clone_fresh(pkg, dest)
             subprocess.run(
                 ["yarn", "install"], cwd=dest, check=True, timeout=300,
             )
@@ -693,6 +673,27 @@ class InstallerManager:
         if post_install:
             self._run_post_install(tool_id, post_install)
         return msg
+
+    # ── git install helpers ────────────────────────────────────────
+
+    @staticmethod
+    def _backup_existing(dest: str) -> str:
+        """Move *dest* aside to ``<dest>.bak.<unix_ts>`` and return the backup path.
+
+        Caller guarantees *dest* exists.
+        """
+        backup = f"{dest}.bak.{int(time.time())}"
+        shutil.move(dest, backup)
+        return backup
+
+    @staticmethod
+    def _clone_fresh(pkg: str, dest: str) -> None:
+        """Create *dest* (empty) and run ``git clone pkg dest`` into it."""
+        os.makedirs(dest, exist_ok=True)
+        subprocess.run(
+            ["git", "clone", pkg, dest],
+            check=True, timeout=600,
+        )
 
     def install_script(
         self,

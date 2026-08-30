@@ -1,18 +1,18 @@
 """Registry entries for the Routing layer (L5).
 
-Restored layer (v3.1.1b): model gateways, LLM proxies, request routers,
-mesh transport, and the model-routing tier that sits between the Engines
-(who serve weights) and the Orchestrators (who build agent workflows on
-top of a single OpenAI-compatible endpoint).  This re-unites the old
-13-layer model's "AI Endpoints" tier (LiteLLM, model routers, API
-gateways) that had been folded into Orchestrators during the 13-to-10
-reorg, plus the mesh-aware clients that ride on it.
+L5 (Intelligent API Routers & Proxies) holds the model-routing tier
+that sits between the Engines (who serve weights) and the Orchestrators
+(who build agent workflows on top of a single OpenAI-compatible
+endpoint): model gateways, LLM proxies, request routers, mesh
+transport, and the mesh-aware clients that ride on it.
 
-This module is consumed by :mod:`ai_lsc.registry.loader`.
+This module is consumed by :mod:`ai_lsc.registry.loader`.  The loader
+merges by tool, not by filename, so tools may be regrouped across
+files in a future pass without a behavior change.
 
-Structural fields (layer, level) follow the 10-Layer Systems
-Architecture Taxonomy; tools may be regrouped across files in a
-future pass — the loader merges by tool, not by filename.
+Source of truth: the entries below.  The merged registry produced by
+``loader.load_merged_registry()`` is a derived view; if any manifest
+or cached ``ecosystem.json`` disagrees, the source in this file wins.
 """
 
 TOOLS: dict[str, dict] = {

@@ -360,35 +360,35 @@ if _HAS_QT:
                 },
             }
 
-            html = (
-                "<body style='background:#121212; color:#e0e0e0;"
-                " font-family:sans-serif;'>"
-            )
-            for msg in self.chat_messages:
+            # Dispatch table for the bubble-style key — replaces a
+            # 2-level nested ternary on (is_user, is_error).
+            _identity_color = {"user": "#e0e0e0", "error": "#e74c3c", "assistant": "#d35400"}
+            _identity_label = {
+                "user": "<b>You</b>",
+                # assistant/error labels render identity inline; filled below.
+            }
+
+            def _style_key(msg: dict) -> str:
+                if msg["is_user"]:
+                    return "user"
+                return "error" if "?" in msg["identity"] else "assistant"
+
+            def _render_bubble(msg: dict) -> str:
+                style_key = _style_key(msg)
+                s = bubble_styles[style_key]
                 ts = msg["timestamp"]
                 payload = (
                     msg["payload"]
                     .replace("<", "&lt;").replace(">", "&gt;")
                     .replace("\n", "<br/>")
                 )
-                is_error = "?" in msg["identity"]
-                style_key = (
-                    "user" if msg["is_user"]
-                    else ("error" if is_error else "assistant")
-                )
-                s = bubble_styles[style_key]
-                label_color = (
-                    "#e0e0e0" if msg["is_user"]
-                    else ("#e74c3c" if is_error else "#d35400")
-                )
-                label = (
-                    "<b>You</b>" if msg["is_user"]
-                    else f"<b style='color:{label_color}'>{msg['identity']}</b>"
-                )
-                border_css = (
-                    f"border: {s['border']};" if "border" in s else ""
-                )
-                html += (
+                if style_key == "user":
+                    label = _identity_label["user"]
+                else:
+                    color = _identity_color[style_key]
+                    label = f"<b style='color:{color}'>{msg['identity']}</b>"
+                border_css = f"border: {s['border']};" if "border" in s else ""
+                return (
                     f"<div style='margin-bottom:15px; text-align:{s['align']}';>"
                     f"<span style='background:{s['bg']}; {border_css} color:#e0e0e0; "
                     f"padding:10px 14px; border-radius:{s['radius']}; "
@@ -399,6 +399,12 @@ if _HAS_QT:
                     f"{payload}</span>"
                     f"</span></div>"
                 )
+
+            html = (
+                "<body style='background:#121212; color:#e0e0e0;"
+                " font-family:sans-serif;'>"
+            )
+            html += "".join(_render_bubble(m) for m in self.chat_messages)
 
             if self.is_thinking:
                 model = self.cbo_chat_model.currentText() or "Model"
@@ -638,11 +644,9 @@ if _HAS_QT:
                     "Absorb and layer the following skill instructions:\n\n"
                     + "\n\n".join(skill_directives)
                 )
-            system_content = (
-                parts[0] + "\n\n" + parts[1]
-                if len(parts) == 2
-                else (parts[0] if parts else "")
-            )
+            # Flat join beats the prior 3-way nested ternary; empty parts
+            # naturally produce an empty string.
+            system_content = "\n\n".join(parts)
 
             self.chat_history_data.append(
                 {"role": "user", "content": full_prompt}
@@ -650,9 +654,7 @@ if _HAS_QT:
             filtered = [
                 m for m in self.chat_history_data if m.get("role") != "system"
             ]
-            result = []
-            if system_content:
-                result.append({"role": "system", "content": system_content})
+            result = [{"role": "system", "content": system_content}] if system_content else []
             result.extend(filtered)
             return result
 

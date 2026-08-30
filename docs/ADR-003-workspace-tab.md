@@ -64,7 +64,7 @@ The emoji encoding lets the user scan the tab bar at a glance and see what kind 
 
 ### Sub-tab closing
 
-Sub-tabs are closable via the standard × button. Closing a sub-tab calls `stop_polling()` on the page (for CLI tools) but does **NOT** stop the underlying tool — that's the user's call from the Stack Editor. The empty-state placeholder is restored when all sub-tabs are closed.
+Sub-tabs are closable via the standard × button. Closing a sub-tab calls `stop_polling()` on the page (for CLI tools) but does **NOT** stop the underlying tool — that's the user's call from the Stack Editor. When all sub-tabs are closed the empty-state placeholder is shown again.
 
 ## Refresh model
 

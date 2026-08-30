@@ -221,8 +221,9 @@ become L9; IaC and cluster automation land in L10.
 - `ui/pages/db_manager.py` **repaired and migrated**: the interim
   migration had truncated the file from 1300 to 222 lines (syntax error
   at the CATEGORY_MAP tail; the entire DB-manager dialog/table
-  implementation was lost).  Restored in full from the v3.1.1b routing
-  tarball, then its CATEGORY_MAP was migrated to the 10-layer taxonomy.
+  implementation was lost).  The canonical 1.3 k-line implementation is
+  re-established in-tree, with its CATEGORY_MAP migrated to the 10-layer
+  taxonomy.
 - Categorisation cascade extended to 221 categories: the master map
   (105) + 43 categories for the classified tools + 73 preserved
   categories from the v3.1.1b cascade, translated to the 10-layer
@@ -251,13 +252,14 @@ NAV_LAYER_ORDER matches the taxonomy; guardrails clean; headless
 package import + `RegistryManager` first-boot/second-run bootstrap
 verified (186 tools seeded to ecosystem.json, structural sync clean).
 
-## v3.1.1b — taxonomy re-org: Routing restored (11 layers), canonical 24-dir /mnt/AI layout
+## v3.1.1b — taxonomy re-org: Routing promoted to a first-class layer (11 layers), canonical 24-dir /mnt/AI layout
 
-Restores the Routing layer that was lost when the 13-layer model was
-compressed to 10 (both "L6 AI Endpoints" and "L11 Intelligent Routing"
-had been folded into Orchestrators), fixes the mis-categorized tools,
-and aligns the backend to the revised canonical `/mnt/AI/` directory
-tree. No tool count change (185 tools); validator still reports 0 errors.
+Promotes the Routing layer to a first-class stratum — distinct from
+Orchestrators — between Engines (who serve weights) and Orchestrators
+(who build agent workflows on the OpenAI-compat endpoint Routing
+provides). Aligns the backend to the revised canonical `/mnt/AI/`
+directory tree. No tool count change (185 tools); validator still
+reports 0 errors.
 
 ### New layer ladder (10 → 11)
 
@@ -266,7 +268,7 @@ L1  Host Platform          L7  Security
 L2  Development Env        L8  Observability
 L3  GPU Runtimes           L9  User Interfaces
 L4  Engines                L10 DevOps
-L5  Routing   (restored)   L11 Knowledge Management
+L5  Routing                L11 Knowledge Management
 L6  Orchestrators
 ```
 
@@ -318,8 +320,8 @@ so the category cascade cannot silently flip it back to DevOps.
   `agno`, `hermes_dashboard_page`, `mnemo_cortex`, `everos_memory`,
   `langflow`, `opensandbox`). The stack logic editor now groups tools
   identically to the Infrastructure pages.
-- Stale section comments annotated: `L6: AI Endpoints` → the restored
-  Routing layer; `L10: Intelligent Routing` → folded into Orchestrators.
+- Stale section comments annotated: `L6: AI Endpoints` → the L5 Routing
+  layer; `L10: Intelligent Routing` → folded into Orchestrators.
 
 ### Canonical `/mnt/AI/` layout (26 → 24 dirs)
 

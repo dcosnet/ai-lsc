@@ -68,34 +68,36 @@ if command -v pipx &>/dev/null && pipx list 2>/dev/null | grep -q "ai-lsc"; then
 fi
 
 # ── Ensure AI_BASE exists ─────────────────────────────────────
-if [ ! -d "$AI_BASE" ]; then
-    if [ "$(id -u)" -eq 0 ]; then
-        mkdir -p "$AI_BASE"
-        info "Created ${AI_BASE} (running as root)"
+# Step-down (early-return) logic per Unix philosophy: each branch
+# resolves the situation and falls through; the bottom of the block
+# is the success path.
+if [ -d "$AI_BASE" ]; then
+    : # already present — nothing to do
+elif [ "$(id -u)" -eq 0 ]; then
+    mkdir -p "$AI_BASE"
+    info "Created ${AI_BASE} (running as root)"
+else
+    # Non-root path: prompt for action, escalate if possible.
+    echo ""
+    echo -e "${YELLOW}${AI_BASE} does not exist.${NC}"
+    echo "  This is the managed working directory for all AI tools."
+    echo ""
+    read -p "Create ${AI_BASE} now? [Y/n] " -n 1 -r
+    echo
+    # User declined the canonical path → fall through to alternative.
+    if [[ $REPLY =~ ^[Nn]$ ]]; then
+        read -p "Alternative base directory? [${SCRIPT_DIR}/ai-stack] " ALT_BASE
+        ALT_BASE="${ALT_BASE:-${SCRIPT_DIR}/ai-stack}"
+        mkdir -p "$ALT_BASE"
+        warn "Using ${ALT_BASE}"
+        AI_BASE="$ALT_BASE"
+        export AI_LSC_BASE_DIR="$AI_BASE"
+    elif command -v sudo &>/dev/null; then
+        sudo mkdir -p "$AI_BASE"
+        sudo chown "$(id -u):$(id -g)" "$AI_BASE"
+        info "Created ${AI_BASE}"
     else
-        echo ""
-        echo -e "${YELLOW}${AI_BASE} does not exist.${NC}"
-        echo "  This is the managed working directory for all AI tools."
-        echo ""
-        read -p "Create ${AI_BASE} now? [Y/n] " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Nn]$ ]]; then
-            if command -v sudo &>/dev/null; then
-                sudo mkdir -p "$AI_BASE"
-                sudo chown "$(id -u):$(id -g)" "$AI_BASE"
-                info "Created ${AI_BASE}"
-            else
-                error "Need sudo/root to create ${AI_BASE}. Create it manually and re-run."
-            fi
-        else
-            echo ""
-            read -p "Alternative base directory? [${SCRIPT_DIR}/ai-stack] " ALT_BASE
-            ALT_BASE="${ALT_BASE:-${SCRIPT_DIR}/ai-stack}"
-            mkdir -p "$ALT_BASE"
-            warn "Using ${ALT_BASE}"
-            AI_BASE="$ALT_BASE"
-            export AI_LSC_BASE_DIR="$AI_BASE"
-        fi
+        error "Need sudo/root to create ${AI_BASE}. Create it manually and re-run."
     fi
 fi
 

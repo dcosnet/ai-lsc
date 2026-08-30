@@ -76,26 +76,32 @@ class ManifestSupport:
 
     @staticmethod
     def build_system_context(manifest: dict[str, Any]) -> str:
-        """Build a flat system-prompt text block from manifest data."""
+        """Build a flat system-prompt text block from manifest data.
+
+        Source-of-truth boundary: this method renders a *derived* view of
+        the manifest dict. The manifest file itself is an optional
+        convenience; if absent, callers fall back to defaults — the
+        registry layer files in :mod:`ai_lsc.registry.layers` remain
+        the authoritative source for tool definitions.
+        """
+        # (manifest_key, label) pairs in display order. Each entry whose
+        # manifest value is truthy becomes one line in the prompt.
+        _FIELDS: tuple[tuple[str, str], ...] = (
+            ("description",       "Description"),
+            ("language",          "Language"),
+            ("entry_point",       "Entry Point"),
+            ("architecture",      "Architecture"),
+            ("environment_notes", "Environment"),
+        )
         project = manifest.get("project", "Unknown Project")
-        description = manifest.get("description", "")
-        language = manifest.get("language", "")
-        entry = manifest.get("entry_point", "")
-        architecture = manifest.get("architecture", "")
-        environment = manifest.get("environment_notes", "")
         dependencies = manifest.get("dependencies", [])
 
         parts = [f"Project: {project}"]
-        if description:
-            parts.append(f"Description: {description}")
-        if language:
-            parts.append(f"Language: {language}")
-        if entry:
-            parts.append(f"Entry Point: {entry}")
-        if architecture:
-            parts.append(f"Architecture: {architecture}")
-        if environment:
-            parts.append(f"Environment: {environment}")
+        parts.extend(
+            f"{label}: {manifest.get(key)}"
+            for key, label in _FIELDS
+            if manifest.get(key)
+        )
         if dependencies:
             parts.append(f"Dependencies: {', '.join(dependencies)}")
 
@@ -110,15 +116,15 @@ class ManifestSupport:
         base = Path(base_dir)
         patterns = manifest.get("context_files", [])
         exclude = set(manifest.get("exclude", []))
-        files: list[str] = []
 
-        for pattern in patterns:
-            full_pattern = str(base / pattern)
-            matched = glob_mod.glob(full_pattern, recursive=True)
-            for f in matched:
-                if Path(f).is_file() and not any(ex in f for ex in exclude):
-                    files.append(f)
-        return files
+        # Single-pass comprehension: expand every pattern, keep only
+        # regular files whose path does not contain any excluded token.
+        return [
+            f
+            for pattern in patterns
+            for f in glob_mod.glob(str(base / pattern), recursive=True)
+            if Path(f).is_file() and not any(ex in f for ex in exclude)
+        ]
 
     @staticmethod
     def load_jcl(path: str | Path) -> list[dict[str, Any]]:

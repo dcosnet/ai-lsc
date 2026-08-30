@@ -6,10 +6,11 @@
 
 <p align="center">
   <strong>v3.1.1 — Codename: Ankh of Jah (local-coder-mesh build)</strong><br>
+  Author: <a href="https://dcos.net">Jeremy Anderson</a> &lt;<a href="mailto:info@dcos.net">info@dcos.net</a>&gt;<br>
+  Web: <a href="https://dcos.net">https://dcos.net</a>
+</p>
 
 <p align="center"><em>This build includes the local-coder-mesh integration — see <a href="CHANGES.md">CHANGES.md</a> for the full list of changes vs upstream v3.1.</em></p>
-  <a href="http://dcos.net">http://dcos.net</a>
-</p>
 
 <p align="center">
 A PySide6 desktop application for orchestrating local AI/ML tool stacks across a 10-layer architecture.
@@ -238,7 +239,7 @@ ai_lsc/
 ### Quick Install
 
 ```bash
-git clone https://github.com/your-username/ai-lsc.git
+git clone https://github.com/dcos-net/ai-lsc.git
 cd ai-lsc
 pip install -e .
 ```

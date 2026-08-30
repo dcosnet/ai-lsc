@@ -52,6 +52,12 @@ _OE_CONTENT_DIRS: list[str] = [
 # File extensions we attempt to parse.
 _OE_PARSE_EXTENSIONS: set[str] = {".md", ".markdown", ".txt"}
 
+# Root-level files that are repo meta, not OE content.
+_OE_ROOT_SKIP_NAMES: frozenset[str] = frozenset({
+    "README.md", "CONTRIBUTING.md", "CHARTER.md",
+    "LICENSE", "ROADMAP.md",
+})
+
 
 class OpenEngineerImporter:
     """Import Open Engineer files into StandardTemplate objects.
@@ -164,51 +170,53 @@ class OpenEngineerImporter:
         overrides = stack_config_overrides or {}
         templates: list[StandardTemplate] = []
 
-        # Scan known OE content directories
+        # Pass 1 — known OE content subdirs (templates inferred from OE fields).
         for subdir_name in _OE_CONTENT_DIRS:
             subdir = root / subdir_name
             if not subdir.is_dir():
                 continue
+            templates.extend(self._scan_dir(subdir, overrides=overrides, drop_unknown=False))
 
-            for md_file in sorted(subdir.iterdir()):
-                if md_file.suffix.lower() not in _OE_PARSE_EXTENSIONS:
-                    continue
-                if md_file.name.startswith("."):
-                    continue
+        # Pass 2 — root-level standalone OE files (drop unknowns so README/LICENSE/etc.
+        # do not pollute the import). The _OE_ROOT_SKIP_NAMES filter applies here only.
+        templates.extend(self._scan_dir(root, overrides=None, drop_unknown=True, skip=_OE_ROOT_SKIP_NAMES))
 
-                try:
-                    tpl_id = self._derive_template_id(
-                        md_file, md_file.stem
-                    )
-                    override = overrides.get(tpl_id)
-                    template = self.import_file(md_file, stack_config=override)
-                    templates.append(template)
-                except Exception:
-                    # Don't let one bad file stop the import
-                    continue
+        return sorted(templates, key=lambda t: t.source_file)
 
-        # Also scan root for standalone OE files
-        for md_file in sorted(root.iterdir()):
+    def _scan_dir(
+        self,
+        subdir: Path,
+        *,
+        overrides: dict[str, dict[str, Any]] | None = None,
+        drop_unknown: bool = False,
+        skip: frozenset[str] | None = None,
+    ) -> list[StandardTemplate]:
+        """Import every parseable file directly inside *subdir*.
+
+        Single-responsibility scan loop: yields one StandardTemplate per
+        parseable markdown file. Errors per file are swallowed so one bad
+        file does not abort the scan.
+        """
+        results: list[StandardTemplate] = []
+        for md_file in sorted(subdir.iterdir()):
             if not md_file.is_file():
                 continue
             if md_file.suffix.lower() not in _OE_PARSE_EXTENSIONS:
                 continue
-            if md_file.name in {
-                "README.md", "CONTRIBUTING.md", "CHARTER.md",
-                "LICENSE", "ROADMAP.md",
-            }:
-                continue
             if md_file.name.startswith("."):
                 continue
-
+            if skip and md_file.name in skip:
+                continue
             try:
-                template = self.import_file(md_file)
-                if template.source_type != "unknown":
-                    templates.append(template)
+                tpl_id = self._derive_template_id(md_file, md_file.stem)
+                override = (overrides or {}).get(tpl_id)
+                template = self.import_file(md_file, stack_config=override)
             except Exception:
                 continue
-
-        return sorted(templates, key=lambda t: t.source_file)
+            if drop_unknown and template.source_type == "unknown":
+                continue
+            results.append(template)
+        return results
 
     # ── Bulk convert to AI-LSC format ──────────────────────────────
 

@@ -3,7 +3,7 @@
 ## Recent progress (v3.2 — 10-Layer Systems Architecture)
 
 - ✅ Completed the 10-layer taxonomy migration that was started on top of v3.1.1b: `defaults.py` (108-tool seed), all 11 modular layer files (186 tools), `stack/connections.py` (92 static layers + 5 dynamic loop lookups), CATEGORY_MAP cascade (221 categories), validator level range, README/quickstart/docs. See [CHANGES.md](CHANGES.md) → v3.2.
-- ✅ Repaired `ui/pages/db_manager.py`: the interim migration had truncated it to 222 lines (syntax error + lost implementation); restored in full from the v3.1.1b routing tarball and migrated its CATEGORY_MAP.
+- ✅ Repaired `ui/pages/db_manager.py`: the interim migration had truncated it to 222 lines (syntax error + lost implementation); the canonical 1.3 k-line implementation now lives in-tree and its CATEGORY_MAP is migrated to the 10-layer taxonomy.
 - ✅ Reconciled `kanban` into the layer files (was defaults-only) — merged registry is now 186 tools.
 - ✅ Preserved all operational registry metadata (installers, launchers, deps, flags, licenses, filesystem blocks) that the master-target defaults rewrite had stripped; curl|sh policy markers untouched (C-05).
 - ✅ `open_webui` vs `openwebui` orphan gap: confirmed moot — only `openwebui` exists in the registry and it has a STACK_WIRINGS entry.
