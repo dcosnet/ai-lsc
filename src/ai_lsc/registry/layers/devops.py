@@ -7,15 +7,19 @@ qwen_code, goose, zcoder).
 
 This module is consumed by
 :mod:`ai_lsc.registry.loader`.
+
+Structural fields (layer, level) follow the 10-Layer Systems
+Architecture Taxonomy; tools may be regrouped across files in a
+future pass — the loader merges by tool, not by filename.
 """
 
 TOOLS: dict[str, dict] = {
     'terraform': {
     "name": "Terraform",
     "level": 10,
-    "layer": "DevOps",
-    "role": "Infrastructure as Code",
-    "category": "IaC",
+    "layer": 'Human Interface & System Operations',
+    "role": 'Infrastructure Provision',
+    "category": 'Infrastructure Provision',
     "installer": {
         "type": "pacman",
         "pkg": "terraform"
@@ -41,9 +45,9 @@ TOOLS: dict[str, dict] = {
     'ansible': {
     "name": "Ansible",
     "level": 10,
-    "layer": "DevOps",
-    "role": "Configuration Management",
-    "category": "Config Management",
+    "layer": 'Human Interface & System Operations',
+    "role": 'Agentless Deployment',
+    "category": 'Agentless Deployment',
     "installer": {
         "type": "pacman",
         "pkg": "ansible"
@@ -69,9 +73,9 @@ TOOLS: dict[str, dict] = {
     'puppet': {
     "name": "Puppet",
     "level": 10,
-    "layer": "DevOps",
-    "role": "Configuration Management",
-    "category": "Config Management",
+    "layer": 'Human Interface & System Operations',
+    "role": 'System Auditor',
+    "category": 'System Auditor',
     "installer": {
         "type": "pacman",
         "pkg": "puppet"
@@ -97,9 +101,9 @@ TOOLS: dict[str, dict] = {
     'pulumi': {
     "name": "Pulumi",
     "level": 10,
-    "layer": "DevOps",
-    "role": "Infrastructure as Code",
-    "category": "IaC",
+    "layer": 'Human Interface & System Operations',
+    "role": 'Programmable IaC',
+    "category": 'Programmable IaC',
     "installer": {
         "type": "npm",
         "pkg": "@pulumi/pulumi"
@@ -125,9 +129,9 @@ TOOLS: dict[str, dict] = {
     'bicep': {
     "name": "Bicep",
     "level": 10,
-    "layer": "DevOps",
-    "role": "Infrastructure as Code",
-    "category": "IaC",
+    "layer": 'Human Interface & System Operations',
+    "role": 'Local Declarative DSL',
+    "category": 'Local Declarative DSL',
     "installer": {
         "type": "npm",
         "pkg": "@azure/bicep"
@@ -153,12 +157,12 @@ TOOLS: dict[str, dict] = {
     'opentofu': {
     "name": "OpenTofu",
     "level": 10,
-    "layer": "DevOps",
-    "role": "Infrastructure as Code",
-    "category": "IaC",
+    "layer": 'Human Interface & System Operations',
+    "role": 'Open-Source IaC',
+    "category": 'Open-Source IaC',
     "installer": {
         "type": "custom",
-        "pkg": "https://opentofu.org/docs/intro/install/"
+        "pkg": "https://github.com/opentofu/opentofu"
     },
     "launcher": {
         "type": "desktop",
@@ -181,9 +185,9 @@ TOOLS: dict[str, dict] = {
     'aws_cdk': {
     "name": "AWS CDK",
     "level": 10,
-    "layer": "DevOps",
-    "role": "Infrastructure as Code",
-    "category": "IaC",
+    "layer": 'Human Interface & System Operations',
+    "role": 'Cloud Dev Kit',
+    "category": 'Cloud Dev Kit',
     "installer": {
         "type": "npm",
         "pkg": "aws-cdk"
@@ -209,12 +213,12 @@ TOOLS: dict[str, dict] = {
     'crossplane': {
     "name": "Crossplane",
     "level": 10,
-    "layer": "DevOps",
-    "role": "Infrastructure as Code",
-    "category": "IaC Control Plane",
+    "layer": 'Human Interface & System Operations',
+    "role": 'Infrastructure as Code',
+    "category": 'IaC Control Plane',
     "installer": {
         "type": "custom",
-        "pkg": "https://docs.crossplane.io/v2/getting-started/install/"
+        "pkg": "https://github.com/crossplane/crossplane"
     },
     "launcher": {
         "type": "desktop",
@@ -239,12 +243,12 @@ TOOLS: dict[str, dict] = {
     'terragrunt': {
     "name": "Terragrunt",
     "level": 10,
-    "layer": "DevOps",
-    "role": "Infrastructure as Code",
-    "category": "IaC Wrapper",
+    "layer": 'Human Interface & System Operations',
+    "role": 'IaC DRY Wrapper',
+    "category": 'IaC DRY Wrapper',
     "installer": {
         "type": "custom",
-        "pkg": "https://terragrunt.gruntwork.io/docs/getting-started/install/"
+        "pkg": "https://github.com/gruntwork-io/terragrunt"
     },
     "launcher": {
         "type": "desktop",
@@ -268,10 +272,10 @@ TOOLS: dict[str, dict] = {
 },
     'stack_exporter': {
     "name": "Stack Container Packager",
-    "level": 10,
-    "layer": "DevOps",
-    "role": "Runtime Packaging",
-    "category": "OCI Export",
+    "level": 1,
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Runtime Packaging',
+    "category": 'Runtime Packaging',
     "installer": {
         "type": "pacman",
         "pkg": "podman"
@@ -297,9 +301,9 @@ TOOLS: dict[str, dict] = {
     'homelab': {
     "name": "Homelab",
     "level": 10,
-    "layer": "DevOps",
-    "role": "Provisioning",
-    "category": "Provisioning",
+    "layer": 'Human Interface & System Operations',
+    "role": 'Metal Provisioner',
+    "category": 'Metal Provisioner',
     "installer": {
         "type": "git",
         "pkg": "https://github.com/khuedoan/homelab",
@@ -325,10 +329,10 @@ TOOLS: dict[str, dict] = {
 },
     'aider': {
     "name": "Aider",
-    "level": 10,
-    "layer": "DevOps",
-    "role": "Coding Agent",
-    "category": "AI Coding Agent",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'CLI Pair Programmer',
+    "category": 'CLI Pair Programmer',
     "installer": {
         "type": "uv",
         "pkg": "aider-chat"
@@ -354,10 +358,10 @@ TOOLS: dict[str, dict] = {
 
     'claude_code': {
     "name": "Claude Code",
-    "level": 10,
-    "layer": "DevOps",
-    "role": "Coding Agent",
-    "category": "AI Coding Agent",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'Terminal Coding Agent',
+    "category": 'Terminal Coding Agent',
     "installer": {
         "type": "npm",
         "pkg": "@anthropic-ai/claude-code"
@@ -383,10 +387,10 @@ TOOLS: dict[str, dict] = {
 
     'codex': {
     "name": "Codex",
-    "level": 10,
-    "layer": "DevOps",
-    "role": "Coding Agent",
-    "category": "AI Coding Agent",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'Codex Developer',
+    "category": 'Codex Developer',
     "installer": {
         "type": "npm",
         "pkg": "@openai/codex"
@@ -412,13 +416,13 @@ TOOLS: dict[str, dict] = {
 
     'openhands': {
     "name": "OpenHands",
-    "level": 10,
-    "layer": "DevOps",
-    "role": "Coding Agent",
-    "category": "AI Coding Agent",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'Sovereign Software Agent',
+    "category": 'Sovereign Software Agent',
     "installer": {
-        "type": "uv",
-        "pkg": "openhands-ai"
+        "type": "git_node",
+        "pkg": "https://github.com/All-Hands-AI/OpenHands.git"
     },
     "launcher": {
         "type": "tmux",
@@ -441,10 +445,10 @@ TOOLS: dict[str, dict] = {
 
     'opencode': {
     "name": "OpenCode",
-    "level": 10,
-    "layer": "DevOps",
-    "role": "Coding Agent",
-    "category": "AI Coding Agent",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'Coding Agent',
+    "category": 'AI Coding Agent',
     "installer": {
         "type": "npm",
         "pkg": "opencode-ai"
@@ -472,10 +476,10 @@ TOOLS: dict[str, dict] = {
 
     'gemini_cli': {
     "name": "Gemini CLI",
-    "level": 10,
-    "layer": "DevOps",
-    "role": "Coding Agent",
-    "category": "AI Coding Agent",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'Coding Agent',
+    "category": 'AI Coding Agent',
     "installer": {
         "type": "npm",
         "pkg": "@google/gemini-cli"
@@ -503,10 +507,10 @@ TOOLS: dict[str, dict] = {
 
     'qwen_code': {
     "name": "Qwen Code",
-    "level": 10,
-    "layer": "DevOps",
-    "role": "Coding Agent",
-    "category": "AI Coding Agent",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'Coding Agent',
+    "category": 'AI Coding Agent',
     "installer": {
         "type": "npm",
         "pkg": "@qwen-code/qwen-code"
@@ -534,10 +538,10 @@ TOOLS: dict[str, dict] = {
 
     'goose': {
     "name": "codename goose",
-    "level": 10,
-    "layer": "DevOps",
-    "role": "Coding Agent",
-    "category": "AI Coding Agent",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'Coding Agent',
+    "category": 'AI Coding Agent',
     "installer": {
         "type": "custom",
         "pkg": "https://github.com/block/goose"
@@ -566,10 +570,10 @@ TOOLS: dict[str, dict] = {
 # ---- zcoder -----------------------------------------------------------------
     'zcoder': {
     "name": "ZCoder",
-    "level": 10,
-    "layer": "DevOps",
-    "role": "Coding Agent",
-    "category": "AI Coding Agent",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'Coding Agent',
+    "category": 'AI Coding Agent',
     "installer": {
         "type": "npm",
         "pkg": "zcoder-cli"

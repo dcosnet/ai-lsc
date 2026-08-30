@@ -6,18 +6,22 @@ the local AI infrastructure.
 
 This module is consumed by
 :mod:`ai_lsc.registry.loader`.
+
+Structural fields (layer, level) follow the 10-Layer Systems
+Architecture Taxonomy; tools may be regrouped across files in a
+future pass — the loader merges by tool, not by filename.
 """
 
 TOOLS: dict[str, dict] = {
     'keycloak': {
     "name": "Keycloak",
-    "level": 7,
-    "layer": "Security",
-    "role": "Identity",
-    "category": "Auth",
+    "level": 1,
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Identity',
+    "category": 'Auth',
     "installer": {
         "type": "custom",
-        "pkg": "keycloak"
+        "pkg": "https://github.com/keycloak/keycloak"
     },
     "launcher": {
         "type": "tmux",
@@ -39,10 +43,10 @@ TOOLS: dict[str, dict] = {
 },
     'vault': {
     "name": "HashiCorp Vault",
-    "level": 7,
-    "layer": "Security",
-    "role": "Secrets",
-    "category": "Secrets Management",
+    "level": 1,
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Secrets',
+    "category": 'Secrets Management',
     "installer": {
         "type": "pacman",
         "pkg": "vault"
@@ -67,10 +71,10 @@ TOOLS: dict[str, dict] = {
 },
     'trivy': {
     "name": "Trivy",
-    "level": 7,
-    "layer": "Security",
-    "role": "Scanner",
-    "category": "Container Security",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Scanner',
+    "category": 'Container Security',
     "installer": {
         "type": "pacman",
         "pkg": "trivy"
@@ -95,10 +99,10 @@ TOOLS: dict[str, dict] = {
 },
     'fail2ban': {
     "name": "Fail2Ban",
-    "level": 7,
-    "layer": "Security",
-    "role": "IDS",
-    "category": "Intrusion Prevention",
+    "level": 1,
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'IDS',
+    "category": 'Intrusion Prevention',
     "installer": {
         "type": "pacman",
         "pkg": "fail2ban"
@@ -123,10 +127,10 @@ TOOLS: dict[str, dict] = {
 },
     'clamav': {
     "name": "ClamAV",
-    "level": 7,
-    "layer": "Security",
-    "role": "Scanner",
-    "category": "Antivirus",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Scanner',
+    "category": 'Antivirus',
     "installer": {
         "type": "pacman",
         "pkg": "clamav"
@@ -151,10 +155,10 @@ TOOLS: dict[str, dict] = {
 },
     'opa': {
     "name": "Open Policy Agent",
-    "level": 7,
-    "layer": "Security",
-    "role": "Policy",
-    "category": "Policy Engine",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Policy',
+    "category": 'Policy Engine',
     "installer": {
         "type": "pacman",
         "pkg": "opa"

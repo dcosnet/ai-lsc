@@ -1,114 +1,126 @@
-AI-LSC Release v3.0 -- codename: Ankh of Jah
+AI-LSC Release v3.3.0
 
-Full architectural rewrite from v2.4. This is not an incremental
-release; the project fundamentally changed structure, scope, and
-design philosophy.
+Registry git-pull URL sync against the systems-architect reference
+(ai-stack-guide-v12.md, "Approaching the Local AI Stack Like a Systems
+Architect") + bandwidth-aware git-pull-on-update logic for already-cloned
+tools + new ComfyUI registry entry. 52 patches across 8 layer files plus
+a runtime/installer.py hardening.
 
-v2.4 was a monolithic tool launcher.
-v3.0 is a metadata-driven infrastructure management platform.
+Five categories of installer-URL patches:
 
-What changed:
+A. git / git_node / custom installer `pkg` URLs corrected to match the
+   v12 markdown reference (28 patches). The previous registry was
+   pointing at placeholder repos (``github.com/nicely-done/...``) or at
+   wrong upstreams (e.g. ``airllm`` at ``liguodongiot/llm-airforce``,
+   ``llamacpp`` at ``ggerganov/llama.cpp`` instead of ``ggml-org/llama.cpp``).
 
-Architecture
-  - Migrated from flat script layout to src/ai_lsc/ package with 22
-    core modules, 13 registry layer files, and clean separation of
-    concerns (registry, runtime, stack, skills, agents, ui)
-  - Introduced AI_LSC_BASE_DIR env var chain: bootstrap writes .env,
-    launcher reads it, constants.py resolves it -- entire runtime
-    derives from one variable. No hardcoded paths leak outside constants.
-  - ADR-001 established: Capability as the foundational abstraction.
-    Every subsystem (templates, pipelines, skills, containers,
-    dashboards, monitoring) points at Capability. Tool is a
-    implementation detail. Swap Ollama for vLLM -- nothing above the
-    registry notices. See docs/ADR-001-capability-architecture.md.
+B. script-type installers (fabric, grafana_alloy, llamafile, meilisearch,
+   ollama, qdrant) get a new ``pkg`` field added referencing the github
+   repo, while the existing working ``cmd`` (curl release tarball, etc.)
+   is left untouched (6 patches).
 
-Registry
-  - 115 registered tools organized across 13 infrastructure layers
-    (Host Platform -> Containers). Each entry carries full metadata:
-    installer, launcher, health probe, configuration, export rules,
-    capability mapping.
-  - Modular per-layer registry: ai_lsc/registry/layers/*.py -- adding a
-    tool means adding a dict entry, not touching Python logic.
-  - Registry auto-merges new keys across releases without user action.
+C. registry-only git tools with no v12 markdown entry were resolved
+   via web search to their official upstreams (10 patches):
+     - agent_reach    -> Panniantong/Agent-Reach
+     - everos_memory  -> EverMind-AI/EverOS
+     - headroom       -> headroomlabs-ai/headroom
+     - mnemo_cortex   -> GuyMannDude/mnemo-cortex
+     - nightshift     -> johndaskovsky/nightshift
+     - openbrain      -> NateBJones-Projects/OB1
+     - turbovec       -> ryancodrai/turbovec
+     - crossplane     -> crossplane/crossplane
+     - keycloak       -> keycloak/keycloak
+     - dma            -> distcc/distcc (closest parent)
 
-Stack Templates
-  - Template system expresses infrastructure intent, not install scripts.
-  - 4 included templates (Claude Code Setup, Agentic OS Stack,
-    SaaS Integrations, Free Claude Code).
-  - Templates reference tool IDs; the registry provides all install and
-    launch logic. Zero duplication.
-  - Stack Wizard UI for template selection and deployment.
+D. type-mismatch fixes (3 patches): the v12 markdown lists these 3
+   tools with installer type `git` or `git_node`. The user manually
+   tested every entry in the md before publishing it; the registry
+   had them as `uv` package-manager installs, which would have
+   called `uv tool install <pkg>` against PyPI — wrong for tools that
+   are installed by cloning their github repo:
+     - pm_skills : uv:pm-skills    -> git:https://github.com/product-on-purpose/pm-skills
+     - agno      : uv:agno         -> git:https://github.com/agno-agi/agno
+     - openhands : uv:openhands-ai -> git_node:https://github.com/All-Hands-AI/OpenHands.git
 
-Runtime
-  - Multi-runtime execution: native, Podman, Docker Compose, LXC.
-  - RuntimeExecutor unifies install/start/stop/health across all targets.
-  - Container export generates Podman Quadlet, Docker Compose, or LXC
-    config from a template -- same template, different output format.
-  - Fixed LXC config path bug (Path string concat) and hardcoded
-    /mnt/AI mount targets.
+E. user-provided URLs for the 4 previously-unresolved registry-only
+   tools (4 patches).  These tools had placeholder
+   `github.com/nicely-done/<tid>` URLs; the user provided the
+   official upstream URLs directly:
+     - algory    -> aryaghan-mutum/algory
+     - atlas_os  -> atlas-os/atlas
+     - eagle_eye -> thoughtfuldev/eagleeye
+     - glassmind -> khodges42/glassMind
 
-Bootstrap
-  - Fully portable: extracts anywhere, detects parent directory tree,
-    auto-resolves base dir. No assumptions about install location.
-  - Arch Linux: --system-site-packages venv sees pacman-installed
-    PySide6, avoids pip compile hell.
-  - Python version stamping detects stale venv after pacman -Syu,
-    auto-recreates.
-  - Cleans stale ~/.local/bin/ai-lsc and pipx installs from v2.x.
-  - python-pyside6 availability check before attempting pacman install
-    (package not in official Arch repos).
+New tool entry (1):
+  - comfyui (user_interfaces.py):  ComfyUI was referenced in the
+    `ai-image-gen-local.json` stack template but had no registry
+    entry.  Added as a Level 10 (Human Interface & System Operations)
+    tool with installer `git:https://github.com/comfy-org/comfyui`,
+    launcher `python main.py --listen 0.0.0.0 --port 8188`,
+    deps [cuda], license GPL-3.0.  Total registry size is now 187
+    tools (was 186).
 
-Installer
-  - Supports pacman, apt, dnf, pip, git clone, npm, and manual installers.
-  - Dependency expansion: installing a template auto-detects and installs
-    missing prerequisite tools.
-  - License gate: tools requiring license acceptance prompt before install.
+Runtime: bandwidth-aware git-pull-on-update (runtime/installer.py)
 
-Verification
-  - Per-tool health probes: process check, port check, API ping.
-  - Verification dashboard shows install status for all 115 tools.
-  - Hardware detection: GPU driver, CUDA version, memory, disk.
+  The existing install_git / install_git_node methods already did
+  `git pull --ff-only` if the destination dir existed, but the check
+  was `os.path.exists(dest)` — which is True for any dir, not just a
+  git working tree.  An empty or non-git dir at the destination would
+  cause `git pull` to fail and abort the install.  Hardened to:
 
-UI
-  - PySide6 dark-themed interface with sidebar navigation across all
-    13 layers.
-  - Dashboard with live service status, log feed, and system health.
-  - Infrastructure layer pages with per-tool ServiceRow widgets.
-  - Code analysis panel: ripgrep, fd, AST inspection, tree-sitter parsing.
-  - Skills console with modelfile tree browser and model pull.
-  - IPC stack editor for pipeline visualization.
-  - Settings page with base directory configuration.
-  - Fixed 8 NameError crashes in exception handlers (except without as).
-  - Fixed thread-unsafe UI mutation from background install thread.
-  - Fixed stack wizard KeyError on missing metadata fields.
+  1. Check `os.path.isdir(dest/.git)` to confirm a real git repo.
+  2. On pull failure (diverged branches, network errors, corrupted
+     index, etc.), move the old dir aside to `<dest>.bak.<unix_ts>`
+     and re-clone fresh — so the install always ends in a usable
+     state instead of leaving a half-broken tree.
+  3. If the dest dir exists but is not a git repo, back it up and
+     clone fresh.
+  4. Log clearly which path was taken (pulled / re-cloned / new clone
+     / non-git-dir backed up) so the user can see what happened.
 
-Skills
-  - Skill definitions as JSON manifests with capability requirements.
-  - SkillRuntimeResolver maps skill requests to available capabilities.
-  - 6 included skills (code-reviewer, vector-search, rag-analyst,
-    stack-operator, agent-orchestrator, redis-operator).
+  Effect: re-running install on a tool that's already cloned only
+  fetches the diff (a few KB / MB), not the entire repo.
 
-Agents (infrastructure only -- deferred to v4.0)
-  - Redis pub/sub bridge for inter-agent communication.
-  - Tool bridge connecting agent function-calling to RuntimeExecutor.
-  - Ollama tools interface for model management.
-  - Model pool with tier routing (8B/14B/32B/70B).
-  - Dispatcher and clarification gate for multi-turn agent loops.
-  - All symbols safely stubbed; no agent execution in v3.0.
+Intentionally NOT touched:
+  - apex (md says `pip — https://github.com/NVIDIA/apex`): kept as
+    uv:apex (pip-installed).  The md's `pip` installer type is
+    authoritative and the user did not call this one out.
+  - 12 git-ish installers that already matched the v12 reference
+    (anythingllm, dify, heretic, homelab, invokeai, koboldcpp,
+    librechat, mcp_drift_state_tracker, openjarvis, paperlessngx,
+    synapscli, wayland_ai).
+  - 3 registry-only git tools with real-looking URLs already in
+    place (goose -> block/goose, nvidia_agent_skills ->
+    NVIDIA/agent-skills, picode -> jasonjmcghee/picode.git).
+  - APP_CODENAME ("Decalogue") and all historical codename
+    references in docstrings / UI labels / README banner / bootstrap
+    banner — left as-is per user's clarification.
 
-Bug fixes from v2.4
-  - Resolved externally-managed-environment error on Arch (venv isolation)
-  - Removed ModuleNotFoundError from stale ~/.local/bin/ai-lsc entry point
-  - Root launcher (ai_lsc.py) replaces pip entry-point -- no install needed
-  - Convenience launcher (run.sh) sources .env for proper env injection
-  - Path("/var/lib/lxc" / name) string concat crash -> proper Path join
-  - 8x except Exception without as exc -> all now capture correctly
-  - Thread-unsafe _run_install UI calls -> QTimer.singleShot dispatch
-  - Hardcoded /mnt/AI LXC mount targets -> dynamic path resolution
-  - Stack wizard meta['name'] KeyError -> .get() with safe defaults
-  - python-pyside6 pacman fallback for Arch repos that don't carry it
+All 0 placeholder `github.com/nicely-done/...` URLs have been
+removed from the registry.
 
-Files changed: essentially everything. See ADR-001 for the architectural
-rationale and the vocabulary that will govern v3.0 stabilization and
-v4.0 development.
-```
+Versioning:
+  - pyproject.toml: 3.2.0 -> 3.3.0
+  - src/ai_lsc/constants.py: APP_VERSION 3.2.0 -> 3.3.0
+    (APP_CODENAME unchanged: "Decalogue")
+  - docs/REGISTRY-URLS-v3.3.0.md: per-file old -> new URL table.
+
+Verification:
+  - All 94 Python files under src/ AST-parse cleanly.
+  - Registry extractor re-reads the patched tree and confirms all 52
+    patches landed + the new ComfyUI entry.  Total tools: 187 (was
+    186).
+  - Each old `pkg` URL string was unique within its file and matched
+    exactly once during the patch — no blind global replaces.
+  - install_git / install_git_node hardened: the new logic
+    branches on `os.path.isdir(.git)`, falls back to re-clone on pull
+    failure, and uses `import time` for backup-dir timestamps.  All
+    confirmed present in installer.py.
+  - 0 `nicely-done` placeholder URLs remain in the registry.
+
+Layer ladder (unchanged from v3.2):
+  L1  Host Platform & Infrastructure          L6  Multi-Agent Orchestration Runtimes
+  L2  Development Runtime & Environment       L7  Agentic Software Engineering & Sandboxes
+  L3  GPU Acceleration & Optimization         L8  Decentralized Knowledge & Vector Stores
+  L4  Local Inference Engines                 L9  Data Extraction & Pipeline Harvest
+  L5  Intelligent API Routers & Proxies       L10 Human Interface & System Operations

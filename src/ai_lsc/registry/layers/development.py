@@ -15,15 +15,19 @@ Each entry follows the standard registry schema:
 
 This module is consumed by
 :mod:`ai_lsc.registry.loader`.
+
+Structural fields (layer, level) follow the 10-Layer Systems
+Architecture Taxonomy; tools may be regrouped across files in a
+future pass — the loader merges by tool, not by filename.
 """
 
 TOOLS: dict[str, dict] = {
     'python': {
     "name": "Python Environment",
     "level": 2,
-    "layer": "Development Environment",
-    "role": "Build System",
-    "category": "Runtime",
+    "layer": 'Development Runtime & Environment',
+    "role": 'Runtime Environment',
+    "category": 'Runtime Environment',
     "installer": {
         "type": "pacman",
         "pkg": "python-pip"
@@ -48,10 +52,10 @@ TOOLS: dict[str, dict] = {
 },
     'cupy': {
     "name": "CuPy",
-    "level": 2,
-    "layer": "Development Environment",
-    "role": "GPU Acceleration",
-    "category": "GPU Computing",
+    "level": 3,
+    "layer": 'GPU Acceleration & Optimization',
+    "role": 'GPU Computing',
+    "category": 'GPU Computing',
     "installer": {
         "type": "uv",
         "pkg": "cupy-cuda12x"
@@ -79,9 +83,9 @@ TOOLS: dict[str, dict] = {
     'fd': {
     "name": "fd",
     "level": 2,
-    "layer": "Development Environment",
-    "role": "Search",
-    "category": "Find Tool",
+    "layer": 'Development Runtime & Environment',
+    "role": 'File Discovery',
+    "category": 'File Discovery',
     "installer": {
         "type": "pacman",
         "pkg": "fd"
@@ -107,9 +111,9 @@ TOOLS: dict[str, dict] = {
     'ripgrep': {
     "name": "ripgrep (rg)",
     "level": 2,
-    "layer": "Development Environment",
-    "role": "Search",
-    "category": "Search Tool",
+    "layer": 'Development Runtime & Environment',
+    "role": 'Text Search',
+    "category": 'Text Search',
     "installer": {
         "type": "pacman",
         "pkg": "ripgrep"
@@ -135,9 +139,9 @@ TOOLS: dict[str, dict] = {
     'tree_sitter': {
     "name": "tree-sitter",
     "level": 2,
-    "layer": "Development Environment",
-    "role": "Parsing",
-    "category": "Parser",
+    "layer": 'Development Runtime & Environment',
+    "role": 'Parsing Engine',
+    "category": 'Parsing Engine',
     "installer": {
         "type": "uv",
         "pkg": "tree-sitter"
@@ -163,9 +167,9 @@ TOOLS: dict[str, dict] = {
     'sst': {
     "name": "SST (Serverless Stack)",
     "level": 2,
-    "layer": "Development Environment",
-    "role": "Full-Stack Framework",
-    "category": "Serverless Framework",
+    "layer": 'Development Runtime & Environment',
+    "role": 'Infrastructure as Code',
+    "category": 'Infrastructure as Code',
     "installer": {
         "type": "npm",
         "pkg": "sst"
@@ -190,10 +194,10 @@ TOOLS: dict[str, dict] = {
 },
     'unsloth': {
     "name": "Unsloth",
-    "level": 2,
-    "layer": "Development Environment",
-    "role": "Training",
-    "category": "Model Training",
+    "level": 3,
+    "layer": 'GPU Acceleration & Optimization',
+    "role": 'Model Optimization',
+    "category": 'Model Optimization',
     "installer": {
         "type": "uv",
         "pkg": "unsloth"
@@ -221,9 +225,9 @@ TOOLS: dict[str, dict] = {
     'php': {
         "name": "PHP",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Language",
-        "category": "Runtime",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Language',
+        "category": 'Runtime',
         "installer": {
             "type": "pacman",
             "pkg": "php"
@@ -249,9 +253,9 @@ TOOLS: dict[str, dict] = {
     'ruby': {
         "name": "Ruby",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Language",
-        "category": "Runtime",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Language',
+        "category": 'Runtime',
         "installer": {
             "type": "pacman",
             "pkg": "ruby"
@@ -277,9 +281,9 @@ TOOLS: dict[str, dict] = {
     'perl': {
         "name": "Perl",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Language",
-        "category": "Runtime",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Language',
+        "category": 'Runtime',
         "installer": {
             "type": "pacman",
             "pkg": "perl"
@@ -305,9 +309,9 @@ TOOLS: dict[str, dict] = {
     'julia': {
         "name": "Julia",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Language",
-        "category": "Runtime",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Language',
+        "category": 'Runtime',
         "installer": {
             "type": "pacman",
             "pkg": "julia"
@@ -333,9 +337,9 @@ TOOLS: dict[str, dict] = {
     'nodejs': {
         "name": "Node.js",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Language",
-        "category": "Runtime",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Language',
+        "category": 'Runtime',
         "installer": {
             "type": "pacman",
             "pkg": "nodejs"
@@ -361,9 +365,9 @@ TOOLS: dict[str, dict] = {
     'go': {
         "name": "Go",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Language",
-        "category": "Runtime",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Language',
+        "category": 'Runtime',
         "installer": {
             "type": "pacman",
             "pkg": "go"
@@ -389,9 +393,9 @@ TOOLS: dict[str, dict] = {
     'rust': {
         "name": "Rust",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Language",
-        "category": "Runtime",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Language',
+        "category": 'Runtime',
         "installer": {
             "type": "pacman",
             "pkg": "rust"
@@ -417,9 +421,9 @@ TOOLS: dict[str, dict] = {
     'java_jdk': {
         "name": "Java JDK",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Language",
-        "category": "Runtime",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Language',
+        "category": 'Runtime',
         "installer": {
             "type": "pacman",
             "pkg": "jdk-openjdk"
@@ -445,9 +449,9 @@ TOOLS: dict[str, dict] = {
     'zsh': {
         "name": "Zsh",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Shell",
-        "category": "Shell",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Shell',
+        "category": 'Shell',
         "installer": {
             "type": "pacman",
             "pkg": "zsh"
@@ -473,9 +477,9 @@ TOOLS: dict[str, dict] = {
     'mksh': {
         "name": "mksh",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Shell",
-        "category": "Shell",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Shell',
+        "category": 'Shell',
         "installer": {
             "type": "pacman",
             "pkg": "mksh"
@@ -501,9 +505,9 @@ TOOLS: dict[str, dict] = {
     'bash': {
         "name": "Bash",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Shell",
-        "category": "Shell",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Shell',
+        "category": 'Shell',
         "installer": {
             "type": "pacman",
             "pkg": "bash"
@@ -529,9 +533,9 @@ TOOLS: dict[str, dict] = {
     'fish': {
         "name": "Fish",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Shell",
-        "category": "Shell",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Shell',
+        "category": 'Shell',
         "installer": {
             "type": "pacman",
             "pkg": "fish"
@@ -557,9 +561,9 @@ TOOLS: dict[str, dict] = {
     'fakeroot': {
         "name": "Fakeroot",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Build Tool",
-        "category": "Build",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Build Tool',
+        "category": 'Build',
         "installer": {
             "type": "pacman",
             "pkg": "fakeroot"
@@ -585,9 +589,9 @@ TOOLS: dict[str, dict] = {
     'make': {
         "name": "GNU Make",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Build System",
-        "category": "Build",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Build System',
+        "category": 'Build',
         "installer": {
             "type": "pacman",
             "pkg": "make"
@@ -613,9 +617,9 @@ TOOLS: dict[str, dict] = {
     'cmake': {
         "name": "CMake",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Build System",
-        "category": "Build",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Build System',
+        "category": 'Build',
         "installer": {
             "type": "pacman",
             "pkg": "cmake"
@@ -641,9 +645,9 @@ TOOLS: dict[str, dict] = {
     'gcc': {
         "name": "GCC",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Compiler",
-        "category": "Build",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Compiler',
+        "category": 'Build',
         "installer": {
             "type": "pacman",
             "pkg": "gcc"
@@ -669,9 +673,9 @@ TOOLS: dict[str, dict] = {
     'bison': {
         "name": "Bison",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Parser Generator",
-        "category": "Build",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Parser Generator',
+        "category": 'Build',
         "installer": {
             "type": "pacman",
             "pkg": "bison"
@@ -697,9 +701,9 @@ TOOLS: dict[str, dict] = {
     'pkg_config': {
         "name": "pkg-config",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Build Tool",
-        "category": "Build",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Build Tool',
+        "category": 'Build',
         "installer": {
             "type": "pacman",
             "pkg": "pkg-config"
@@ -725,9 +729,9 @@ TOOLS: dict[str, dict] = {
     'valgrind': {
         "name": "Valgrind",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Profiling",
-        "category": "Debugging",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Profiling',
+        "category": 'Debugging',
         "installer": {
             "type": "pacman",
             "pkg": "valgrind"
@@ -753,9 +757,9 @@ TOOLS: dict[str, dict] = {
     'gdb': {
         "name": "GDB",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Debugger",
-        "category": "Debugging",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Debugger',
+        "category": 'Debugging',
         "installer": {
             "type": "pacman",
             "pkg": "gdb"
@@ -781,9 +785,9 @@ TOOLS: dict[str, dict] = {
     'strace': {
         "name": "strace",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Tracing",
-        "category": "Debugging",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Tracing',
+        "category": 'Debugging',
         "installer": {
             "type": "pacman",
             "pkg": "strace"
@@ -809,9 +813,9 @@ TOOLS: dict[str, dict] = {
     'ltrace': {
         "name": "ltrace",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Tracing",
-        "category": "Debugging",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Tracing',
+        "category": 'Debugging',
         "installer": {
             "type": "pacman",
             "pkg": "ltrace"
@@ -837,9 +841,9 @@ TOOLS: dict[str, dict] = {
     'patchelf': {
         "name": "PatchELF",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Binary Tool",
-        "category": "Build",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Binary Tool',
+        "category": 'Build',
         "installer": {
             "type": "pacman",
             "pkg": "patchelf"
@@ -865,9 +869,9 @@ TOOLS: dict[str, dict] = {
     'upx': {
         "name": "UPX",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Packer",
-        "category": "Build",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Packer',
+        "category": 'Build',
         "installer": {
             "type": "pacman",
             "pkg": "upx"
@@ -893,9 +897,9 @@ TOOLS: dict[str, dict] = {
     'deno': {
         "name": "Deno",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Language",
-        "category": "Runtime",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Language',
+        "category": 'Runtime',
         "installer": {
             "type": "pacman",
             "pkg": "deno"
@@ -923,9 +927,9 @@ TOOLS: dict[str, dict] = {
     'uv': {
         "name": "uv",
         "level": 2,
-        "layer": "Development Environment",
-        "role": "Package Manager",
-        "category": "Build",
+        "layer": 'Development Runtime & Environment',
+        "role": 'Package Manager',
+        "category": 'Build',
         "installer": {
             "type": "pacman",
             "pkg": "uv"

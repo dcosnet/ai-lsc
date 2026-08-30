@@ -5,15 +5,19 @@ evaluation, and build/system monitoring tools.
 
 This module is consumed by
 :mod:`ai_lsc.registry.loader`.
+
+Structural fields (layer, level) follow the 10-Layer Systems
+Architecture Taxonomy; tools may be regrouped across files in a
+future pass — the loader merges by tool, not by filename.
 """
 
 TOOLS: dict[str, dict] = {
     'btop': {
     "name": "Btop",
-    "level": 8,
-    "layer": "Observability",
-    "role": "Dashboard",
-    "category": "Metrics",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Dashboard',
+    "category": 'Metrics',
     "installer": {
         "type": "pacman",
         "pkg": "btop"
@@ -38,10 +42,10 @@ TOOLS: dict[str, dict] = {
 },
     'glances': {
     "name": "Glances",
-    "level": 8,
-    "layer": "Observability",
-    "role": "Dashboard",
-    "category": "Metrics",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Telemetry Monitor',
+    "category": 'Telemetry Monitor',
     "installer": {
         "type": "pacman",
         "pkg": "glances"
@@ -66,10 +70,10 @@ TOOLS: dict[str, dict] = {
 },
     'prometheus': {
     "name": "Prometheus",
-    "level": 8,
-    "layer": "Observability",
-    "role": "Metrics Collector",
-    "category": "Metrics",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Metric Scraper',
+    "category": 'Metric Scraper',
     "installer": {
         "type": "pacman",
         "pkg": "prometheus"
@@ -94,10 +98,10 @@ TOOLS: dict[str, dict] = {
 },
     'grafana': {
     "name": "Grafana",
-    "level": 8,
-    "layer": "Observability",
-    "role": "Dashboard",
-    "category": "Visualization",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Telemetry Visualizer',
+    "category": 'Telemetry Visualizer',
     "installer": {
         "type": "pacman",
         "pkg": "grafana"
@@ -122,13 +126,14 @@ TOOLS: dict[str, dict] = {
 },
     'grafana_alloy': {
     "name": "Grafana Alloy",
-    "level": 8,
-    "layer": "Observability",
-    "role": "Collector",
-    "category": "Telemetry",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Alloy Telemetry',
+    "category": 'Alloy Telemetry',
     "installer": {
         "type": "script",
-        "cmd": "mkdir -p {tools_root}/bin {tools_root}/alloy && curl -fsSL https://github.com/grafana/alloy/releases/latest/download/alloy-linux-amd64.zip -o {tools_root}/alloy/alloy.zip && python3 -m zipfile -e {tools_root}/alloy/alloy.zip {tools_root}/alloy && mv {tools_root}/alloy/alloy-linux-amd64 {tools_root}/bin/alloy && chmod +x {tools_root}/bin/alloy"
+        "cmd": "mkdir -p {tools_root}/bin {tools_root}/alloy && curl -fsSL https://github.com/grafana/alloy/releases/latest/download/alloy-linux-amd64.zip -o {tools_root}/alloy/alloy.zip && python3 -m zipfile -e {tools_root}/alloy/alloy.zip {tools_root}/alloy && mv {tools_root}/alloy/alloy-linux-amd64 {tools_root}/bin/alloy && chmod +x {tools_root}/bin/alloy",
+        "pkg": "https://github.com/grafana/alloy"
     },
     "launcher": {
         "type": "tmux",
@@ -152,10 +157,10 @@ TOOLS: dict[str, dict] = {
 },
     'opik': {
     "name": "Opik",
-    "level": 8,
-    "layer": "Observability",
-    "role": "LLM Tracing",
-    "category": "AI Observability",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'LLM Observability',
+    "category": 'LLM Observability',
     "installer": {
         "type": "uv",
         "pkg": "opik"
@@ -180,13 +185,13 @@ TOOLS: dict[str, dict] = {
 },
     'pulse_ai': {
     "name": "Pulse AI",
-    "level": 8,
-    "layer": "Observability",
-    "role": "Health Monitor",
-    "category": "AI Monitoring",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Auto Recovery Daemon',
+    "category": 'Auto Recovery Daemon',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/pulse-ai"
+        "pkg": "https://github.com/glieai/pulse-ai"
     },
     "launcher": {
         "type": "tmux",
@@ -208,13 +213,13 @@ TOOLS: dict[str, dict] = {
 },
     'latitude': {
     "name": "Latitude",
-    "level": 8,
-    "layer": "Observability",
-    "role": "Evaluation",
-    "category": "LLM Evaluation",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Output Evaluator',
+    "category": 'Output Evaluator',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/latitude"
+        "pkg": "https://github.com/latitude-dev/latitude-llm"
     },
     "launcher": {
         "type": "tmux",
@@ -238,13 +243,13 @@ TOOLS: dict[str, dict] = {
 },
     'eagle_eye': {
     "name": "Eagle Eye",
-    "level": 8,
-    "layer": "Observability",
-    "role": "Monitoring",
-    "category": "Observability",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Monitoring',
+    "category": 'Observability',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/eagle_eye"
+        "pkg": "https://github.com/thoughtfuldev/eagleeye"
     },
     "launcher": {
         "type": "desktop",
@@ -267,13 +272,13 @@ TOOLS: dict[str, dict] = {
 
     'dma': {
     "name": "DMA (Distcc Monitor Agent)",
-    "level": 8,
-    "layer": "Observability",
-    "role": "Monitoring",
-    "category": "Build Monitoring",
+    "level": 2,
+    "layer": 'Development Runtime & Environment',
+    "role": 'Monitoring',
+    "category": 'Build Monitoring',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/distcc/dma"
+        "pkg": "https://github.com/distcc/distcc"
     },
     "launcher": {
         "type": "desktop",

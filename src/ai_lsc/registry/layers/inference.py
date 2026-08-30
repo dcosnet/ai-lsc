@@ -15,18 +15,23 @@ Each entry follows the standard registry schema:
 
 This module is consumed by
 :mod:`ai_lsc.registry.loader`.
+
+Structural fields (layer, level) follow the 10-Layer Systems
+Architecture Taxonomy; tools may be regrouped across files in a
+future pass — the loader merges by tool, not by filename.
 """
 
 TOOLS: dict[str, dict] = {
     'ollama': {
     "name": "Ollama",
     "level": 4,
-    "layer": "Engines",
-    "role": "Engine",
-    "category": "LLM Runtime",
+    "layer": 'Local Inference Engines',
+    "role": 'Local LLM Runner',
+    "category": 'Local LLM Runner',
     "installer": {
         "type": "script",
-        "cmd": "curl -fsSL https://ollama.com/install.sh | sh"
+        "cmd": "curl -fsSL https://ollama.com/install.sh | sh",
+        "pkg": "https://github.com/ollama/ollama"
     },
     "launcher": {
         "type": "tmux",
@@ -49,12 +54,12 @@ TOOLS: dict[str, dict] = {
     'llamacpp': {
     "name": "llama.cpp",
     "level": 4,
-    "layer": "Engines",
-    "role": "Engine",
-    "category": "LLM Runtime",
+    "layer": 'Local Inference Engines',
+    "role": 'Native Inference',
+    "category": 'Native Inference',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/ggerganov/llama.cpp"
+        "pkg": "https://github.com/ggml-org/llama.cpp"
     },
     "launcher": {
         "type": "tmux",
@@ -77,9 +82,9 @@ TOOLS: dict[str, dict] = {
     'koboldcpp': {
     "name": "KoboldCPP",
     "level": 4,
-    "layer": "Engines",
-    "role": "Engine",
-    "category": "LLM Runtime",
+    "layer": 'Local Inference Engines',
+    "role": 'GGUF Runtime',
+    "category": 'GGUF Runtime',
     "installer": {
         "type": "git",
         "pkg": "https://github.com/LostRuins/koboldcpp"
@@ -105,12 +110,13 @@ TOOLS: dict[str, dict] = {
     'llamafile': {
     "name": "Llamafile",
     "level": 4,
-    "layer": "Engines",
-    "role": "Engine",
-    "category": "Single-File LLM",
+    "layer": 'Local Inference Engines',
+    "role": 'Single-File Runtime',
+    "category": 'Single-File Runtime',
     "installer": {
         "type": "script",
-        "cmd": "mkdir -p {tools_root}/bin && curl -L https://github.com/Mozilla-Ocho/llamafile/releases/latest/download/llamafile -o {tools_root}/bin/llamafile && chmod +x {tools_root}/bin/llamafile"
+        "cmd": "mkdir -p {tools_root}/bin && curl -L https://github.com/Mozilla-Ocho/llamafile/releases/latest/download/llamafile -o {tools_root}/bin/llamafile && chmod +x {tools_root}/bin/llamafile",
+        "pkg": "https://github.com/Mozilla-Ocho/llamafile"
     },
     "launcher": {
         "type": "desktop",
@@ -133,12 +139,12 @@ TOOLS: dict[str, dict] = {
     'turbollm': {
     "name": "TurboLLM",
     "level": 4,
-    "layer": "Engines",
-    "role": "Engine",
-    "category": "LLM Runtime",
+    "layer": 'Local Inference Engines',
+    "role": 'Performance Engine',
+    "category": 'Performance Engine',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/turbollm"
+        "pkg": "https://github.com/mohitsoni48/TurboLLM"
     },
     "launcher": {
         "type": "tmux",
@@ -163,12 +169,12 @@ TOOLS: dict[str, dict] = {
     'airllm': {
     "name": "AirLLM",
     "level": 4,
-    "layer": "Engines",
-    "role": "Engine",
-    "category": "Efficient LLM",
+    "layer": 'Local Inference Engines',
+    "role": 'Layer-wise Inference',
+    "category": 'Layer-wise Inference',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/liguodongiot/llm-airforce"
+        "pkg": "https://github.com/lyogavin/airllm"
     },
     "launcher": {
         "type": "tmux",
@@ -193,12 +199,12 @@ TOOLS: dict[str, dict] = {
     'locally_uncensored': {
     "name": "Locally-Uncensored",
     "level": 4,
-    "layer": "Engines",
-    "role": "Engine",
-    "category": "Uncensored Models",
+    "layer": 'Local Inference Engines',
+    "role": 'Model Curation',
+    "category": 'Model Curation',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/locally-uncensored"
+        "pkg": "https://github.com/PurpleDoubleD/locally-uncensored"
     },
     "launcher": {
         "type": "desktop",
@@ -223,9 +229,9 @@ TOOLS: dict[str, dict] = {
     'heretic': {
     "name": "Heretic",
     "level": 4,
-    "layer": "Engines",
-    "role": "Abliteration",
-    "category": "Model Surgery",
+    "layer": 'Local Inference Engines',
+    "role": 'Model Surgery',
+    "category": 'Model Surgery',
     "installer": {
         "type": "git",
         "pkg": "https://github.com/p-e-w/heretic",
@@ -254,9 +260,9 @@ TOOLS: dict[str, dict] = {
     'vllm': {
     "name": "vLLM",
     "level": 4,
-    "layer": "Engines",
-    "role": "Engine",
-    "category": "LLM Serving",
+    "layer": 'Local Inference Engines',
+    "role": 'Datacenter Inference',
+    "category": 'Datacenter Inference',
     "installer": {
         "type": "uv",
         "pkg": "vllm"
@@ -285,9 +291,9 @@ TOOLS: dict[str, dict] = {
     'sglang': {
     "name": "SGLang",
     "level": 4,
-    "layer": "Engines",
-    "role": "Engine",
-    "category": "LLM Serving",
+    "layer": 'Local Inference Engines',
+    "role": 'Engine',
+    "category": 'LLM Serving',
     "installer": {
         "type": "uv",
         "pkg": "sglang"

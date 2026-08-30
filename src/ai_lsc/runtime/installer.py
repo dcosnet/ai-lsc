@@ -43,6 +43,7 @@ Key capabilities
 from __future__ import annotations
 
 import os
+import time
 import re
 import shlex
 import shutil
@@ -562,14 +563,53 @@ class InstallerManager:
         post_install: str | None = None,
         env_overrides: dict[str, str] | None = None,
     ) -> str:
-        """Clone a git repository into ``tools_root/<tool_id>``."""
+        """Clone or update a git repository at ``tools_root/<tool_id>``.
+
+        Bandwidth-aware: if a git working tree already exists at the
+        destination, run ``git pull --ff-only`` to fetch only the diff.
+        If the destination exists but is not a git repo (or the pull
+        fails for any reason — diverged branches, network errors,
+        corrupted index, etc.), move the old dir aside and re-clone
+        fresh, so the install always ends in a usable state.
+        """
         dest = os.path.join(self.tools_root, tool_id)
-        if os.path.exists(dest):
+        git_dir = os.path.join(dest, ".git")
+        if os.path.isdir(git_dir):
+            try:
+                subprocess.run(
+                    ["git", "-C", dest, "pull", "--ff-only"],
+                    check=True, timeout=600,
+                )
+                msg = f"Git source updated (pulled): {dest}"
+            except subprocess.CalledProcessError as exc:
+                logger.warning(
+                    "git pull failed for %s (%s); re-cloning fresh",
+                    tool_id, exc,
+                )
+                backup = dest + ".bak." + str(int(time.time()))
+                shutil.move(dest, backup)
+                os.makedirs(dest, exist_ok=True)
+                subprocess.run(
+                    ["git", "clone", pkg, dest],
+                    check=True, timeout=600,
+                )
+                msg = (
+                    f"Git source re-cloned (pull failed, "
+                    f"old copy at {backup}): {dest}"
+                )
+        elif os.path.exists(dest):
+            # Dir exists but is not a git repo — back it up and clone.
+            backup = dest + ".bak." + str(int(time.time()))
+            shutil.move(dest, backup)
+            os.makedirs(dest, exist_ok=True)
             subprocess.run(
-                ["git", "-C", dest, "pull", "--ff-only"],
+                ["git", "clone", pkg, dest],
                 check=True, timeout=600,
             )
-            msg = f"Git source updated: {dest}"
+            msg = (
+                f"Git source cloned (existing non-git dir backed up "
+                f"at {backup}): {dest}"
+            )
         else:
             os.makedirs(dest, exist_ok=True)
             subprocess.run(
@@ -588,16 +628,58 @@ class InstallerManager:
         tool_id: str,
         post_install: str | None = None,
     ) -> str:
-        """Clone a git repo and run ``yarn setup``."""
+        """Clone or update a git repo and run ``yarn install``.
+
+        Bandwidth-aware: if a git working tree already exists at the
+        destination, run ``git pull --ff-only`` (diff-only fetch) and
+        then ``yarn install`` to pick up any changed dependencies.  If
+        the destination exists but is not a git repo, or if the pull
+        fails, move the old dir aside and re-clone fresh.
+        """
         dest = os.path.join(self.tools_root, tool_id)
-        if os.path.exists(dest):
+        git_dir = os.path.join(dest, ".git")
+        if os.path.isdir(git_dir):
+            try:
+                subprocess.run(
+                    ["git", "-C", dest, "pull", "--ff-only"],
+                    check=True, timeout=600,
+                )
+                subprocess.run(
+                    ["yarn", "install"], cwd=dest, check=True, timeout=300,
+                )
+                msg = f"Git+Node source updated (pulled): {dest}"
+            except subprocess.CalledProcessError as exc:
+                logger.warning(
+                    "git pull / yarn install failed for %s (%s); re-cloning",
+                    tool_id, exc,
+                )
+                backup = dest + ".bak." + str(int(time.time()))
+                shutil.move(dest, backup)
+                os.makedirs(dest, exist_ok=True)
+                subprocess.run(
+                    ["git", "clone", pkg, dest], check=True, timeout=600,
+                )
+                subprocess.run(
+                    ["yarn", "install"], cwd=dest, check=True, timeout=300,
+                )
+                msg = (
+                    f"Git+Node source re-cloned (pull failed, "
+                    f"old copy at {backup}): {dest}"
+                )
+        elif os.path.exists(dest):
+            backup = dest + ".bak." + str(int(time.time()))
+            shutil.move(dest, backup)
+            os.makedirs(dest, exist_ok=True)
             subprocess.run(
-                ["git", "-C", dest, "pull", "--ff-only"], check=True, timeout=600,
+                ["git", "clone", pkg, dest], check=True, timeout=600,
             )
             subprocess.run(
                 ["yarn", "install"], cwd=dest, check=True, timeout=300,
             )
-            msg = f"Git+Node source updated: {dest}"
+            msg = (
+                f"Git+Node source cloned (existing non-git dir backed "
+                f"up at {backup}): {dest}"
+            )
         else:
             os.makedirs(dest, exist_ok=True)
             subprocess.run(

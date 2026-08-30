@@ -5,15 +5,19 @@ data pipelines, memory systems, and knowledge management tools.
 
 This module is consumed by
 :mod:`ai_lsc.registry.loader`.
+
+Structural fields (layer, level) follow the 10-Layer Systems
+Architecture Taxonomy; tools may be regrouped across files in a
+future pass — the loader merges by tool, not by filename.
 """
 
 TOOLS: dict[str, dict] = {
     'zotero': {
     "name": "Zotero",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Reference Manager",
-    "category": "Academic References",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Reference Manager',
+    "category": 'Reference Manager',
     "installer": {
         "type": "pacman",
         "pkg": "zotero"
@@ -38,10 +42,10 @@ TOOLS: dict[str, dict] = {
 },
     'calibre': {
     "name": "Calibre",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Library Manager",
-    "category": "Ebook Library",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Library Manager',
+    "category": 'Library Manager',
     "installer": {
         "type": "pacman",
         "pkg": "calibre"
@@ -66,10 +70,10 @@ TOOLS: dict[str, dict] = {
 },
     'paperlessngx': {
     "name": "Paperless-ngx",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Document Archive",
-    "category": "Document Management",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Document Archiver',
+    "category": 'Document Archiver',
     "installer": {
         "type": "git",
         "pkg": "https://github.com/paperless-ngx/paperless-ngx"
@@ -97,10 +101,10 @@ TOOLS: dict[str, dict] = {
 },
     'logseq': {
     "name": "Logseq",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Knowledge Graph",
-    "category": "Outliner",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Outliner Graph',
+    "category": 'Outliner Graph',
     "installer": {
         "type": "npm",
         "pkg": "logseq"
@@ -125,10 +129,10 @@ TOOLS: dict[str, dict] = {
 },
     'joplin': {
     "name": "Joplin",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Note Taking",
-    "category": "Notes",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Offline Journal',
+    "category": 'Offline Journal',
     "installer": {
         "type": "pacman",
         "pkg": "joplin"
@@ -153,10 +157,10 @@ TOOLS: dict[str, dict] = {
 },
     'chromadb': {
     "name": "ChromaDB",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Memory",
-    "category": "Vector Store",
+    "level": 8,
+    "layer": 'Decentralized Knowledge & Vector Stores',
+    "role": 'Vector Engine',
+    "category": 'Vector Engine',
     "installer": {
         "type": "uv",
         "pkg": "chromadb"
@@ -181,10 +185,10 @@ TOOLS: dict[str, dict] = {
 },
     'lancedb': {
     "name": "LanceDB",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Memory",
-    "category": "Vector Store",
+    "level": 8,
+    "layer": 'Decentralized Knowledge & Vector Stores',
+    "role": 'Serverless Database',
+    "category": 'Serverless Database',
     "installer": {
         "type": "uv",
         "pkg": "lancedb"
@@ -209,13 +213,14 @@ TOOLS: dict[str, dict] = {
 },
     'qdrant': {
     "name": "Qdrant",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Memory",
-    "category": "Vector Store",
+    "level": 8,
+    "layer": 'Decentralized Knowledge & Vector Stores',
+    "role": 'High-Performance Vector',
+    "category": 'High-Performance Vector',
     "installer": {
         "type": "script",
-        "cmd": "curl -L https://github.com/qdrant/qdrant/releases/latest/download/qdrant-x86_64-unknown-linux-musl.tar.gz | tar xz -C {tools_root}/qdrant && chmod +x {tools_root}/qdrant/qdrant"
+        "cmd": "curl -L https://github.com/qdrant/qdrant/releases/latest/download/qdrant-x86_64-unknown-linux-musl.tar.gz | tar xz -C {tools_root}/qdrant && chmod +x {tools_root}/qdrant/qdrant",
+        "pkg": "https://github.com/qdrant/qdrant"
     },
     "launcher": {
         "type": "tmux",
@@ -242,10 +247,10 @@ TOOLS: dict[str, dict] = {
 },
     'neo4j': {
     "name": "Neo4j",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Memory",
-    "category": "Graph Database",
+    "level": 8,
+    "layer": 'Decentralized Knowledge & Vector Stores',
+    "role": 'Graph Database',
+    "category": 'Graph Database',
     "installer": {
         "type": "pacman",
         "pkg": "neo4j"
@@ -270,10 +275,10 @@ TOOLS: dict[str, dict] = {
 },
     'elasticsearch': {
     "name": "Elasticsearch",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Memory",
-    "category": "Search Engine",
+    "level": 8,
+    "layer": 'Decentralized Knowledge & Vector Stores',
+    "role": 'Distributed Search',
+    "category": 'Distributed Search',
     "installer": {
         "type": "pacman",
         "pkg": "elasticsearch"
@@ -298,13 +303,14 @@ TOOLS: dict[str, dict] = {
 },
     'meilisearch': {
     "name": "Meilisearch",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Memory",
-    "category": "Search Engine",
+    "level": 8,
+    "layer": 'Decentralized Knowledge & Vector Stores',
+    "role": 'Lexical Search',
+    "category": 'Lexical Search',
     "installer": {
         "type": "script",
-        "cmd": "mkdir -p {tools_root}/bin && cd {tools_root}/bin && curl -L https://install.meilisearch.com | sh"
+        "cmd": "mkdir -p {tools_root}/bin && cd {tools_root}/bin && curl -L https://install.meilisearch.com | sh",
+        "pkg": "https://github.com/meilisearch/meilisearch"
     },
     "launcher": {
         "type": "tmux",
@@ -326,10 +332,10 @@ TOOLS: dict[str, dict] = {
 },
     'graphrag': {
     "name": "GraphRAG",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Knowledge Synthesis",
-    "category": "Graph RAG",
+    "level": 8,
+    "layer": 'Decentralized Knowledge & Vector Stores',
+    "role": 'Structured Synthesis',
+    "category": 'Structured Synthesis',
     "installer": {
         "type": "uv",
         "pkg": "graphrag"
@@ -354,13 +360,13 @@ TOOLS: dict[str, dict] = {
 },
     'turbovec': {
     "name": "TurboVec",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Embedding",
-    "category": "Vector Engine",
+    "level": 8,
+    "layer": 'Decentralized Knowledge & Vector Stores',
+    "role": 'Embedding',
+    "category": 'Vector Engine',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/turbovec"
+        "pkg": "https://github.com/ryancodrai/turbovec"
     },
     "launcher": {
         "type": "tmux",
@@ -384,13 +390,13 @@ TOOLS: dict[str, dict] = {
 },
     'airweave': {
     "name": "Airweave",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Integration",
-    "category": "Data Sync",
+    "level": 9,
+    "layer": 'Data Extraction & Pipeline Harvest',
+    "role": 'Synchronization Layer',
+    "category": 'Synchronization Layer',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/airweave"
+        "pkg": "https://github.com/airweave-ai/airweave"
     },
     "launcher": {
         "type": "tmux",
@@ -412,10 +418,10 @@ TOOLS: dict[str, dict] = {
 },
     'crawl4ai': {
     "name": "Crawl4AI",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Data Harvesting",
-    "category": "Web Crawler",
+    "level": 9,
+    "layer": 'Data Extraction & Pipeline Harvest',
+    "role": 'Web Scraper',
+    "category": 'Web Scraper',
     "installer": {
         "type": "uv",
         "pkg": "crawl4ai"
@@ -440,10 +446,10 @@ TOOLS: dict[str, dict] = {
 },
     'docling': {
     "name": "Docling",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Memory",
-    "category": "File Parsing",
+    "level": 9,
+    "layer": 'Data Extraction & Pipeline Harvest',
+    "role": 'Document Parser',
+    "category": 'Document Parser',
     "installer": {
         "type": "uv",
         "pkg": "docling"
@@ -468,10 +474,10 @@ TOOLS: dict[str, dict] = {
 },
     'markitdown': {
     "name": "MarkItDown",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "File Parsing",
-    "category": "Document Converter",
+    "level": 9,
+    "layer": 'Data Extraction & Pipeline Harvest',
+    "role": 'Markdown Converter',
+    "category": 'Markdown Converter',
     "installer": {
         "type": "uv",
         "pkg": "markitdown"
@@ -496,13 +502,13 @@ TOOLS: dict[str, dict] = {
 },
     'opendataloader': {
     "name": "OpenDataLoader",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Ingestion",
-    "category": "Data Pipeline",
+    "level": 9,
+    "layer": 'Data Extraction & Pipeline Harvest',
+    "role": 'Data Ingest',
+    "category": 'Data Ingest',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/opendataloader"
+        "pkg": "https://github.com/opendataloader-project/opendataloader-pdf"
     },
     "launcher": {
         "type": "desktop",
@@ -524,10 +530,10 @@ TOOLS: dict[str, dict] = {
 },
     'whisper': {
     "name": "Whisper",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Memory",
-    "category": "Audio Parsing",
+    "level": 9,
+    "layer": 'Data Extraction & Pipeline Harvest',
+    "role": 'Audio Extraction',
+    "category": 'Audio Extraction',
     "installer": {
         "type": "uv",
         "pkg": "openai-whisper"
@@ -552,10 +558,10 @@ TOOLS: dict[str, dict] = {
 },
     'mnemosyne': {
     "name": "Mnemosyne",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Memory",
-    "category": "Spaced Repetition",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Learning Cards',
+    "category": 'Learning Cards',
     "installer": {
         "type": "pipx",
         "pkg": "mnemosyne"
@@ -580,13 +586,13 @@ TOOLS: dict[str, dict] = {
 },
     'mnemo_cortex': {
     "name": "Mnemo Cortex",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Memory",
-    "category": "Cortex Memory",
+    "level": 8,
+    "layer": 'Decentralized Knowledge & Vector Stores',
+    "role": 'Memory',
+    "category": 'Cortex Memory',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/mnemo-cortex"
+        "pkg": "https://github.com/GuyMannDude/mnemo-cortex"
     },
     "launcher": {
         "type": "tmux",
@@ -610,13 +616,13 @@ TOOLS: dict[str, dict] = {
 },
     'everos_memory': {
     "name": "EverOS Memory",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Memory",
-    "category": "Persistent Memory",
+    "level": 8,
+    "layer": 'Decentralized Knowledge & Vector Stores',
+    "role": 'Memory',
+    "category": 'Persistent Memory',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/everos-memory"
+        "pkg": "https://github.com/EverMind-AI/EverOS"
     },
     "launcher": {
         "type": "tmux",
@@ -638,13 +644,13 @@ TOOLS: dict[str, dict] = {
 },
     'mirofish': {
     "name": "Mirofish",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Transform",
-    "category": "Data Pipeline",
+    "level": 9,
+    "layer": 'Data Extraction & Pipeline Harvest',
+    "role": 'ETL Transformation',
+    "category": 'ETL Transformation',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/mirofish"
+        "pkg": "https://github.com/666ghj/MiroFish"
     },
     "launcher": {
         "type": "desktop",
@@ -666,13 +672,13 @@ TOOLS: dict[str, dict] = {
 },
     'opendataloader_pdf': {
     "name": "OpenDataLoader PDF",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Extraction",
-    "category": "PDF Pipeline",
+    "level": 9,
+    "layer": 'Data Extraction & Pipeline Harvest',
+    "role": 'PDF Processing',
+    "category": 'PDF Processing',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/opendataloader-pdf"
+        "pkg": "https://github.com/opendataloader-project/opendataloader-pdf"
     },
     "launcher": {
         "type": "desktop",
@@ -694,13 +700,13 @@ TOOLS: dict[str, dict] = {
 },
     'understand_anything': {
     "name": "Understand Anything",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Comprehension",
-    "category": "Document Understanding",
+    "level": 9,
+    "layer": 'Data Extraction & Pipeline Harvest',
+    "role": 'Document Comprehension',
+    "category": 'Document Comprehension',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/understand-anything"
+        "pkg": "https://github.com/Egonex-AI/Understand-Anything"
     },
     "launcher": {
         "type": "desktop",
@@ -724,10 +730,10 @@ TOOLS: dict[str, dict] = {
 },
     'mem0': {
     "name": "Mem0",
-    "level": 11,
-    "layer": "Knowledge Management",
-    "role": "Memory",
-    "category": "Memory System",
+    "level": 8,
+    "layer": 'Decentralized Knowledge & Vector Stores',
+    "role": 'Memory',
+    "category": 'Memory System',
     "installer": {
         "type": "uv",
         "pkg": "mem0ai"

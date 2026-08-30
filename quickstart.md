@@ -249,7 +249,7 @@ for f in os.listdir('ai_lsc/registry/layers'):
 
 ## Next Steps
 
-- Explore the **Infrastructure** section to understand the 13-layer architecture
+- Explore the **Infrastructure** section to understand the 10-layer architecture
 - Try different **Stack Templates** to find the right combination for your workflow
 - Set up the **Skills Console** to extend your tool capabilities
 - Use **Code Analysis** to inspect and understand your project dependencies

@@ -25,6 +25,63 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+
+# ── 10-layer taxonomy resolution ──────────────────────────────────────
+# Static wiring entries carry their layer as a literal; loop-based bulk
+# allocations resolve the layer dynamically from the registry so the
+# wiring graph can never drift from the taxonomy again.
+from ai_lsc.registry.defaults import DEFAULT_REGISTRY
+
+# Layer assignments for staged tools that live in the modular layer
+# files but are not part of the shipped DEFAULT_REGISTRY seed.
+_WIRING_LAYER_SUPPLEMENT: dict[str, str] = {
+    "agent_reach": "Multi-Agent Orchestration Runtimes",
+    "algory": "Multi-Agent Orchestration Runtimes",
+    "atlas_os": "Multi-Agent Orchestration Runtimes",
+    "clamav": "Human Interface & System Operations",
+    "crossplane": "Human Interface & System Operations",
+    "distcc": "Development Runtime & Environment",
+    "eagle_eye": "Human Interface & System Operations",
+    "everos_memory": "Decentralized Knowledge & Vector Stores",
+    "gemini_cli": "Agentic Software Engineering & Sandboxes",
+    "glassmind": "Multi-Agent Orchestration Runtimes",
+    "goose": "Agentic Software Engineering & Sandboxes",
+    "graphify": "Agentic Software Engineering & Sandboxes",
+    "headroom": "Multi-Agent Orchestration Runtimes",
+    "hermes_webui": "Human Interface & System Operations",
+    "honcho": "Multi-Agent Orchestration Runtimes",
+    "jan": "Human Interface & System Operations",
+    "letta": "Multi-Agent Orchestration Runtimes",
+    "mem0": "Decentralized Knowledge & Vector Stores",
+    "meshllm": "Intelligent API Routers & Proxies",
+    "mnemo_cortex": "Decentralized Knowledge & Vector Stores",
+    "n8n": "Human Interface & System Operations",
+    "nightshift": "Multi-Agent Orchestration Runtimes",
+    "nvidia_agent_skills": "Multi-Agent Orchestration Runtimes",
+    "odysseus": "Multi-Agent Orchestration Runtimes",
+    "openbrain": "Multi-Agent Orchestration Runtimes",
+    "opencode": "Agentic Software Engineering & Sandboxes",
+    "picode": "Agentic Software Engineering & Sandboxes",
+    "pssh": "Human Interface & System Operations",
+    "qwen_code": "Agentic Software Engineering & Sandboxes",
+    "sglang": "Local Inference Engines",
+    "tinygrad": "GPU Acceleration & Optimization",
+    "trivy": "Human Interface & System Operations",
+    "turbovec": "Decentralized Knowledge & Vector Stores",
+    "zcoder": "Agentic Software Engineering & Sandboxes",
+    "dma": "Development Runtime & Environment",
+    "opa": "Human Interface & System Operations",
+}
+
+
+def _wiring_layer(tool_id: str) -> str:
+    """Resolve a tool's 10-layer taxonomy layer for its wiring entry."""
+    entry = DEFAULT_REGISTRY.get(tool_id)
+    if entry:
+        return entry.get("layer", "")
+    return _WIRING_LAYER_SUPPLEMENT.get(tool_id, "")
+
+
 # ── Schema version ──────────────────────────────────────────────────
 
 CONNECTIONS_SCHEMA_VERSION: str = "1.0.0"
@@ -358,12 +415,12 @@ def _reg(w: StackWiring) -> StackWiring:
 
 
 # ──────────────────────────────────────────────────────────────────
-# L1: Host Platform
+# L1: Host Platform  →  Layer 1: Host Platform & Infrastructure
 # ──────────────────────────────────────────────────────────────────
 
 _reg(StackWiring(
     tool_id="postgresql",
-    layer="Host Platform",
+    layer="Host Platform & Infrastructure",
     interfaces=[
         ToolInterface(
             interface_id="postgresql",
@@ -403,7 +460,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="redis",
-    layer="Host Platform",
+    layer="Host Platform & Infrastructure",
     interfaces=[
         ToolInterface(
             interface_id="redis",
@@ -443,7 +500,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="mariadb",
-    layer="Host Platform",
+    layer="Host Platform & Infrastructure",
     interfaces=[
         ToolInterface(
             interface_id="mariadb",
@@ -473,7 +530,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="duckdb",
-    layer="Host Platform",
+    layer="Host Platform & Infrastructure",
     interfaces=[
         ToolInterface(
             interface_id="duckdb_in_process",
@@ -501,7 +558,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="sqlite3",
-    layer="Host Platform",
+    layer="Host Platform & Infrastructure",
     interfaces=[],
     connections=[],
     context=EngineeringContext(
@@ -515,12 +572,12 @@ _reg(StackWiring(
 
 
 # ──────────────────────────────────────────────────────────────────
-# L2: Development Environment
+# L2: Development Environment  →  Layer 2: Development Runtime & Environment
 # ──────────────────────────────────────────────────────────────────
 
 _reg(StackWiring(
     tool_id="cuda",
-    layer="GPU Runtimes",
+    layer="GPU Acceleration & Optimization",
     interfaces=[_CUDA_INTERFACE],
     connections=[],
     context=EngineeringContext(
@@ -536,7 +593,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="cupy",
-    layer="Development Environment",
+    layer="GPU Acceleration & Optimization",
     interfaces=[],
     connections=[
         Connection(
@@ -558,7 +615,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="python",
-    layer="Development Environment",
+    layer="Development Runtime & Environment",
     interfaces=[],
     connections=[],
     context=EngineeringContext(
@@ -571,7 +628,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="tree_sitter",
-    layer="Development Environment",
+    layer="Development Runtime & Environment",
     interfaces=[],
     connections=[],
     context=EngineeringContext(
@@ -582,7 +639,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="ripgrep",
-    layer="Development Environment",
+    layer="Development Runtime & Environment",
     interfaces=[],
     connections=[],
     context=EngineeringContext(
@@ -593,7 +650,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="fd",
-    layer="Development Environment",
+    layer="Development Runtime & Environment",
     interfaces=[],
     connections=[],
     context=EngineeringContext(
@@ -604,12 +661,12 @@ _reg(StackWiring(
 
 
 # ──────────────────────────────────────────────────────────────────
-# L3: GPU Runtime
+# L3: GPU Runtime  →  Layer 3: GPU Acceleration & Optimization
 # ──────────────────────────────────────────────────────────────────
 
 _reg(StackWiring(
     tool_id="apex",
-    layer="GPU Runtimes",
+    layer="GPU Acceleration & Optimization",
     interfaces=[],
     connections=[
         Connection(
@@ -632,7 +689,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="heretic",
-    layer="Engines",
+    layer="Local Inference Engines",
     interfaces=[],
     connections=[
         Connection(
@@ -656,7 +713,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="unsloth",
-    layer="Development Environment",
+    layer="GPU Acceleration & Optimization",
     interfaces=[],
     connections=[
         Connection(
@@ -679,12 +736,12 @@ _reg(StackWiring(
 
 
 # ──────────────────────────────────────────────────────────────────
-# L4: Inference Engines
+# L4: Inference Engines  →  Layer 4: Local Inference Engines
 # ──────────────────────────────────────────────────────────────────
 
 _reg(StackWiring(
     tool_id="ollama",
-    layer="Engines",
+    layer="Local Inference Engines",
     interfaces=[
         ToolInterface(
             interface_id="openai_api",
@@ -741,7 +798,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="llamacpp",
-    layer="Engines",
+    layer="Local Inference Engines",
     interfaces=[
         ToolInterface(
             interface_id="openai_api",
@@ -771,7 +828,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="vllm",
-    layer="Engines",
+    layer="Local Inference Engines",
     interfaces=[
         ToolInterface(
             interface_id="openai_api",
@@ -818,7 +875,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="airllm",
-    layer="Engines",
+    layer="Local Inference Engines",
     interfaces=[
         ToolInterface(
             interface_id="airllm_api",
@@ -841,7 +898,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="koboldcpp",
-    layer="Engines",
+    layer="Local Inference Engines",
     interfaces=[
         ToolInterface(
             interface_id="koboldcpp_api",
@@ -859,7 +916,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="llamafile",
-    layer="Engines",
+    layer="Local Inference Engines",
     interfaces=[
         ToolInterface(
             interface_id="llamafile_api",
@@ -877,7 +934,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="locally_uncensored",
-    layer="Engines",
+    layer="Local Inference Engines",
     interfaces=[],
     connections=[
         Connection(
@@ -901,7 +958,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="turbollm",
-    layer="Engines",
+    layer="Local Inference Engines",
     interfaces=[
         ToolInterface(
             interface_id="turbollm_api",
@@ -924,19 +981,19 @@ _reg(StackWiring(
 
 
 # ──────────────────────────────────────────────────────────────────
-# L5: Distributed Runtime
+# L5: Distributed Runtime  →  Layer 3/4: GPU + Inference Engines (10-layer taxonomy)
 # (vLLM is already registered above — it sits at L5 in the taxonomy
 #  but is logically grouped with inference engines in the wiring.)
 # ──────────────────────────────────────────────────────────────────
 
 
 # ──────────────────────────────────────────────────────────────────
-# L6: AI Endpoints  (→ the restored "Routing" layer in the 11-layer taxonomy)
+# L6: AI Endpoints  →  Layer 5: Intelligent API Routers & Proxies (10-layer taxonomy)
 # ──────────────────────────────────────────────────────────────────
 
 _reg(StackWiring(
     tool_id="litellm",
-    layer="Routing",
+    layer="Intelligent API Routers & Proxies",
     interfaces=[
         ToolInterface(
             interface_id="openai_api",
@@ -1015,7 +1072,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="9router_proxy",
-    layer="Routing",
+    layer="Intelligent API Routers & Proxies",
     interfaces=[
         ToolInterface(
             interface_id="router_api",
@@ -1041,7 +1098,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="deep_eye",
-    layer="User Interfaces",
+    layer="Data Extraction & Pipeline Harvest",
     interfaces=[
         ToolInterface(
             interface_id="deep_eye_api",
@@ -1066,7 +1123,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="luxtts",
-    layer="User Interfaces",
+    layer="Data Extraction & Pipeline Harvest",
     interfaces=[
         ToolInterface(
             interface_id="tts_api",
@@ -1082,12 +1139,12 @@ _reg(StackWiring(
 
 
 # ──────────────────────────────────────────────────────────────────
-# L7: Data & Knowledge Pipelines
+# L7: Data & Knowledge Pipelines  →  Layer 8/9: Vector Stores + Data Extraction (10-layer taxonomy)
 # ──────────────────────────────────────────────────────────────────
 
 _reg(StackWiring(
     tool_id="chromadb",
-    layer="Knowledge Management",
+    layer="Decentralized Knowledge & Vector Stores",
     interfaces=[
         ToolInterface(
             interface_id="http_api",
@@ -1121,7 +1178,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="qdrant",
-    layer="Knowledge Management",
+    layer="Decentralized Knowledge & Vector Stores",
     interfaces=[
         ToolInterface(
             interface_id="http_api",
@@ -1151,7 +1208,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="lancedb",
-    layer="Knowledge Management",
+    layer="Decentralized Knowledge & Vector Stores",
     interfaces=[
         ToolInterface(
             interface_id="http_api",
@@ -1167,7 +1224,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="elasticsearch",
-    layer="Knowledge Management",
+    layer="Decentralized Knowledge & Vector Stores",
     interfaces=[
         ToolInterface(
             interface_id="http_api",
@@ -1184,7 +1241,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="neo4j",
-    layer="Knowledge Management",
+    layer="Decentralized Knowledge & Vector Stores",
     interfaces=[
         ToolInterface(
             interface_id="http_api",
@@ -1201,7 +1258,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="meilisearch",
-    layer="Knowledge Management",
+    layer="Decentralized Knowledge & Vector Stores",
     interfaces=[
         ToolInterface(
             interface_id="http_api",
@@ -1217,7 +1274,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="airweave",
-    layer="Knowledge Management",
+    layer="Data Extraction & Pipeline Harvest",
     interfaces=[
         ToolInterface(
             interface_id="airweave_api",
@@ -1234,7 +1291,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="parakeet",
-    layer="User Interfaces",
+    layer="Data Extraction & Pipeline Harvest",
     interfaces=[
         ToolInterface(
             interface_id="parakeet_api",
@@ -1257,7 +1314,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="turbovec",
-    layer="Knowledge Management",
+    layer="Decentralized Knowledge & Vector Stores",
     interfaces=[
         ToolInterface(
             interface_id="turbovec_api",
@@ -1280,7 +1337,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="crawl4ai",
-    layer="Knowledge Management",
+    layer="Data Extraction & Pipeline Harvest",
     interfaces=[],
     connections=[],
     context=EngineeringContext(
@@ -1294,7 +1351,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="docling",
-    layer="Knowledge Management",
+    layer="Data Extraction & Pipeline Harvest",
     interfaces=[],
     connections=[],
     context=EngineeringContext(
@@ -1306,7 +1363,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="fabric",
-    layer="Orchestrators",
+    layer="Intelligent API Routers & Proxies",
     interfaces=[],
     connections=[],
     context=EngineeringContext(
@@ -1318,7 +1375,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="graphrag",
-    layer="Knowledge Management",
+    layer="Decentralized Knowledge & Vector Stores",
     interfaces=[],
     connections=[],
     context=EngineeringContext(
@@ -1330,7 +1387,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="markitdown",
-    layer="Knowledge Management",
+    layer="Data Extraction & Pipeline Harvest",
     interfaces=[],
     connections=[],
     context=EngineeringContext(
@@ -1342,7 +1399,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="mirofish",
-    layer="Knowledge Management",
+    layer="Data Extraction & Pipeline Harvest",
     interfaces=[],
     connections=[],
     context=EngineeringContext(
@@ -1353,7 +1410,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="opendataloader",
-    layer="Knowledge Management",
+    layer="Data Extraction & Pipeline Harvest",
     interfaces=[],
     connections=[],
     context=EngineeringContext(
@@ -1364,7 +1421,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="opendataloader_pdf",
-    layer="Knowledge Management",
+    layer="Data Extraction & Pipeline Harvest",
     interfaces=[],
     connections=[],
     context=EngineeringContext(
@@ -1375,7 +1432,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="understand_anything",
-    layer="Knowledge Management",
+    layer="Data Extraction & Pipeline Harvest",
     interfaces=[],
     connections=[
         Connection(
@@ -1391,7 +1448,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="whisper",
-    layer="Knowledge Management",
+    layer="Data Extraction & Pipeline Harvest",
     interfaces=[],
     connections=[],
     context=EngineeringContext(
@@ -1403,12 +1460,12 @@ _reg(StackWiring(
 
 
 # ──────────────────────────────────────────────────────────────────
-# L8: Automation & Execution
+# L8: Automation & Execution  →  Layer 6/7: Orchestration + Agentic Engineering (10-layer taxonomy)
 # ──────────────────────────────────────────────────────────────────
 
 _reg(StackWiring(
     tool_id="n8n",
-    layer="Orchestrators",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="n8n_api",
@@ -1454,7 +1511,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="nightshift",
-    layer="Orchestrators",
+    layer="Multi-Agent Orchestration Runtimes",
     interfaces=[
         ToolInterface(
             interface_id="nightshift_api",
@@ -1470,7 +1527,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="hivemind",
-    layer="Orchestrators",
+    layer="Multi-Agent Orchestration Runtimes",
     interfaces=[
         ToolInterface(
             interface_id="hivemind_api",
@@ -1495,7 +1552,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="hermes_agent",
-    layer="Orchestrators",
+    layer="Multi-Agent Orchestration Runtimes",
     interfaces=[
         ToolInterface(
             interface_id="hermes_agent_api",
@@ -1520,7 +1577,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="openhands",
-    layer="DevOps",
+    layer="Agentic Software Engineering & Sandboxes",
     interfaces=[
         ToolInterface(
             interface_id="openhands_api",
@@ -1582,7 +1639,7 @@ for _tid in [
         ))
     _reg(StackWiring(
         tool_id=_tid,
-        layer="DevOps",
+        layer=_wiring_layer(_tid),
         interfaces=[],
         connections=_conns,
         context=EngineeringContext(
@@ -1595,7 +1652,7 @@ for _tid in [
 # agno has a web interface but no deps in defaults
 _reg(StackWiring(
     tool_id="agno",
-    layer="Orchestrators",
+    layer="Multi-Agent Orchestration Runtimes",
     interfaces=[
         ToolInterface(
             interface_id="agno_web",
@@ -1611,12 +1668,12 @@ _reg(StackWiring(
 
 
 # ──────────────────────────────────────────────────────────────────
-# L9: Observability
+# L9: Observability  →  Layer 10: Human Interface & System Operations (10-layer taxonomy)
 # ──────────────────────────────────────────────────────────────────
 
 _reg(StackWiring(
     tool_id="prometheus",
-    layer="Observability",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="prometheus_api",
@@ -1646,7 +1703,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="grafana",
-    layer="Observability",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="grafana_web",
@@ -1695,7 +1752,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="grafana_alloy",
-    layer="Observability",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="otlp_grpc",
@@ -1739,7 +1796,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="glances",
-    layer="Observability",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="glances_web",
@@ -1755,7 +1812,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="opik",
-    layer="Observability",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="opik_api",
@@ -1771,7 +1828,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="pulse_ai",
-    layer="Observability",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="pulse_ai_api",
@@ -1787,7 +1844,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="hermes_dashboard_page",
-    layer="User Interfaces",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="dashboard_api",
@@ -1812,7 +1869,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="latitude",
-    layer="Observability",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="latitude_api",
@@ -1837,12 +1894,12 @@ _reg(StackWiring(
 
 
 # ──────────────────────────────────────────────────────────────────
-# L10: Intelligent Routing  (folded into "Orchestrators" in the 11-layer taxonomy)
+# L10: Intelligent Routing  →  Layer 5: Intelligent API Routers & Proxies (10-layer taxonomy)
 # ──────────────────────────────────────────────────────────────────
 
 _reg(StackWiring(
     tool_id="odysseus",
-    layer="Orchestrators",
+    layer="Multi-Agent Orchestration Runtimes",
     interfaces=[
         ToolInterface(
             interface_id="odysseus_api",
@@ -1867,7 +1924,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="glassmind",
-    layer="Orchestrators",
+    layer="Multi-Agent Orchestration Runtimes",
     interfaces=[
         ToolInterface(
             interface_id="glassmind_api",
@@ -1892,7 +1949,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="mnemo_cortex",
-    layer="Knowledge Management",
+    layer="Decentralized Knowledge & Vector Stores",
     interfaces=[
         ToolInterface(
             interface_id="mnemo_cortex_api",
@@ -1917,7 +1974,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="openbrain",
-    layer="Orchestrators",
+    layer="Multi-Agent Orchestration Runtimes",
     interfaces=[
         ToolInterface(
             interface_id="openbrain_api",
@@ -1942,7 +1999,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="everos_memory",
-    layer="Knowledge Management",
+    layer="Decentralized Knowledge & Vector Stores",
     interfaces=[
         ToolInterface(
             interface_id="everos_memory_api",
@@ -1960,7 +2017,7 @@ _reg(StackWiring(
 for _tid in ["autogen", "crewai", "openai_swarm"]:
     _reg(StackWiring(
         tool_id=_tid,
-        layer="Orchestrators",
+        layer=_wiring_layer(_tid),
         interfaces=[],
         connections=[],
         context=EngineeringContext(
@@ -1972,12 +2029,12 @@ for _tid in ["autogen", "crewai", "openai_swarm"]:
 
 
 # ──────────────────────────────────────────────────────────────────
-# L11: User Interfaces
+# L11: User Interfaces  →  Layer 10: Human Interface & System Operations (10-layer taxonomy)
 # ──────────────────────────────────────────────────────────────────
 
 _reg(StackWiring(
     tool_id="openwebui",
-    layer="User Interfaces",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="openwebui_web",
@@ -2049,7 +2106,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="dify",
-    layer="Routing",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="dify_web",
@@ -2112,7 +2169,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="flowise",
-    layer="User Interfaces",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="flowise_web",
@@ -2147,7 +2204,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="openjarvis",
-    layer="User Interfaces",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="openjarvis_web",
@@ -2196,7 +2253,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="hermes",
-    layer="User Interfaces",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="hermes_web",
@@ -2222,7 +2279,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="librechat",
-    layer="User Interfaces",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="librechat_web",
@@ -2254,7 +2311,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="anythingllm",
-    layer="User Interfaces",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="anythingllm_web",
@@ -2271,7 +2328,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="langflow",
-    layer="Orchestrators",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="langflow_web",
@@ -2288,7 +2345,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="forge",
-    layer="User Interfaces",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="forge_web",
@@ -2312,7 +2369,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="invokeai",
-    layer="User Interfaces",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="invokeai_web",
@@ -2336,7 +2393,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="dashy",
-    layer="User Interfaces",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="dashy_web",
@@ -2365,7 +2422,7 @@ for _tid in ["hermes_desktop", "local_llm_launcher"]:
         ))
     _reg(StackWiring(
         tool_id=_tid,
-        layer="User Interfaces",
+        layer=_wiring_layer(_tid),
         interfaces=[],
         connections=_conns,
         context=EngineeringContext(
@@ -2376,12 +2433,12 @@ for _tid in ["hermes_desktop", "local_llm_launcher"]:
 
 
 # ──────────────────────────────────────────────────────────────────
-# L12: DevOps
+# L12: DevOps  →  Layer 9/10: Data Extraction + System Operations (10-layer taxonomy)
 # ──────────────────────────────────────────────────────────────────
 
 _reg(StackWiring(
     tool_id="opensandbox",
-    layer="Orchestrators",
+    layer="Host Platform & Infrastructure",
     interfaces=[
         ToolInterface(
             interface_id="opensandbox_web",
@@ -2439,7 +2496,7 @@ for _tid in [
         ))
     _reg(StackWiring(
         tool_id=_tid,
-        layer="DevOps",
+        layer=_wiring_layer(_tid),
         interfaces=[],
         connections=_conns,
         context=EngineeringContext(
@@ -2450,12 +2507,12 @@ for _tid in [
 
 
 # ──────────────────────────────────────────────────────────────────
-# L13: Knowledge Management
+# L13: Knowledge Management  →  Layer 8/10: Vector Stores + System Operations (10-layer taxonomy)
 # ──────────────────────────────────────────────────────────────────
 
 _reg(StackWiring(
     tool_id="paperlessngx",
-    layer="Knowledge Management",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="paperlessngx_web",
@@ -2518,7 +2575,7 @@ for _tid in [
 ]:
     _reg(StackWiring(
         tool_id=_tid,
-        layer="Knowledge Management",
+        layer=_wiring_layer(_tid),
         interfaces=[],
         connections=[],
         context=EngineeringContext(
@@ -2560,7 +2617,7 @@ _CODING_AGENT_CTX = EngineeringContext(
 
 _reg(StackWiring(
     tool_id="opencode",
-    layer="DevOps",
+    layer="Agentic Software Engineering & Sandboxes",
     interfaces=[],
     connections=[
         Connection(
@@ -2584,7 +2641,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="gemini_cli",
-    layer="DevOps",
+    layer="Agentic Software Engineering & Sandboxes",
     interfaces=[],
     connections=[
         Connection(
@@ -2608,7 +2665,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="qwen_code",
-    layer="DevOps",
+    layer="Agentic Software Engineering & Sandboxes",
     interfaces=[],
     connections=[
         Connection(
@@ -2632,7 +2689,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="goose",
-    layer="DevOps",
+    layer="Agentic Software Engineering & Sandboxes",
     interfaces=[],
     connections=[
         Connection(
@@ -2659,7 +2716,7 @@ _reg(StackWiring(
 # it was staged.  This wiring closes that gap.
 _reg(StackWiring(
     tool_id="codex",
-    layer="DevOps",
+    layer="Agentic Software Engineering & Sandboxes",
     interfaces=[],
     connections=[
         Connection(
@@ -2683,7 +2740,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="letta",
-    layer="Orchestrators",
+    layer="Multi-Agent Orchestration Runtimes",
     interfaces=[
         ToolInterface(
             interface_id="http_api",
@@ -2745,7 +2802,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="sglang",
-    layer="Engines",
+    layer="Local Inference Engines",
     interfaces=[
         ToolInterface(
             interface_id="openai_api",
@@ -2799,7 +2856,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="jan",
-    layer="User Interfaces",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="openai_api",
@@ -2835,7 +2892,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="mem0",
-    layer="Knowledge Management",
+    layer="Decentralized Knowledge & Vector Stores",
     interfaces=[],
     connections=[
         Connection(
@@ -2872,7 +2929,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="tinygrad",
-    layer="GPU Runtimes",
+    layer="GPU Acceleration & Optimization",
     interfaces=[],
     connections=[
         Connection(
@@ -3017,7 +3074,7 @@ def validate_wiring() -> list[str]:
 # ──────────────────────────────────────────────────────────────────
 _reg(StackWiring(
     tool_id="graphify",
-    layer="Orchestrators",
+    layer="Agentic Software Engineering & Sandboxes",
     interfaces=[
         ToolInterface(
             interface_id="graphify_mcp",
@@ -3119,7 +3176,7 @@ _reg(StackWiring(
 
 _reg(StackWiring(
     tool_id="meshllm",
-    layer="Routing",
+    layer="Intelligent API Routers & Proxies",
     interfaces=[
         ToolInterface(
             interface_id="openai_api",
@@ -3231,7 +3288,7 @@ _reg(StackWiring(
 # ──────────────────────────────────────────────────────────────────
 _reg(StackWiring(
     tool_id="picode",
-    layer="Routing",
+    layer="Agentic Software Engineering & Sandboxes",
     interfaces=[],
     connections=[
         Connection(
@@ -3282,7 +3339,7 @@ _reg(StackWiring(
 # ──────────────────────────────────────────────────────────────────
 _reg(StackWiring(
     tool_id="zcoder",
-    layer="DevOps",
+    layer="Agentic Software Engineering & Sandboxes",
     interfaces=[],
     connections=[
         Connection(
@@ -3324,7 +3381,7 @@ _reg(StackWiring(
 # ──────────────────────────────────────────────────────────────────
 _reg(StackWiring(
     tool_id="hermes_webui",
-    layer="User Interfaces",
+    layer="Human Interface & System Operations",
     interfaces=[
         ToolInterface(
             interface_id="hermes_webui_http",

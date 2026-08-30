@@ -5,15 +5,19 @@ sensory interfaces (vision, speech, voice), and knowledge graph tools.
 
 This module is consumed by
 :mod:`ai_lsc.registry.loader`.
+
+Structural fields (layer, level) follow the 10-Layer Systems
+Architecture Taxonomy; tools may be regrouped across files in a
+future pass — the loader merges by tool, not by filename.
 """
 
 TOOLS: dict[str, dict] = {
     'openwebui': {
     "name": "Open WebUI",
-    "level": 9,
-    "layer": "User Interfaces",
-    "role": "Face",
-    "category": "Chat Frontend",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Extensible Interface',
+    "category": 'Extensible Interface',
     "installer": {
         "type": "uv",
         "pkg": "open-webui"
@@ -40,10 +44,10 @@ TOOLS: dict[str, dict] = {
 },
     'anythingllm': {
     "name": "AnythingLLM",
-    "level": 9,
-    "layer": "User Interfaces",
-    "role": "Face",
-    "category": "Chat",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Collaborative Chat',
+    "category": 'Collaborative Chat',
     "installer": {
         "type": "git_node",
         "pkg": "https://github.com/Mintplex-Labs/anything-llm.git"
@@ -68,10 +72,10 @@ TOOLS: dict[str, dict] = {
 },
     'librechat': {
     "name": "LibreChat",
-    "level": 9,
-    "layer": "User Interfaces",
-    "role": "Face",
-    "category": "Chat Agent Platform",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Enterprise Assistant',
+    "category": 'Enterprise Assistant',
     "installer": {
         "type": "git_node",
         "pkg": "https://github.com/danny-avila/LibreChat.git",
@@ -105,10 +109,10 @@ TOOLS: dict[str, dict] = {
 },
     'flowise': {
     "name": "Flowise",
-    "level": 9,
-    "layer": "User Interfaces",
-    "role": "Face",
-    "category": "Workflow",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Visual Agent Canvas',
+    "category": 'Visual Agent Canvas',
     "installer": {
         "type": "npm",
         "pkg": "flowise"
@@ -133,10 +137,10 @@ TOOLS: dict[str, dict] = {
 },
     'invokeai': {
     "name": "InvokeAI",
-    "level": 9,
-    "layer": "User Interfaces",
-    "role": "Face",
-    "category": "Image Generation",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Studio Canvas',
+    "category": 'Studio Canvas',
     "installer": {
         "type": "git",
         "pkg": "https://github.com/invoke-ai/InvokeAI"
@@ -163,13 +167,13 @@ TOOLS: dict[str, dict] = {
 },
     'forge': {
     "name": "Forge (A1111)",
-    "level": 9,
-    "layer": "User Interfaces",
-    "role": "Face",
-    "category": "Image Generation",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Image WebUI',
+    "category": 'Image WebUI',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/AUTOMATIC1111/stable-diffusion-webui-forge"
+        "pkg": "https://github.com/lllyasviel/stable-diffusion-webui-forge"
     },
     "launcher": {
         "type": "tmux",
@@ -193,10 +197,10 @@ TOOLS: dict[str, dict] = {
 },
     'dashy': {
     "name": "Dashy",
-    "level": 9,
-    "layer": "User Interfaces",
-    "role": "Face",
-    "category": "Homepage",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Cluster Homepage',
+    "category": 'Cluster Homepage',
     "installer": {
         "type": "npm",
         "pkg": "dashy"
@@ -221,10 +225,10 @@ TOOLS: dict[str, dict] = {
 },
     'obsidian': {
     "name": "Obsidian",
-    "level": 9,
-    "layer": "User Interfaces",
-    "role": "Face",
-    "category": "Knowledge Graph Notes",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Sovereign Graph Editor',
+    "category": 'Sovereign Graph Editor',
     "installer": {
         "type": "pacman",
         "pkg": "obsidian"
@@ -249,10 +253,10 @@ TOOLS: dict[str, dict] = {
 },
     'hermes': {
     "name": "Hermes",
-    "level": 9,
-    "layer": "User Interfaces",
-    "role": "Face",
-    "category": "Ecosystem Dashboard",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Ecosystem Launcher',
+    "category": 'Ecosystem Launcher',
     "installer": {
         "type": "npm",
         "pkg": "hermes-ai"
@@ -279,10 +283,10 @@ TOOLS: dict[str, dict] = {
 },
     'hermes_desktop': {
     "name": "Hermes Desktop",
-    "level": 9,
-    "layer": "User Interfaces",
-    "role": "Face",
-    "category": "Desktop Agent",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Desktop GUI',
+    "category": 'Desktop GUI',
     "installer": {
         "type": "npm",
         "pkg": "hermes-desktop"
@@ -309,10 +313,10 @@ TOOLS: dict[str, dict] = {
 },
     'hermes_dashboard_page': {
     "name": "Hermes Dashboard",
-    "level": 9,
-    "layer": "User Interfaces",
-    "role": "Face",
-    "category": "Dashboard",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'System Console',
+    "category": 'System Console',
     "installer": {
         "type": "npm",
         "pkg": "hermes-dashboard"
@@ -339,13 +343,13 @@ TOOLS: dict[str, dict] = {
 },
     'local_llm_launcher': {
     "name": "Local LLM Launcher",
-    "level": 9,
-    "layer": "User Interfaces",
-    "role": "Face",
-    "category": "LLM GUI",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Model Manager GUI',
+    "category": 'Model Manager GUI',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/local-llm-launcher-gui"
+        "pkg": "https://github.com/jimdawdy-hub/Local-LLM-Launcher-GUI"
     },
     "launcher": {
         "type": "desktop",
@@ -369,10 +373,10 @@ TOOLS: dict[str, dict] = {
 },
     'openjarvis': {
     "name": "OpenJarvis",
-    "level": 9,
-    "layer": "User Interfaces",
-    "role": "Central Intelligence",
-    "category": "AI Assistant Platform",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Local Central Shell',
+    "category": 'Local Central Shell',
     "installer": {
         "type": "git_node",
         "pkg": "https://github.com/openjarvis/openjarvis.git",
@@ -409,12 +413,12 @@ TOOLS: dict[str, dict] = {
     'deep_eye': {
     "name": "Deep Eye",
     "level": 9,
-    "layer": "User Interfaces",
-    "role": "Vision",
-    "category": "Computer Vision",
+    "layer": 'Data Extraction & Pipeline Harvest',
+    "role": 'Vision describer',
+    "category": 'Vision describer',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/deep-eye"
+        "pkg": "https://github.com/zakirkun/deep-eye"
     },
     "launcher": {
         "type": "tmux",
@@ -439,12 +443,12 @@ TOOLS: dict[str, dict] = {
     'parakeet': {
     "name": "Parakeet.cpp",
     "level": 9,
-    "layer": "User Interfaces",
-    "role": "Senses",
-    "category": "Speech Recognition",
+    "layer": 'Data Extraction & Pipeline Harvest',
+    "role": 'Speech Transcriber',
+    "category": 'Speech Transcriber',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/parakeet.cpp"
+        "pkg": "https://github.com/mudler/parakeet.cpp"
     },
     "launcher": {
         "type": "tmux",
@@ -469,9 +473,9 @@ TOOLS: dict[str, dict] = {
     'luxtts': {
     "name": "LuxTTS",
     "level": 9,
-    "layer": "User Interfaces",
-    "role": "Voice",
-    "category": "Text-to-Speech",
+    "layer": 'Data Extraction & Pipeline Harvest',
+    "role": 'Voice Synthesis',
+    "category": 'Voice Synthesis',
     "installer": {
         "type": "uv",
         "pkg": "luxtts"
@@ -496,10 +500,10 @@ TOOLS: dict[str, dict] = {
 },
     'jan': {
     "name": "Jan",
-    "level": 9,
-    "layer": "User Interfaces",
-    "role": "Face",
-    "category": "LLM GUI",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Face',
+    "category": 'LLM GUI',
     "installer": {
         "type": "npm",
         "pkg": "@janhq/jan"
@@ -526,10 +530,10 @@ TOOLS: dict[str, dict] = {
 },
 'hermes_webui': {
     "name": "Hermes WebUI",
-    "level": 9,
-    "layer": "User Interfaces",
-    "role": "Face",
-    "category": "Chat Frontend",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Face',
+    "category": 'Chat Frontend',
     "installer": {
         "type": "uv",
         "pkg": "open-webui"
@@ -561,4 +565,64 @@ TOOLS: dict[str, dict] = {
     }
 },
 
+
+    'kanban': {
+    "name": 'Kanban Board',
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Sprints Manager',
+    "category": 'Sprints Manager',
+    "installer": {
+        "type": 'npm',
+        "pkg": 'kanban-board',
+    },
+    "launcher": {
+        "type": 'desktop',
+        "cmd": 'kanban',
+        "default_port": None,
+    },
+    "deps": [
+    ],
+    "description": 'Local visual dashboard designed to map task timelines and track developer sprints natively.',
+    "license": 'Proprietary',
+    "flags": {
+        "has_cli": False,
+        "has_gui": True,
+        "has_web": False,
+        "is_ollama": False,
+        "is_passive": False,
+        "is_mcp": False,
+        "is_skills_collection": False,
+    }
+    },
+    'comfyui': {
+    "name": "ComfyUI",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Node-Based Image Gen',
+    "category": 'Node-Based Image Gen',
+    "installer": {
+        "type": "git",
+        "pkg": "https://github.com/comfy-org/comfyui"
+    },
+    "launcher": {
+        "type": "tmux",
+        "cmd": "cd {tools_root}/comfyui && python main.py --listen 0.0.0.0 --port {port}",
+        "default_port": 8188
+    },
+    "deps": [
+        "cuda"
+    ],
+    "description": "Node-based Stable Diffusion / FLUX image generation pipeline editor.",
+    "license": 'GPL-3.0',
+    "flags": {
+        "has_cli": False,
+        "has_gui": False,
+        "has_web": True,
+        "is_ollama": False,
+        "is_passive": False,
+        "is_mcp": False,
+        "is_skills_collection": False
+    }
+    },
 }

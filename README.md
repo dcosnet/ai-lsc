@@ -26,17 +26,17 @@ AI Local Stack Control (AI-LSC) provides a unified interface to discover, config
 Every tool in the registry is classified within a 10-layer taxonomy, giving you a clear mental model of your entire AI stack. Select tools directly from the sidebar — the sidebar *is* the wizard.
 
 | Layer | Tools | Examples |
-|-------|-------|---------|
-| L1 — Host Platform | 16 | PostgreSQL, MariaDB, Redis, SQLite3, DuckDB, Podman, Docker, Tmux, Git |
-| L2 — Development Environment | 33 | Python Environment, Deno, uv, Node.js, CuPy, ripgrep, fd, tree-sitter, SST, Unsloth |
-| L3 — GPU Runtimes | 3 | CUDA Toolkit, NVIDIA Apex, tinygrad |
-| L4 — Engines | 8 | Ollama, llama.cpp, KoboldCPP, Llamafile, TurboLLM, AirLLM, Locally-Uncensored |
-| L5 — Orchestrators | 53 | vLLM, SGLang, LiteLLM Proxy, 9Router Proxy, LangChain, LangFlow, Dify, CrewAI, AutoGen, Letta, OpenCode, Gemini CLI, Qwen Code, goose, Codex, +38 more |
-| L6 — Security | 6 | Keycloak, HashiCorp Vault, Trivy, Fail2Ban, ClamAV, Open Policy Agent |
-| L7 — Observability | 8 | Btop, Glances, Prometheus, Grafana, Grafana Alloy, Opik, Pulse AI, Latitude |
-| L8 — User Interfaces | 17 | Open WebUI, AnythingLLM, LibreChat, Flowise, Jan, InvokeAI, Forge (A1111), ComfyUI, Dashy, Obsidian, +7 more |
-| L9 — DevOps | 11 | Terraform, Ansible, Puppet, Pulumi, OpenTofu, AWS CDK, Crossplane, Terragrunt |
-| L10 — Knowledge Management | 26 | Zotero, Calibre, Paperless-ngx, Logseq, Joplin, Mem0, ChromaDB, LanceDB, Qdrant, LlamaIndex, +16 more |
+|-------|-------|----------|
+| L1 — Host Platform & Infrastructure | 21 | PostgreSQL, MariaDB, Redis, DuckDB, Podman, Docker, LXC, Firecracker, libvirt, nginx, Tmux, Keycloak, Vault |
+| L2 — Development Runtime & Environment | 34 | Python, uv, Node.js, Deno, Go, Rust, GCC, make, ripgrep, fd, tree-sitter, git, gdb, valgrind |
+| L3 — GPU Acceleration & Optimization | 5 | CUDA, CuPy, Apex, Unsloth, tinygrad |
+| L4 — Local Inference Engines | 10 | vLLM, SGLang, llama.cpp, KoboldCPP, Llamafile, Ollama, TurboLLM, AirLLM |
+| L5 — Intelligent API Routers & Proxies | 4 | LiteLLM Proxy, 9Router Proxy, MeshLLM, Fabric |
+| L6 — Multi-Agent Orchestration Runtimes | 22 | Swarm, AutoGen, CrewAI, Agno, LangChain, Letta, OpenBrain, Ray, Glassmind |
+| L7 — Agentic Software Engineering & Sandboxes | 17 | OpenHands, Aider, Claude Code, Codex, Gemini CLI, OpenCode, goose, spec-kit |
+| L8 — Decentralized Knowledge & Vector Stores | 11 | ChromaDB, LanceDB, Qdrant, Neo4j, Elasticsearch, Meilisearch, Mem0, TurboVec |
+| L9 — Data Extraction & Pipeline Harvest | 12 | Crawl4AI, Docling, MarkItDown, Whisper, Parakeet, Airweave, OpenDataloader |
+| L10 — Human Interface & System Operations | 50 | Open WebUI, AnythingLLM, LibreChat, Flowise, n8n, Dify, Grafana, Prometheus, Terraform, Ansible |
 
 ![Infrastructure Layers](docs/screenshots/infrastructure-layers.png)
 
@@ -147,7 +147,7 @@ ai_lsc/
     validator.py               # Schema validation (8-key flags enforced)
     license_gate.py            # License compliance gating
     licenses.py                # License database
-    layers/                    # 10 per-layer tool files
+    layers/                    # 11 per-layer tool files (10-layer taxonomy)
       host_platform.py         # L1: 9 tools
       development.py           # L2: 7 tools
       gpu.py                   # L3: 3 tools

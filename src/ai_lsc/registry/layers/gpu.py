@@ -15,15 +15,19 @@ Each entry follows the standard registry schema:
 
 This module is consumed by
 :mod:`ai_lsc.registry.loader`.
+
+Structural fields (layer, level) follow the 10-Layer Systems
+Architecture Taxonomy; tools may be regrouped across files in a
+future pass — the loader merges by tool, not by filename.
 """
 
 TOOLS: dict[str, dict] = {
     'cuda': {
     "name": "CUDA Toolkit",
     "level": 3,
-    "layer": "GPU Runtimes",
-    "role": "Acceleration",
-    "category": "GPU",
+    "layer": 'GPU Acceleration & Optimization',
+    "role": 'Hardware Acceleration',
+    "category": 'Hardware Acceleration',
     "installer": {
         "type": "pacman",
         "pkg": "cuda"
@@ -49,9 +53,9 @@ TOOLS: dict[str, dict] = {
     'apex': {
     "name": "NVIDIA Apex",
     "level": 3,
-    "layer": "GPU Runtimes",
-    "role": "Optimization",
-    "category": "Mixed Precision",
+    "layer": 'GPU Acceleration & Optimization',
+    "role": 'Mixed Precision',
+    "category": 'Mixed Precision',
     "installer": {
         "type": "uv",
         "pkg": "apex"
@@ -79,9 +83,9 @@ TOOLS: dict[str, dict] = {
     'tinygrad': {
     "name": "tinygrad",
     "level": 3,
-    "layer": "GPU Runtimes",
-    "role": "GPU Acceleration",
-    "category": "GPU Computing",
+    "layer": 'GPU Acceleration & Optimization',
+    "role": 'GPU Acceleration',
+    "category": 'GPU Computing',
     "installer": {
         "type": "uv",
         "pkg": "tinygrad"

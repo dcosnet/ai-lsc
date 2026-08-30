@@ -7,15 +7,19 @@ coding agents to DevOps in the 11-layer taxonomy.)
 
 This module is consumed by
 :mod:`ai_lsc.registry.loader`.
+
+Structural fields (layer, level) follow the 10-Layer Systems
+Architecture Taxonomy; tools may be regrouped across files in a
+future pass — the loader merges by tool, not by filename.
 """
 
 TOOLS: dict[str, dict] = {
     'distcc': {
     "name": "DistCC",
-    "level": 6,
-    "layer": "Orchestrators",
-    "role": "Distribution",
-    "category": "Distributed Compilation",
+    "level": 2,
+    "layer": 'Development Runtime & Environment',
+    "role": 'Distribution',
+    "category": 'Distributed Compilation',
     "installer": {
         "type": "pacman",
         "pkg": "distcc"
@@ -41,9 +45,9 @@ TOOLS: dict[str, dict] = {
     'ray': {
     "name": "Ray",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Scaling",
-    "category": "Distributed Compute",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Scaling',
+    "category": 'Distributed Compute',
     "installer": {
         "type": "uv",
         "pkg": "ray"
@@ -68,10 +72,10 @@ TOOLS: dict[str, dict] = {
 },
     'pssh': {
     "name": "PSSH (Parallel SSH)",
-    "level": 6,
-    "layer": "Orchestrators",
-    "role": "Coordination",
-    "category": "Cluster SSH",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Coordination',
+    "category": 'Cluster SSH',
     "installer": {
         "type": "pacman",
         "pkg": "pssh"
@@ -97,9 +101,9 @@ TOOLS: dict[str, dict] = {
     'langchain': {
     "name": "LangChain",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Orchestration",
-    "category": "LLM Framework",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Integration Library',
+    "category": 'Integration Library',
     "installer": {
         "type": "uv",
         "pkg": "langchain"
@@ -124,10 +128,10 @@ TOOLS: dict[str, dict] = {
 },
     'langflow': {
     "name": "LangFlow",
-    "level": 6,
-    "layer": "Orchestrators",
-    "role": "Visual Builder",
-    "category": "Workflow",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'RAG Flow Canvas',
+    "category": 'RAG Flow Canvas',
     "installer": {
         "type": "uv",
         "pkg": "langflow"
@@ -153,9 +157,9 @@ TOOLS: dict[str, dict] = {
     'crewai': {
     "name": "CrewAI",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Brain",
-    "category": "Agent Workflow",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Role-Playing Agent',
+    "category": 'Role-Playing Agent',
     "installer": {
         "type": "uv",
         "pkg": "crewai"
@@ -181,9 +185,9 @@ TOOLS: dict[str, dict] = {
     'autogen': {
     "name": "AutoGen",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Brain",
-    "category": "Agent Workflow",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Multi-Agent Framework',
+    "category": 'Multi-Agent Framework',
     "installer": {
         "type": "uv",
         "pkg": "pyautogen"
@@ -209,9 +213,9 @@ TOOLS: dict[str, dict] = {
     'openai_swarm': {
     "name": "OpenAI Swarm",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Multi-Agent",
-    "category": "Agent Framework",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Stateless Orchestration',
+    "category": 'Stateless Orchestration',
     "installer": {
         "type": "uv",
         "pkg": "swarm"
@@ -237,12 +241,12 @@ TOOLS: dict[str, dict] = {
     'agno': {
     "name": "Agno",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Agent Framework",
-    "category": "AI Agent",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Production Multi-Agent',
+    "category": 'Production Multi-Agent',
     "installer": {
-        "type": "uv",
-        "pkg": "agno"
+        "type": "git",
+        "pkg": "https://github.com/agno-agi/agno"
     },
     "launcher": {
         "type": "desktop",
@@ -265,9 +269,9 @@ TOOLS: dict[str, dict] = {
     'nvidia_agent_skills': {
     "name": "NVIDIA Agent Skills",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Tool Integration",
-    "category": "Agent Toolkit",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Tool Integration',
+    "category": 'Agent Toolkit',
     "installer": {
         "type": "git",
         "pkg": "https://github.com/NVIDIA/agent-skills"
@@ -295,12 +299,12 @@ TOOLS: dict[str, dict] = {
     'openbrain': {
     "name": "OpenBrain",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Brain",
-    "category": "Reasoning Engine",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Brain',
+    "category": 'Reasoning Engine',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/openbrain"
+        "pkg": "https://github.com/NateBJones-Projects/OB1"
     },
     "launcher": {
         "type": "tmux",
@@ -325,9 +329,9 @@ TOOLS: dict[str, dict] = {
     'odysseus': {
     "name": "Odysseus",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Reasoning",
-    "category": "Agent Workflow",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Reasoning',
+    "category": 'Agent Workflow',
     "installer": {
         "type": "uv",
         "pkg": "odysseus"
@@ -340,7 +344,12 @@ TOOLS: dict[str, dict] = {
     "deps": [
         "ollama"
     ],
-    "description": "Local reasoning and orchestration agent.",
+    "filesystem": {
+        "install": "tools/odysseus",
+        "config": "configs/odysseus",
+        "logs": "logs/odysseus",
+    },
+"description": "Local reasoning and orchestration agent.",
     "license": 'MIT',
     "flags": {
         "has_cli": False,
@@ -354,10 +363,10 @@ TOOLS: dict[str, dict] = {
 },
     'n8n': {
     "name": "n8n",
-    "level": 6,
-    "layer": "Orchestrators",
-    "role": "Workflow Orchestrator",
-    "category": "Workflow Automation",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Workflow Orchestrator',
+    "category": 'Workflow',
     "installer": {
         "type": "npm",
         "pkg": "n8n",
@@ -371,7 +380,12 @@ TOOLS: dict[str, dict] = {
         "default_port": 5678
     },
     "deps": [],
-    "description": "Ops-oriented workflow automation for multi-step agent orchestration beyond single-turn tool calls.",
+    "filesystem": {
+        "install": "tools/n8n",
+        "data": "workspaces/n8n",
+        "logs": "logs/n8n",
+    },
+"description": "Ops-oriented workflow automation for multi-step agent orchestration beyond single-turn tool calls.",
     "license": 'Sustainable-Use',
     "flags": {
         "has_cli": True,
@@ -385,13 +399,14 @@ TOOLS: dict[str, dict] = {
 },
     'fabric': {
     "name": "Fabric",
-    "level": 6,
-    "layer": "Orchestrators",
-    "role": "Curation",
-    "category": "AI Augmentation",
+    "level": 5,
+    "layer": 'Intelligent API Routers & Proxies',
+    "role": 'Curation Pipeline',
+    "category": 'Curation Pipeline',
     "installer": {
         "type": "script",
-        "cmd": "curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-amd64 > {tools_root}/bin/fabric && chmod +x {tools_root}/bin/fabric"
+        "cmd": "curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-amd64 > {tools_root}/bin/fabric && chmod +x {tools_root}/bin/fabric",
+        "pkg": "https://github.com/danielmiessler/fabric"
     },
     "launcher": {
         "type": "tmux",
@@ -416,9 +431,9 @@ TOOLS: dict[str, dict] = {
     'synapscli': {
     "name": "SynapsCLI",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Agent",
-    "category": "AI Agent",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Terminal Agent',
+    "category": 'Terminal Agent',
     "installer": {
         "type": "git",
         "pkg": "https://github.com/HaseebKhalid1507/SynapsCLI",
@@ -445,12 +460,12 @@ TOOLS: dict[str, dict] = {
     'hivemind': {
     "name": "HiveMind",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Coordination",
-    "category": "Multi-Agent",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Coordination Protocol',
+    "category": 'Coordination Protocol',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/hivemind"
+        "pkg": "https://github.com/hivementality-ai/hivemind"
     },
     "launcher": {
         "type": "tmux",
@@ -475,9 +490,9 @@ TOOLS: dict[str, dict] = {
     'hermes_agent': {
     "name": "Hermes Agent",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Agent",
-    "category": "AI Agent",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Agent Daemon',
+    "category": 'Agent Daemon',
     "installer": {
         "type": "npm",
         "pkg": "hermes-agent"
@@ -505,12 +520,12 @@ TOOLS: dict[str, dict] = {
     'agentic_os': {
     "name": "Agentic OS",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Hands",
-    "category": "Agent OS",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Agent Shell',
+    "category": 'Agent Shell',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/agentic-os"
+        "pkg": "https://github.com/aporb/agentic-os"
     },
     "launcher": {
         "type": "tmux",
@@ -534,10 +549,10 @@ TOOLS: dict[str, dict] = {
 },
     'mcp_drift_state_tracker': {
     "name": "MCP Drift State Tracker",
-    "level": 6,
-    "layer": "Orchestrators",
-    "role": "Code Audit",
-    "category": "MCP Server",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'Context Integrity Core',
+    "category": 'Context Integrity Core',
     "installer": {
         "type": "git_node",
         "pkg": "https://git.dcos.net/dcosnet/MCP-Drift-State-Tracker.git",
@@ -565,12 +580,12 @@ TOOLS: dict[str, dict] = {
     'glassmind': {
     "name": "GlassMind",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Reasoning",
-    "category": "Reasoning Engine",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Reasoning',
+    "category": 'Reasoning Engine',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/glassmind"
+        "pkg": "https://github.com/khodges42/glassMind"
     },
     "launcher": {
         "type": "tmux",
@@ -595,9 +610,9 @@ TOOLS: dict[str, dict] = {
     'honcho': {
     "name": "Honcho",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Process Manager",
-    "category": "Workflow Automation",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Process Manager',
+    "category": 'Workflow Automation',
     "installer": {
         "type": "uv",
         "pkg": "honcho"
@@ -622,10 +637,10 @@ TOOLS: dict[str, dict] = {
 },
     'graphify': {
     "name": "Graphify",
-    "level": 6,
-    "layer": "Orchestrators",
-    "role": "Knowledge Graph Builder",
-    "category": "Claude Code Skill",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'Knowledge Graph Builder',
+    "category": 'Claude Code Skill',
     "installer": {
         "type": "uv",
         "pkg": "graphifyy"
@@ -661,12 +676,12 @@ TOOLS: dict[str, dict] = {
     'headroom': {
     "name": "Headroom",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Resource Manager",
-    "category": "Infrastructure",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Resource Manager',
+    "category": 'Infrastructure',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/headroom"
+        "pkg": "https://github.com/headroomlabs-ai/headroom"
     },
     "launcher": {
         "type": "desktop",
@@ -688,13 +703,13 @@ TOOLS: dict[str, dict] = {
 },
     'loop_engineering': {
     "name": "Loop Engineering",
-    "level": 6,
-    "layer": "Orchestrators",
-    "role": "Engineering Loop",
-    "category": "Workflow Automation",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'CI/CD Orchestration',
+    "category": 'CI/CD Orchestration',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/loop_engineering"
+        "pkg": "https://github.com/lcajigasm/loop-engineering"
     },
     "launcher": {
         "type": "desktop",
@@ -717,12 +732,12 @@ TOOLS: dict[str, dict] = {
     'nightshift': {
     "name": "Nightshift",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Night Ops",
-    "category": "Workflow Automation",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Night Ops',
+    "category": 'Workflow Automation',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/nightshift"
+        "pkg": "https://github.com/johndaskovsky/nightshift"
     },
     "launcher": {
         "type": "desktop",
@@ -744,13 +759,13 @@ TOOLS: dict[str, dict] = {
 },
     'opensandbox': {
     "name": "OpenSandbox",
-    "level": 6,
-    "layer": "Orchestrators",
-    "role": "Sandbox",
-    "category": "Container Ops",
+    "level": 1,
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Isolation',
+    "category": 'Isolation',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/opensandbox"
+        "pkg": "https://github.com/opensandbox-group/OpenSandbox"
     },
     "launcher": {
         "type": "desktop",
@@ -772,13 +787,13 @@ TOOLS: dict[str, dict] = {
 },
     'ponytail': {
     "name": "Ponytail",
-    "level": 6,
-    "layer": "Orchestrators",
-    "role": "CI/CD",
-    "category": "Workflow Automation",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'Code Refactoring',
+    "category": 'Code Refactoring',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/ponytail"
+        "pkg": "https://github.com/DietrichGebert/ponytail"
     },
     "launcher": {
         "type": "desktop",
@@ -800,13 +815,13 @@ TOOLS: dict[str, dict] = {
 },
     'promptops': {
     "name": "PromptOps",
-    "level": 6,
-    "layer": "Orchestrators",
-    "role": "Prompt Ops",
-    "category": "AI Agent",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'Prompt Tester',
+    "category": 'Prompt Tester',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/promptops"
+        "pkg": "https://github.com/llmhq-hub/promptops"
     },
     "launcher": {
         "type": "desktop",
@@ -829,12 +844,12 @@ TOOLS: dict[str, dict] = {
     'agent_reach': {
     "name": "Agent Reach",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Agent Discovery",
-    "category": "Multi-Agent",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Agent Discovery',
+    "category": 'Multi-Agent',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/agent_reach"
+        "pkg": "https://github.com/Panniantong/Agent-Reach"
     },
     "launcher": {
         "type": "desktop",
@@ -857,12 +872,12 @@ TOOLS: dict[str, dict] = {
     'algory': {
     "name": "Algory",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Algorithm",
-    "category": "AI Agent",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Algorithm',
+    "category": 'AI Agent',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/algory"
+        "pkg": "https://github.com/aryaghan-mutum/algory"
     },
     "launcher": {
         "type": "desktop",
@@ -885,12 +900,12 @@ TOOLS: dict[str, dict] = {
     'atlas_os': {
     "name": "Atlas OS",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "OS Framework",
-    "category": "Agent OS",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'OS Framework',
+    "category": 'Agent OS',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/atlas_os"
+        "pkg": "https://github.com/atlas-os/atlas"
     },
     "launcher": {
         "type": "desktop",
@@ -912,13 +927,13 @@ TOOLS: dict[str, dict] = {
 },
     'career_ops': {
     "name": "Career Ops",
-    "level": 6,
-    "layer": "Orchestrators",
-    "role": "Career Ops",
-    "category": "Workflow Automation",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Gap Analyzer',
+    "category": 'Gap Analyzer',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/career_ops"
+        "pkg": "https://github.com/santifer/career-ops"
     },
     "launcher": {
         "type": "desktop",
@@ -940,13 +955,13 @@ TOOLS: dict[str, dict] = {
 },
     'container_tool': {
     "name": "Container Tool",
-    "level": 6,
-    "layer": "Orchestrators",
-    "role": "Containerization",
-    "category": "Container Ops",
+    "level": 1,
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Isolation',
+    "category": 'Isolation',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/container_tool"
+        "pkg": "https://github.com/NVIDIA/nvidia-container-toolkit"
     },
     "launcher": {
         "type": "desktop",
@@ -968,13 +983,13 @@ TOOLS: dict[str, dict] = {
 },
     'pm_skills': {
     "name": "PM Skills",
-    "level": 6,
-    "layer": "Orchestrators",
-    "role": "Project Management",
-    "category": "Workflow Automation",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Sprint Planner',
+    "category": 'Sprint Planner',
     "installer": {
-        "type": "uv",
-        "pkg": "pm-skills"
+        "type": "git",
+        "pkg": "https://github.com/product-on-purpose/pm-skills"
     },
     "launcher": {
         "type": "desktop",
@@ -996,13 +1011,13 @@ TOOLS: dict[str, dict] = {
 },
     'skillspector': {
     "name": "Skillspector",
-    "level": 6,
-    "layer": "Orchestrators",
-    "role": "Skill Inspector",
-    "category": "AI Agent",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'Skill Auditor',
+    "category": 'Skill Auditor',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/skillspector"
+        "pkg": "https://github.com/NVIDIA/skillspector"
     },
     "launcher": {
         "type": "desktop",
@@ -1024,13 +1039,13 @@ TOOLS: dict[str, dict] = {
 },
     'spec_kit': {
     "name": "Spec Kit",
-    "level": 6,
-    "layer": "Orchestrators",
-    "role": "Specification",
-    "category": "AI Agent",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'Requirement Builder',
+    "category": 'Requirement Builder',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/spec_kit"
+        "pkg": "https://github.com/github/spec-kit"
     },
     "launcher": {
         "type": "desktop",
@@ -1053,9 +1068,9 @@ TOOLS: dict[str, dict] = {
 'wayland_ai': {
     "name": "Wayland AI",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Agent Orchestrator",
-    "category": "AI Agent",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Desktop Agent Core',
+    "category": 'Desktop Agent Core',
     "installer": {
         "type": "git",
         "pkg": "https://github.com/ferroxlabs/wayland",
@@ -1082,9 +1097,9 @@ TOOLS: dict[str, dict] = {
     'letta': {
     "name": "Letta",
     "level": 6,
-    "layer": "Orchestrators",
-    "role": "Agent Framework",
-    "category": "Agent Framework",
+    "layer": 'Multi-Agent Orchestration Runtimes',
+    "role": 'Agent Framework',
+    "category": 'Agent Framework',
     "installer": {
         "type": "uv",
         "pkg": "letta"

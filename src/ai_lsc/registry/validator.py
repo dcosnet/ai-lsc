@@ -150,10 +150,11 @@ def _check_entry(tool_id: str, entry: dict[str, Any]) -> list[str]:
     if missing:
         errors.append(f"{tool_id}: missing fields {sorted(missing)}")
 
-    # Level must be 1–13
+    # Level must be 1–10 (10-Layer Systems Architecture Taxonomy)
     level = entry.get("level")
-    if isinstance(level, int) and not (1 <= level <= 13):
-        errors.append(f"{tool_id}: level {level} out of range 1-13")
+    if isinstance(level, int) and not (1 <= level <= 10):
+        errors.append(f"{tool_id}: level {level} out of range 1-10 "
+                      f"(10-layer taxonomy)")
     elif not isinstance(level, int):
         errors.append(f"{tool_id}: level is not an int ({level!r})")
 

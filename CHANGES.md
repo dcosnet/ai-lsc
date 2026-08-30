@@ -1,5 +1,256 @@
 # AI-LSC Changelog
 
+## v3.3 — Registry git-URL sync + bandwidth-aware git-pull + ComfyUI
+
+Patch release over v3.2. No schema changes, no UI reorganisation, no
+wiring-graph churn — only the 10-layer registry's installer URLs are
+touched, plus the git install/update logic in `runtime/installer.py`,
+plus a new ComfyUI registry entry, plus version strings and a per-file
+change log.
+
+### What changed
+
+The 10-layer registry layer files had drifted from the systems-architect
+reference (`ai-stack-guide-v12.md`, "Approaching the Local AI Stack Like
+a Systems Architect" by Jeremy Anderson). 52 installer URLs were either
+pointing at placeholder repos (`github.com/nicely-done/<tool_id>`,
+clearly never intended to ship) or at wrong upstreams (e.g. `airllm`
+pointed at `liguodongiot/llm-airforce`; `llamacpp` pointed at
+`ggerganov/llama.cpp` instead of the current `ggml-org/llama.cpp`).
+Three tools the v12 md lists as `git` / `git_node` (pm_skills, agno,
+openhands) were registered as `uv` package-manager installs — wrong,
+since the user manually tested every entry in the md by cloning the
+github repo.  Four registry-only tools (algory, atlas_os, eagle_eye,
+glassmind) had only placeholder URLs because web search could not
+find their official upstreams; the user provided the URLs directly.
+ComfyUI was referenced in the `ai-image-gen-local.json` stack template
+but had no registry entry.
+
+This release:
+- Brings every git-ish installer into agreement with the v12 reference.
+- Adds `pkg` fields to the 6 script-type installers that reference
+  github release tarballs.
+- Resolves 10 registry-only git tools to their official upstreams via
+  web search.
+- Switches the 3 type-mismatch tools to proper git/git_node installs.
+- Resolves the 4 previously-unresolved registry-only tools to the
+  user-provided official upstreams.
+- Adds a ComfyUI registry entry (Level 10, `git:comfy-org/comfyui`).
+- Hardens the git installer runtime to be bandwidth-aware.
+
+### Five categories of patches (52 total)
+
+- **A (28)** — `git` / `git_node` / `custom` installer `pkg` URL
+  corrected to match the v12 markdown reference. See
+  `docs/REGISTRY-URLS-v3.3.0.md` for the per-file old → new URL table.
+- **B (6)** — `script`-type installers (fabric, grafana_alloy,
+  llamafile, meilisearch, ollama, qdrant) get a new `pkg` field
+  referencing the github repo, while the existing working `cmd`
+  (curl release tarball, etc.) is left untouched.
+- **C (10)** — registry-only git tools with no v12 markdown entry
+  resolved via web search:
+  - `agent_reach` → `Panniantong/Agent-Reach`
+  - `everos_memory` → `EverMind-AI/EverOS`
+  - `headroom` → `headroomlabs-ai/headroom`
+  - `mnemo_cortex` → `GuyMannDude/mnemo-cortex`
+  - `nightshift` → `johndaskovsky/nightshift`
+  - `openbrain` → `NateBJones-Projects/OB1`
+  - `turbovec` → `ryancodrai/turbovec`
+  - `crossplane` → `crossplane/crossplane`
+  - `keycloak` → `keycloak/keycloak`
+  - `dma` → `distcc/distcc` (closest parent project; DMA has no
+    separate public repo)
+- **D (3)** — type-mismatch fixes (md says git / git_node, registry had
+  `uv` with package name):
+  - `pm_skills` → `git:https://github.com/product-on-purpose/pm-skills`
+  - `agno` → `git:https://github.com/agno-agi/agno`
+  - `openhands` → `git_node:https://github.com/All-Hands-AI/OpenHands.git`
+- **E (4)** — user-provided URLs for the 4 previously-unresolved
+  registry-only tools (web search could not find these; the user
+  provided the official upstream URLs directly):
+  - `algory` → `aryaghan-mutum/algory`
+  - `atlas_os` → `atlas-os/atlas`
+  - `eagle_eye` → `thoughtfuldev/eagleeye`
+  - `glassmind` → `khodges42/glassMind`
+
+### New tool entry (1)
+
+- **ComfyUI** (`user_interfaces.py`): ComfyUI was referenced in the
+  `ai-image-gen-local.json` stack template but had no registry entry
+  before.  Added as a Level 10 (Human Interface & System Operations)
+  tool with installer `git:https://github.com/comfy-org/comfyui`,
+  launcher `python main.py --listen 0.0.0.0 --port 8188`, deps
+  `[cuda]`, license GPL-3.0.  Total registry size is now 187 tools
+  (was 186).
+
+### Runtime: bandwidth-aware git-pull-on-update
+
+`runtime/installer.py`'s `install_git` and `install_git_node` already
+ran `git pull --ff-only` if the destination dir existed, but the
+existence check was `os.path.exists(dest)` — True for any dir, not
+just a git working tree.  An empty or non-git dir at the destination
+would cause `git pull` to fail and abort the install.  Hardened:
+
+1. Check `os.path.isdir(dest/.git)` to confirm a real git repo.
+2. On pull failure (diverged branches, network errors, corrupted
+   index, etc.), move the old dir aside to `<dest>.bak.<unix_ts>`
+   and re-clone fresh — so the install always ends in a usable state
+   instead of leaving a half-broken tree.
+3. If the dest dir exists but is not a git repo, back it up and clone
+   fresh.
+4. Log clearly which path was taken (pulled / re-cloned / new clone /
+   non-git-dir backed up).
+
+**Effect:** re-running install on a tool that's already cloned only
+fetches the diff (a few KB / MB), not the entire repo.  This is the
+bandwidth-saving behaviour the user asked for.
+
+### Intentionally NOT touched
+
+- `apex` (md says `pip — https://github.com/NVIDIA/apex`): kept as
+  `uv:apex` (pip-installed).  The md's `pip` installer type is
+  authoritative and the user did not call this one out.
+- 12 git-ish installers that already matched the v12 reference
+  (`anythingllm`, `dify`, `heretic`, `homelab`, `invokeai`,
+  `koboldcpp`, `librechat`, `mcp_drift_state_tracker`, `openjarvis`,
+  `paperlessngx`, `synapscli`, `wayland_ai`) — no change needed.
+- 3 registry-only git tools with real-looking URLs already in place
+  (`goose` → `block/goose`, `nvidia_agent_skills` →
+  `NVIDIA/agent-skills`, `picode` → `jasonjmcghee/picode.git`) — no
+  change needed.
+
+### Versioning & docs
+
+- `pyproject.toml`: 3.2.0 → 3.3.0
+- `src/ai_lsc/constants.py`: `APP_VERSION` 3.2.0 → 3.3.0
+  (`APP_CODENAME` unchanged: `"Decalogue"`)
+- New file: `docs/REGISTRY-URLS-v3.3.0.md` (per-file old → new URL
+  table, also serves as a release audit trail).
+- `gitcommit` rewritten for v3.3.0.
+
+### Verification
+
+- All 94 Python files under `src/` AST-parse cleanly.
+- Registry extractor re-imports every patched layer module and
+  confirms all 52 patches landed + the new ComfyUI entry.  Total
+  registry size: 187 tools (was 186).
+- Each old `pkg` URL string was unique within its file and matched
+  exactly once — no blind global replaces.
+- Each script-type pkg-field injection matched exactly one installer
+  block (Python AST-parses after each injection).
+- `install_git` / `install_git_node` hardened: the new logic branches
+  on `os.path.isdir(.git)`, falls back to re-clone on pull failure,
+  and uses `import time` for backup-dir timestamps.  All confirmed
+  present in `runtime/installer.py`.
+- 0 `nicely-done` placeholder URLs remain in the registry.
+
+---
+
+## v3.2 — 10-Layer Systems Architecture Taxonomy completed
+
+Finishes the taxonomy re-org that was started (but stalled) on top of
+v3.1.1b: the whole codebase now speaks the unified 10-layer taxonomy
+from the systems-architecture review (POSIX/Unix philosophy, bare-metal
+process hierarchy).  The partial migration had already rewritten
+`constants.py` (NAV_LAYER_ORDER) and `db_manager.py` (CATEGORY_MAP); this
+release completes every remaining surface, repairs the damage the
+interim tooling caused, and reconciles the registries.  Validator
+reports 0 errors on both the 108-tool defaults seed and the 186-tool
+merged layer registry; wiring graph validates with 0 errors.
+
+### New layer ladder (11 → 10)
+
+```
+L1  Host Platform & Infrastructure          L6  Multi-Agent Orchestration Runtimes
+L2  Development Runtime & Environment       L7  Agentic Software Engineering & Sandboxes
+L3  GPU Acceleration & Optimization         L8  Decentralized Knowledge & Vector Stores
+L4  Local Inference Engines                 L9  Data Extraction & Pipeline Harvest
+L5  Intelligent API Routers & Proxies       L10 Human Interface & System Operations
+```
+
+The 11-layer model's Security and Observability strata dissolve:
+security *daemons* (keycloak, vault, fail2ban, edge/proxy daemons) are
+host platform infrastructure (L1); scanners/policy/audit tooling
+(trivy, clamav, opa) and telemetry (btop, grafana, prometheus, opik)
+are system operations (L10).  Routing merges into Intelligent API
+Routers & Proxies (L5).  Vector/graph stores and agent memory move out
+of Knowledge Management into L8; document/crawl/transcode pipelines
+become L9; IaC and cluster automation land in L10.
+
+### Registry
+
+- `registry/defaults.py` rebuilt as the 108-tool 10-layer seed from the
+  master-target registry: new `level`/`layer`/`role`/`category` plus the
+  richer descriptions.  Operational metadata (real installer pkgs/URLs
+  and cmds, `post_install`/`update_cmd`/`env_overrides`, launchers with
+  correct binary names and systemd-for-daemons, dependency edges,
+  curated flags, SPDX licenses, `filesystem` blocks) is preserved from
+  the previous registry — the master-target file had systematically
+  replaced installers with placeholder URLs, dropped script cmds
+  (validator errors), wiped all dep edges, and renamed binaries
+  (`rg` → `ripgrep`, systemd → tmux `serve` stubs).  curl|sh installer
+  policy markers are untouched (see whatremains.txt, C-05).
+- 11 modular layer files realigned: 185 tools migrated to the 10-layer
+  taxonomy (107 shared tools take their structural fields from the
+  master registry; the other 78 classified explicitly — see
+  `scripts/apply_10layer_taxonomy.py` for the classification table).
+- `kanban` reconciled: it existed only in `defaults.py` (the canonical
+  source is the layer files), so it is now declared in
+  `layers/user_interfaces.py` as well (L10, Sprints Manager).  Merged
+  registry: 185 → 186 tools.
+- `n8n` keeps its explicit L10 placement (visual flow canvas) and moves
+  to the `Workflow` (Visual Builder) category so the categorisation
+  cascade agrees with the registry.
+- `n8n`/`odysseus` `filesystem` blocks (previously only in the old
+  defaults) are preserved in `layers/orchestrators.py`.
+- The `open_webui`/`openwebui` orphan-flagging gap from the TODO is
+  confirmed moot: only `openwebui` exists and it is wired.
+
+### Stack wiring
+
+- `stack/connections.py`: 92 static `StackWiring(layer=...)` values
+  migrated to the 10-layer names; the 5 loop-based bulk allocations now
+  resolve layers dynamically via `_wiring_layer(_tid)` (DEFAULT_REGISTRY
+  lookup + `_WIRING_LAYER_SUPPLEMENT` for wired tools outside the seed
+  registry), so the wiring graph can never drift from the taxonomy
+  again.  Section header comments map the old L1–L13 sections to their
+  new homes.  Wiring-vs-registry layer mismatches: 0 across 137 wirings.
+
+### UI
+
+- `ui/pages/db_manager.py` **repaired and migrated**: the interim
+  migration had truncated the file from 1300 to 222 lines (syntax error
+  at the CATEGORY_MAP tail; the entire DB-manager dialog/table
+  implementation was lost).  Restored in full from the v3.1.1b routing
+  tarball, then its CATEGORY_MAP was migrated to the 10-layer taxonomy.
+- Categorisation cascade extended to 221 categories: the master map
+  (105) + 43 categories for the classified tools + 73 preserved
+  categories from the v3.1.1b cascade, translated to the 10-layer
+  taxonomy with their curated roles.  Every category used by the 186
+  registry tools is covered; cascade and registry agree on layer for
+  every tool.
+- `ui/pages/db_manager_category_map.py` regenerated to match.
+- `registry/validator.py` now enforces level range 1–10.
+
+### Docs & tooling
+
+- README layer table + tool counts updated to the 10-layer taxonomy
+  (186 tools); quickstart's "13-layer architecture" reference fixed.
+- Layer-file module docstrings note the 10-layer realignment.
+- `scripts/apply_10layer_taxonomy.py` added (the corrected, completed
+  migration utility — supersedes the root `apply_taxonomy_migration.py`,
+  whose regexes could not match multi-word layer names and whose
+  defaults handling was lossy; kept for history).
+
+### Verification
+
+`scripts`-style checks all pass: 100 Python files AST-parse; validator
+0 errors (defaults + merged + wiring graph); level/layer consistency
+holds across defaults, layer files, CATEGORY_MAP, and STACK_WIRINGS;
+NAV_LAYER_ORDER matches the taxonomy; guardrails clean; headless
+package import + `RegistryManager` first-boot/second-run bootstrap
+verified (186 tools seeded to ecosystem.json, structural sync clean).
+
 ## v3.1.1b — taxonomy re-org: Routing restored (11 layers), canonical 24-dir /mnt/AI layout
 
 Restores the Routing layer that was lost when the 13-layer model was

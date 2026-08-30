@@ -9,15 +9,19 @@ gateways) that had been folded into Orchestrators during the 13-to-10
 reorg, plus the mesh-aware clients that ride on it.
 
 This module is consumed by :mod:`ai_lsc.registry.loader`.
+
+Structural fields (layer, level) follow the 10-Layer Systems
+Architecture Taxonomy; tools may be regrouped across files in a
+future pass — the loader merges by tool, not by filename.
 """
 
 TOOLS: dict[str, dict] = {
     'litellm': {
     "name": "LiteLLM Proxy",
     "level": 5,
-    "layer": "Routing",
-    "role": "API Gateway",
-    "category": "Proxy",
+    "layer": 'Intelligent API Routers & Proxies',
+    "role": 'Unified API Gateway',
+    "category": 'Unified API Gateway',
     "installer": {
         "type": "uv",
         "pkg": "litellm"
@@ -44,12 +48,12 @@ TOOLS: dict[str, dict] = {
     '9router_proxy': {
     "name": "9Router Proxy",
     "level": 5,
-    "layer": "Routing",
-    "role": "API Gateway",
-    "category": "LLM Router",
+    "layer": 'Intelligent API Routers & Proxies',
+    "role": 'Load Balancer',
+    "category": 'Load Balancer',
     "installer": {
         "type": "git",
-        "pkg": "https://github.com/nicely-done/9router"
+        "pkg": "https://github.com/decolua/9router"
     },
     "launcher": {
         "type": "tmux",
@@ -79,9 +83,9 @@ TOOLS: dict[str, dict] = {
     'meshllm': {
     "name": "MeshLLM",
     "level": 5,
-    "layer": "Routing",
-    "role": "API Gateway",
-    "category": "LLM Mesh",
+    "layer": 'Intelligent API Routers & Proxies',
+    "role": 'API Gateway',
+    "category": 'LLM Mesh',
     "installer": {
         "type": "script",
         "cmd": "mkdir -p {tools_root}/meshllm/bin && curl -fsSL https://raw.githubusercontent.com/Mesh-LLM/mesh-llm/main/install.sh | MESH_LLM_INSTALL_DIR={tools_root}/meshllm/bin bash"
@@ -118,10 +122,10 @@ TOOLS: dict[str, dict] = {
 
     'dify': {
     "name": "Dify",
-    "level": 5,
-    "layer": "Routing",
-    "role": "Pipeline Orchestrator",
-    "category": "Pipeline",
+    "level": 10,
+    "layer": 'Human Interface & System Operations',
+    "role": 'Platform Workspace',
+    "category": 'Platform Workspace',
     "installer": {
         "type": "git",
         "pkg": "https://github.com/langgenius/dify.git"
@@ -152,10 +156,10 @@ TOOLS: dict[str, dict] = {
 
 'picode': {
     "name": "PiCode",
-    "level": 5,
-    "layer": "Routing",
-    "role": "Coding Agent",
-    "category": "Mesh Client",
+    "level": 7,
+    "layer": 'Agentic Software Engineering & Sandboxes',
+    "role": 'Coding Agent',
+    "category": 'Mesh Client',
     "installer": {
         "type": "git",
         "pkg": "https://github.com/jasonjmcghee/picode.git"

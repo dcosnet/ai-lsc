@@ -15,15 +15,19 @@ Each entry follows the standard registry schema:
 
 This module is consumed by
 :mod:`ai_lsc.registry.loader`.
+
+Structural fields (layer, level) follow the 10-Layer Systems
+Architecture Taxonomy; tools may be regrouped across files in a
+future pass — the loader merges by tool, not by filename.
 """
 
 TOOLS: dict[str, dict] = {
     'tmux': {
     "name": "Tmux",
     "level": 1,
-    "layer": "Host Platform",
-    "role": "Multiplexer",
-    "category": "Terminal",
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Multiplexer',
+    "category": 'Terminal',
     "installer": {
         "type": "pacman",
         "pkg": "tmux"
@@ -48,10 +52,10 @@ TOOLS: dict[str, dict] = {
 },
     'git': {
     "name": "Git",
-    "level": 1,
-    "layer": "Host Platform",
-    "role": "Version Control",
-    "category": "VCS",
+    "level": 2,
+    "layer": 'Development Runtime & Environment',
+    "role": 'Version Control',
+    "category": 'VCS',
     "installer": {
         "type": "pacman",
         "pkg": "git"
@@ -77,9 +81,9 @@ TOOLS: dict[str, dict] = {
     'podman': {
     "name": "Podman",
     "level": 1,
-    "layer": "Host Platform",
-    "role": "Container Runtime",
-    "category": "Containers",
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Container Runtime',
+    "category": 'Containers',
     "installer": {
         "type": "pacman",
         "pkg": "podman"
@@ -105,9 +109,9 @@ TOOLS: dict[str, dict] = {
     'docker': {
     "name": "Docker",
     "level": 1,
-    "layer": "Host Platform",
-    "role": "Container Runtime",
-    "category": "Containers",
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Container Runtime',
+    "category": 'Containers',
     "installer": {
         "type": "pacman",
         "pkg": "docker"
@@ -133,9 +137,9 @@ TOOLS: dict[str, dict] = {
     'postgresql': {
     "name": "PostgreSQL",
     "level": 1,
-    "layer": "Host Platform",
-    "role": "Foundation",
-    "category": "Database",
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Database',
+    "category": 'Database',
     "installer": {
         "type": "pacman",
         "pkg": "postgresql"
@@ -161,9 +165,9 @@ TOOLS: dict[str, dict] = {
     'mariadb': {
     "name": "MariaDB",
     "level": 1,
-    "layer": "Host Platform",
-    "role": "Foundation",
-    "category": "Database",
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Database',
+    "category": 'Database',
     "installer": {
         "type": "pacman",
         "pkg": "mariadb"
@@ -189,9 +193,9 @@ TOOLS: dict[str, dict] = {
     'redis': {
     "name": "Redis",
     "level": 1,
-    "layer": "Host Platform",
-    "role": "Foundation",
-    "category": "Cache",
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Cache',
+    "category": 'Cache',
     "installer": {
         "type": "pacman",
         "pkg": "redis"
@@ -217,9 +221,9 @@ TOOLS: dict[str, dict] = {
     'sqlite3': {
     "name": "SQLite3",
     "level": 1,
-    "layer": "Host Platform",
-    "role": "Foundation",
-    "category": "Database",
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Database',
+    "category": 'Database',
     "installer": {
         "type": "pacman",
         "pkg": "sqlite"
@@ -245,9 +249,9 @@ TOOLS: dict[str, dict] = {
     'duckdb': {
     "name": "DuckDB",
     "level": 1,
-    "layer": "Host Platform",
-    "role": "Foundation",
-    "category": "Analytical Database",
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Analytical Database',
+    "category": 'Analytical Database',
     "installer": {
         "type": "uv",
         "pkg": "duckdb"
@@ -273,9 +277,9 @@ TOOLS: dict[str, dict] = {
     'lxc': {
     "name": "LXC",
     "level": 1,
-    "layer": "Host Platform",
-    "role": "Container Runtime",
-    "category": "Containers",
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Container Runtime',
+    "category": 'Containers',
     "installer": {
         "type": "pacman",
         "pkg": "lxc"
@@ -301,9 +305,9 @@ TOOLS: dict[str, dict] = {
     'firecracker': {
     "name": "Firecracker",
     "level": 1,
-    "layer": "Host Platform",
-    "role": "MicroVM",
-    "category": "Virtualization",
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'MicroVM',
+    "category": 'Virtualization',
     "installer": {
         "type": "script",
         "cmd": "mkdir -p {tools_root}/bin {tools_root}/firecracker && FC_VER=$(curl -sIL https://github.com/firecracker-microvm/firecracker/releases/latest | grep -i '^location:' | tail -1 | sed 's|.*/tag/||' | tr -d '\r') && curl -fsSL 'https://github.com/firecracker-microvm/firecracker/releases/download/$FC_VER/firecracker-$FC_VER-x86_64.tgz' | tar xz -C {tools_root}/firecracker --strip-components=1 && ln -sf {tools_root}/firecracker/firecracker-$FC_VER-x86_64 {tools_root}/bin/firecracker && ln -sf {tools_root}/firecracker/jailer-$FC_VER-x86_64 {tools_root}/bin/jailer"
@@ -329,9 +333,9 @@ TOOLS: dict[str, dict] = {
     'qemu': {
     "name": "QEMU",
     "level": 1,
-    "layer": "Host Platform",
-    "role": "Emulation",
-    "category": "Virtualization",
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Emulation',
+    "category": 'Virtualization',
     "installer": {
         "type": "pacman",
         "pkg": "qemu-base"
@@ -357,9 +361,9 @@ TOOLS: dict[str, dict] = {
     'libvirt': {
     "name": "libvirt",
     "level": 1,
-    "layer": "Host Platform",
-    "role": "VM Management",
-    "category": "Virtualization",
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'VM Management',
+    "category": 'Virtualization',
     "installer": {
         "type": "pacman",
         "pkg": "libvirt"
@@ -385,9 +389,9 @@ TOOLS: dict[str, dict] = {
     'cloudflared': {
     "name": "Cloudflared",
     "level": 1,
-    "layer": "Host Platform",
-    "role": "Tunnel",
-    "category": "Networking",
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Tunnel',
+    "category": 'Networking',
     "installer": {
         "type": "script",
         "cmd": "mkdir -p {tools_root}/bin && curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o {tools_root}/bin/cloudflared && chmod +x {tools_root}/bin/cloudflared"
@@ -413,9 +417,9 @@ TOOLS: dict[str, dict] = {
     'nginx': {
     "name": "Nginx",
     "level": 1,
-    "layer": "Host Platform",
-    "role": "Reverse Proxy",
-    "category": "Networking",
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'Reverse Proxy',
+    "category": 'Networking',
     "installer": {
         "type": "pacman",
         "pkg": "nginx"
@@ -441,9 +445,9 @@ TOOLS: dict[str, dict] = {
     'certbot': {
     "name": "Certbot",
     "level": 1,
-    "layer": "Host Platform",
-    "role": "TLS",
-    "category": "Networking",
+    "layer": 'Host Platform & Infrastructure',
+    "role": 'TLS',
+    "category": 'Networking',
     "installer": {
         "type": "pacman",
         "pkg": "certbot"
