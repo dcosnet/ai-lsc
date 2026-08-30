@@ -3398,13 +3398,13 @@ _reg(StackWiring(
                 decision="Run a second Open-WebUI instance dedicated "
                          "to the Hermes stack.",
                 observation="Open-WebUI supports multiple instances "
-                            "with separate data-dir flags. The general "
-                            "openwebui tool already occupies :3000 with "
-                            "Ollama direct as backend.",
+                            "with separate WEBUI_DATA_DIR env vars. The "
+                            "general openwebui tool already occupies :3000 "
+                            "with Ollama direct as backend.",
                 alternatives="Use a single Open-WebUI instance with "
                              "model name prefixes (hermes/*).",
                 constraints="Must run on a different port (8081) and "
-                            "data-dir than the general openwebui.",
+                            "WEBUI_DATA_DIR than the general openwebui.",
                 reasoning="Dedicated Hermes UI keeps the Hermes agent "
                           "runtime as the single backend, so every "
                           "Hermes WebUI conversation flows through "

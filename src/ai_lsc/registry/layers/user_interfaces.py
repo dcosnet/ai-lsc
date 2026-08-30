@@ -24,7 +24,7 @@ TOOLS: dict[str, dict] = {
     },
     "launcher": {
         "type": "tmux",
-        "cmd": "open-webui serve --port {port} --data-dir {workspaces_root}/openwebui",
+        "cmd": "WEBUI_DATA_DIR={workspaces_root}/openwebui open-webui serve --port {port}",
         "default_port": 8080
     },
     "deps": [
@@ -540,7 +540,7 @@ TOOLS: dict[str, dict] = {
     },
     "launcher": {
         "type": "tmux",
-        "cmd": "open-webui serve --port {port} --data-dir {workspaces_root}/hermes-webui --env OLLAMA_BASE_URL=http://localhost:17051",
+        "cmd": "WEBUI_DATA_DIR={workspaces_root}/hermes-webui OLLAMA_BASE_URL=http://localhost:17051 open-webui serve --port {port}",
         "default_port": 8081
     },
     "deps": [

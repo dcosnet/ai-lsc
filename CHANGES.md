@@ -192,8 +192,7 @@ become L9; IaC and cluster automation land in L10.
   policy markers are untouched (see whatremains.txt, C-05).
 - 11 modular layer files realigned: 185 tools migrated to the 10-layer
   taxonomy (107 shared tools take their structural fields from the
-  master registry; the other 78 classified explicitly — see
-  `scripts/apply_10layer_taxonomy.py` for the classification table).
+  master registry; the other 78 classified explicitly).
 - `kanban` reconciled: it existed only in `defaults.py` (the canonical
   source is the layer files), so it is now declared in
   `layers/user_interfaces.py` as well (L10, Sprints Manager).  Merged
@@ -238,10 +237,11 @@ become L9; IaC and cluster automation land in L10.
 - README layer table + tool counts updated to the 10-layer taxonomy
   (186 tools); quickstart's "13-layer architecture" reference fixed.
 - Layer-file module docstrings note the 10-layer realignment.
-- `scripts/apply_10layer_taxonomy.py` added (the corrected, completed
-  migration utility — supersedes the root `apply_taxonomy_migration.py`,
-  whose regexes could not match multi-word layer names and whose
-  defaults handling was lossy; kept for history).
+- One-shot migration utilities (`apply_taxonomy_migration.py`,
+  `scripts/apply_10layer_taxonomy.py`, and the three
+  `scripts/backfill_*.py` license/flag backfills) retired post-apply
+  in the MoE QA pass — they were idempotent and would have left dead
+  code sitting in the tree.
 
 ### Verification
 
@@ -524,6 +524,11 @@ root regardless of where the tarball is extracted:
 - `scripts/backfill_layer_flags.py`
 - `scripts/backfill_tool_licenses.py`
 
+> **Note (MoE QA pass):** all three one-shot backfill scripts have since
+> been retired post-apply — they were idempotent migrations and leaving
+> them in the tree amounted to dead code. The fix history above is kept
+> for traceability.
+
 ### Verification (run against this build)
 
 ```
@@ -669,7 +674,7 @@ Files: `src/ai_lsc/ui/widgets/workspace_tab.py` (new, ~310 lines), `src/ai_lsc/u
 - **H-12** LXC `attach_exec` destroys quoting — `command.split()` replaced with `shlex.split(command)`.
 - **H-13** Redis lock silently bypassed when down — `agents/redis_bridge.py:acquire_lock` and `release_lock` now log a WARNING when Redis is unreachable so operators know concurrent agents could race.
 - **H-14** `_enforce_quality` false-positive error detection — `agents/orchestrator.py` now uses a word-boundary regex with a negative lookahead `(?![\w\-])` so hyphenated compounds like `error-correction module initialized` are not flagged.
-- **H-15** Registry layer files have incomplete flag schemas — `registry/validator.py` now enforces the full 8-key flags schema (`has_cli`, `has_gui`, `has_web`, `is_ollama`, `is_docker`, `is_passive`, `is_mcp`, `is_skills_collection`). `scripts/backfill_layer_flags.py` backfilled 123 flag blocks across all 13 layer files.
+- **H-15** Registry layer files have incomplete flag schemas — `registry/validator.py` now enforces the full 8-key flags schema (`has_cli`, `has_gui`, `has_web`, `is_ollama`, `is_docker`, `is_passive`, `is_mcp`, `is_skills_collection`). A one-shot backfill (now retired) populated 123 flag blocks across all 13 layer files.
 - **H-16** `_inject_skill_stub` returns fake success — `agents/dispatcher.py` now validates the skill exists before reporting success.
 - **H-17** Placeholder resolution triple-copy in `export.py` — new `_resolve_placeholders()` helper replaces three duplicated 6-line `.replace()` chains in `generate_compose_yaml`, `generate_lxc_configs`, and `generate_firecracker_configs`.
 - **H-18** Ollama `/api/tools` endpoint does not exist — `agents/ollama_tools.py` `register_all` and `register_single` are now gated behind `_registration_supported = False` with a clear warning. Tool schemas are passed inline to `/api/chat` instead.
@@ -792,9 +797,9 @@ After the SaaS blocklist landed, the user asked for a layered license-acceptance
    - Unknown SPDX ID (not in the license catalog) → error
    - The `_REQUIRED_FIELDS` set now includes `"license"`
 
-   Two backfill scripts added:
-   - `scripts/backfill_tool_licenses.py` — adds the `license` field to every tool based on a curated override table (85 tools mapped to known licenses: ollama→MIT, vllm→Apache-2.0, grafana→AGPL-3.0, redis→RSALv2, terraform→BSL-1.1, n8n→Sustainable-Use, claude_code→Anthropic-ToS, etc.)
-   - `scripts/backfill_default_licenses.py` — fills any remaining tools with `"Proprietary"` as the defensive default (83 tools defaulted — the user can review and update these to their actual licenses later)
+   Two backfill scripts (now retired) populated the initial values:
+   - One pass added the `license` field based on a curated override table (85 tools mapped to known licenses: ollama→MIT, vllm→Apache-2.0, grafana→AGPL-3.0, redis→RSALv2, terraform→BSL-1.1, n8n→Sustainable-Use, claude_code→Anthropic-ToS, etc.)
+   - A second pass filled any remaining tools with `"Proprietary"` as the defensive default (83 tools defaulted — the user can review and update these to their actual licenses later)
 
 5. **License gate wired into the installer** — `InstallerManager.__init__` now accepts a `license_gate` parameter. `InstallerManager.run()` and `install_with_preflight()` call `self._check_license(tool_id, license_spdx)` before any subprocess dispatch. If the gate raises `LicenseBlocked` or `LicenseAcceptanceRequired`, the exception propagates up through `RuntimeExecutor.install_tool()` to the UI.
 
@@ -864,14 +869,14 @@ Three latent bugs were introduced during the initial fix wave and caught by the 
 ### Upgrade notes
 
 - If you have a v3.0 `pipeline_state.json`, it will continue to work — the schema is unchanged.
-- If you maintain custom layer-file entries, run `python scripts/backfill_layer_flags.py` to backfill the 5 new flag keys (`is_ollama`, `is_docker`, `is_passive`, `is_mcp`, `is_skills_collection`) defaulting to `False`. The validator will reject entries missing these keys.
+- If you maintain custom layer-file entries, ensure each entry declares all 5 newer flag keys (`is_ollama`, `is_docker`, `is_passive`, `is_mcp`, `is_skills_collection`) defaulting to `False`. The validator will reject entries missing these keys. (An idempotent backfill script was shipped in v3.1 and retired in the MoE QA pass — its work is baked into the layer files.)
 - If you have hardcoded `sk-ai-lsc-local` API keys in your environment, set `AI_LSC_LITELLM_KEY` and `AI_LSC_OPENWEBUI_KEY` env vars instead — the source-code default is now an empty string.
 - If you launch the app from a non-default working directory, config is now resolved against `BASE_DIR` instead of `os.getcwd()` — this may move your `config.json` to a new location on first v3.1 launch.
 
 ### Artifacts
 
 - Master tarball: `ai-lsc-master-2026-07-07.tar.gz`
-- New scripts: `scripts/backfill_layer_flags.py`
+- New scripts (v3.1): the three `scripts/backfill_*.py` utilities — since retired in the MoE QA pass.
 - New widgets: `src/ai_lsc/ui/widgets/pipeline_ticker.py`, `src/ai_lsc/ui/widgets/workspace_tab.py`
 - New docs: `CHANGES.md` (this file), `docs/ADR-002-pipeline-ticker.md`, `docs/ADR-003-workspace-tab.md`
 - Skipped-items register: `whatremains.txt`

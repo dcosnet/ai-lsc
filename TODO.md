@@ -13,16 +13,15 @@
 - ✅ Applied the full master code critique: 91 of 93 findings addressed (CRITICAL × 6, HIGH × 24, MEDIUM × 42, LOW × 19). The 2 intentionally skipped items (curl|sh remote installers) are documented in [whatremains.txt](whatremains.txt).
 - ✅ Added the Pipeline Ticker: scrolling wiring-topology status bar at the top of every workspace tab. Color-coded arrows by interface type, orphans flagged red, click-to-jump to Tools tab.
 - ✅ Added the Workspace Tab: peek-style orchestration surface with one sub-tab per active tool. Web tools embed via QWebEngineView, CLI tools attach to tmux via `capture-pane` polling. Feels like virt-manager / aqemu for your AI stack.
-- ✅ Strengthened the registry validator to enforce the full 8-key flags schema; backfilled 123 layer-file flag blocks via `scripts/backfill_layer_flags.py`.
+- ✅ Strengthened the registry validator to enforce the full 8-key flags schema; backfilled 123 layer-file flag blocks (one-shot migration script retired post-apply).
 - ✅ Reconciled tool count: 124 tools in `defaults.py` + 123 tools across the 13 layer files (merged).
 
 ## Open work
 
 The 10-layer taxonomy is now in place; classification quality is the next
 frontier. The 78 layer-file tools absent from the master registry were
-classified by hand for v3.2 (table in
-`scripts/apply_10layer_taxonomy.py`); review those assignments if any
-feel wrong — `layer`/`level` sync from layer files makes corrections a
+classified by hand for v3.2 — review those assignments if any feel
+wrong: `layer`/`level` sync from layer files makes corrections a
 one-file edit. If you're reading this file, first of all thanks for
 trying it out — help by testing the UI, tools, configs, and pipelines.
 It's a lot.
@@ -46,8 +45,8 @@ See [whatremains.txt](whatremains.txt) for the full list. Highlights:
 - `curl|sh` remote installers (Ollama, Grafana Alloy, Meilisearch) — left in place per user instruction. Apply the critique's download-first pattern when the remote-code-execution policy is revisited.
 - L-17: `registry/openengineer/parser.py` still has commented-out code blocks — confirm with the OE importer maintainer before deleting.
 - L-18: registry layer files declare tools without `filesystem` blocks; backfilling `install/config/cache/logs` paths across the layer-file tools is a mechanical but sizable job (v3.2 preserved the 24 defaults.py blocks + n8n/odysseus).
-- M-22 / M-40: `chatbot_console.py` HTML bubble builder + nested ternary — could extract `_render_bubble(msg)` helper, deferred as low-impact polish.
-- M-10 / M-15 / M-16: `registry/openengineer/importer.py` nested-if flattening + dedup — defer to a focused OE-importer cleanup pass.
+- M-22 / M-40: `chatbot_console.py` HTML bubble builder + nested ternary — addressed in the MoE QA pass (`_render_bubble` helper extracted, nested ternary flattened to `"\n\n".join`).
+- M-10 / M-15 / M-16: `registry/openengineer/importer.py` nested-if flattening + dedup — addressed in the MoE QA pass (two scan loops merged into single `_scan_dir` helper).
 
 ### UX polish still on the wishlist
 

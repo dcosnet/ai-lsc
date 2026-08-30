@@ -23,7 +23,7 @@ All instances rewritten as decisive statements. Source files touched:
 |---|---|---|
 | `src/ai_lsc/registry/layers/routing.py` | docstring | "Restored layer (v3.1.1b)" → "L5 (Intelligent API Routers & Proxies) holds …"; added source-of-truth note. |
 | `TODO.md` | 6 | "restored in full from the v3.1.1b routing tarball" → "the canonical 1.3 k-line implementation now lives in-tree". |
-| `scripts/apply_10layer_taxonomy.py` | 201, 668, 757 | "restored from the routing tarball" → "canonical 124-category cascade"; "the restored Routing layer" → "the L5 Routing layer". |
+| `scripts/apply_10layer_taxonomy.py` (now retired) | 201, 668, 757 | "restored from the routing tarball" → "canonical 124-category cascade"; "the restored Routing layer" → "the L5 Routing layer". |
 | `CHANGES.md` | 224, 254, 269, 321 | "Restored in full from the v3.1.1b routing tarball" → "canonical 1.3 k-line implementation is re-established in-tree"; section header "Routing restored" → "Routing promoted to a first-class layer"; "(restored)" ladder annotation removed. |
 | `whatremains.txt` | 9 | "the restored installer cmds" → "the canonical installer cmds". |
 | `docs/ADR-003-workspace-tab.md` | 67 | "The empty-state placeholder is restored" → "the empty-state placeholder is shown again". |
@@ -129,3 +129,61 @@ No code-behavior change; the comment makes the architectural boundary explicit s
 ## 9. Tarball
 
 Packaged as `ai-lsc-moe-qa-pass.tar.gz` in `/home/z/my-project/download/`. Contains the full project tree post-cleanup.
+
+---
+
+## 10. Post-pass cleanup (follow-up)
+
+After the initial MoE QA pass was packaged, two follow-up changes were applied:
+
+### 10.1 Retirement of one-shot migration scripts
+
+The following five scripts were one-shot migrations that had already been
+applied to the registry/layer files. Per the project-manager perspective
+on the MoE panel ("don't leave dead code sitting around"), they have been
+removed from the tree:
+
+- `apply_taxonomy_migration.py` (root) — v3.2 superseded by `apply_10layer_taxonomy.py`.
+- `scripts/apply_10layer_taxonomy.py` — taxonomy re-org, applied.
+- `scripts/backfill_layer_flags.py` — H-15 flag backfill, applied.
+- `scripts/backfill_tool_licenses.py` — license field backfill, applied.
+- `scripts/backfill_default_licenses.py` — license default backfill, applied.
+
+The empty `scripts/` directory was also removed. All historical references
+in `CHANGES.md`, `TODO.md`, and `QA-PASS-REPORT.md` were patched so no
+doc points at a missing file.
+
+### 10.2 Open WebUI launcher fix
+
+`open-webui serve` dropped the `--data-dir` CLI option in a recent
+release; the registry's three open-webui launcher commands all used it
+and were failing at startup with:
+
+```
+No such option '--data-dir'.
+```
+
+The data directory is now set via the `WEBUI_DATA_DIR` environment
+variable, which is the supported mechanism in current open-webui. The
+hermes_webui launcher also dropped the invalid `--env OLLAMA_BASE_URL=...`
+trailer (open-webui reads `OLLAMA_BASE_URL` from the process environment
+directly, not via a CLI flag). Three sites patched:
+
+- `src/ai_lsc/registry/layers/user_interfaces.py` — `openwebui` launcher.
+- `src/ai_lsc/registry/layers/user_interfaces.py` — `hermes_webui` launcher.
+- `src/ai_lsc/registry/defaults.py` — `openwebui` launcher.
+
+Each launcher now reads (e.g. for the canonical openwebui):
+
+```
+WEBUI_DATA_DIR={workspaces_root}/openwebui open-webui serve --port {port}
+```
+
+For hermes_webui the env-prefix also carries `OLLAMA_BASE_URL`:
+
+```
+WEBUI_DATA_DIR={workspaces_root}/hermes-webui OLLAMA_BASE_URL=http://localhost:17051 open-webui serve --port {port}
+```
+
+The ai-lsc runtime resolves env-prefix shells via `shlex.split()` on the
+launcher cmd, so the env-assignment form is parsed correctly.

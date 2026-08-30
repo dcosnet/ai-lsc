@@ -3132,7 +3132,7 @@ DEFAULT_REGISTRY: dict = {
     },
     "launcher": {
         "type": 'tmux',
-        "cmd": 'open-webui serve --port {port} --data-dir {workspaces_root}/openwebui',
+        "cmd": 'WEBUI_DATA_DIR={workspaces_root}/openwebui open-webui serve --port {port}',
         "default_port": 8080,
     },
     "deps": [
